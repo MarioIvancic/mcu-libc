@@ -1,0 +1,209 @@
+This file is provided as a convenience to aid distributors in understanding
+the copyrights for material that has been aggregated into msp430-libc.
+
+Three variants of the BSD license are present:
+  "FreeBSD" 2-clause license
+
+  "Modified BSD" 3-clause license
+
+  "BSD" Original 4-clause license.  Where the sole copyright holder was the Regents
+  of the University of California, the copyright annotation was converted to
+  Modified BSD per the authorization at:
+
+     ftp://ftp.cs.berkeley.edu/pub/4bsd/README.Impt.License.Change
+
+  Note that two files (sys/types.h, sys/string/strtok.c) use the BSD license
+  and list an additional copyright holder.  These have not been converted.
+
+Functions related to math are attributed to Sun Microsystems under a general
+free use license.  Some file listed below do not include a copyright, but
+are included in or otherwise associated with files that belong to this
+suite.  Those are denoted by a prefix hook (?) before the copyright owner
+and license.
+
+The copyright owner and licensing of malloc/free cannot be identified.
+
+Several one-line files are annotated with an inferred copyright owner (based
+on who checked it in, an attribution without license, or clear dependence on
+another), and are categorized as Unclaimed.
+
+File                            Copyright Owner              License
+====                            ===============              =======
+include/bits/byteswap.h         People Power Co              Modified BSD
+include/byteswap.h              People Power Co              Modified BSD
+include/ctype.h                 Chris Liecti, Dmitry Diky    FreeBSD
+include/debug.h                 Dmitry Diky                  FreeBSD
+include/endian.h                People Power Co              Modified BSD
+include/errno.h                 Dmitry Diky                  FreeBSD
+include/inttypes.h              Peter A. Bigot               Modified BSD
+include/isr_compat.h            Steve Underwood              FreeBSD
+include/legacymsp430.h          Dmitry Dicky, Chris Liechti  FreeBSD
+include/limits.h                Dmitry Dicky                 FreeBSD
+include/math.h                  ?Sun Microsystems            ?Free Use
+include/msp430libc.h            Peter A. Bigot               Modified BSD
+include/setjmp.h                Dmitry Dicky                 FreeBSD
+include/signal.h                Peter A. Bigot               Modified BSD
+include/stdint.h                Steve Underwood              FreeBSD
+include/stdio.h                 Dmitry Dicky                 FreeBSD
+include/stdlib.h                Dmitry Dicky                 FreeBSD
+include/string.h                Dmitry Dicky                 FreeBSD
+include/sys/_ansi.h             ?Sun Microsystems            ?Free Use
+include/sys/_types.h            ?Sun Microsystems            ?Free Use
+include/sys/cdefs.h             Regents U. CA                Modified BSD
+include/sys/config.h            ?Sun Microsystems            ?Free Use
+include/sys/fdlibm.h            Sun Microsystems             Free Use
+include/sys/ieeefp.h            ?Sun Microsystems            ?Free Use
+include/sys/inttypes.h          Peter A. Bigot               Modified BSD
+include/sys/reent.h             ?Sun Microsystems            ?Free Use
+include/sys/types.h             Regents U. CA, UNIX Sys Lab  BSD
+include/sys/crtld.h             Peter A. Bigot               Modified BSD
+src/core_common.inc             Sergey A. Borshch            Modified BSD
+src/libm/addsf.c                Dmitry Dicky, Diane Gagne    FreeBSD
+src/libm/cmpsf.c                Dmitry Dicky                 FreeBSD
+src/libm/divsf.c                Dmitry Dicky, Diane Gagne    FreeBSD
+src/libm/ef_acos.c              Sun Microsystems             Free Use
+src/libm/ef_acosh.c             Sun Microsystems             Free Use
+src/libm/ef_asin.c              Sun Microsystems             Free Use
+src/libm/ef_atan2.c             Sun Microsystems             Free Use
+src/libm/ef_atanh.c             Sun Microsystems             Free Use
+src/libm/ef_cosh.c              Sun Microsystems             Free Use
+src/libm/ef_exp.c               Sun Microsystems             Free Use
+src/libm/ef_fmod.c              Sun Microsystems             Free Use
+src/libm/ef_hypot.c             Sun Microsystems             Free Use
+src/libm/ef_j0.c                Sun Microsystems             Free Use
+src/libm/ef_j1.c                Sun Microsystems             Free Use
+src/libm/ef_jn.c                Sun Microsystems             Free Use
+src/libm/ef_log.c               Sun Microsystems             Free Use
+src/libm/ef_log10.c             Sun Microsystems             Free Use
+src/libm/ef_pow.c               Sun Microsystems             Free Use
+src/libm/ef_rem_pio2.c          Sun Microsystems             Free Use
+src/libm/ef_remainder.c         Sun Microsystems             Free Use
+src/libm/ef_scalb.c             Sun Microsystems             Free Use
+src/libm/ef_sinh.c              Sun Microsystems             Free Use
+src/libm/ef_sqrt.c              Sun Microsystems             Free Use
+src/libm/eqsf.c                 Dmitry Dicky                 FreeBSD
+src/libm/erf_gamma.c            Sun Microsystems             Free Use
+src/libm/erf_lgamma.c           Sun Microsystems             Free Use
+src/libm/fdlibm.h               Sun Microsystems             Free Use
+src/libm/fixsfdi.c              Dmitry Dicky                 FreeBSD
+src/libm/fixsfsi.c              Dmitry Dicky                 FreeBSD
+src/libm/fixunssfdi.c           Dmitry Dicky                 FreeBSD
+src/libm/fixunssfsi.c           Dmitry Dicky                 FreeBSD
+src/libm/floatdisf.c            Dmitry Dicky                 FreeBSD
+src/libm/floatsisf.c            Dmitry Dicky                 FreeBSD
+src/libm/fpmulparts.S           Diane Gagne                  FreeBSD
+src/libm/gesf.c                 Dmitry Dicky                 FreeBSD
+src/libm/gtsf.c                 Dmitry Dicky                 FreeBSD
+src/libm/kf_cos.c               Sun Microsystems             Free Use
+src/libm/kf_rem_pio2.c          Sun Microsystems             Free Use
+src/libm/kf_sin.c               Sun Microsystems             Free Use
+src/libm/kf_tan.c               Sun Microsystems             Free Use
+src/libm/lesf.c                 Dmitry Dicky                 FreeBSD
+src/libm/ltsf.c                 Dmitry Dicky                 FreeBSD
+src/libm/mulsf.c                Dmitry Dicky, Diane Gagne    FreeBSD
+src/libm/mulsf.h                Diane Gagne                  FreeBSD
+src/libm/negsf.c                Dmitry Dicky                 FreeBSD
+src/libm/nesf.c                 Dmitry Dicky                 FreeBSD
+src/libm/sf_asinh.c             Sun Microsystems             Free Use
+src/libm/sf_atan.c              Sun Microsystems             Free Use
+src/libm/sf_cbrt.c              Sun Microsystems             Free Use
+src/libm/sf_ceil.c              Sun Microsystems             Free Use
+src/libm/sf_copysign.c          Sun Microsystems             Free Use
+src/libm/sf_cos.c               Sun Microsystems             Free Use
+src/libm/sf_erf.c               Sun Microsystems             Free Use
+src/libm/sf_expm1.c             Sun Microsystems             Free Use
+src/libm/sf_fabs.c              Sun Microsystems             Free Use
+src/libm/sf_finite.c            Sun Microsystems             Free Use
+src/libm/sf_floor.c             Sun Microsystems             Free Use
+src/libm/sf_frexp.c             Sun Microsystems             Free Use
+src/libm/sf_ilogb.c             Sun Microsystems             Free Use
+src/libm/sf_infinity.c          ?Cygnus Support              ?
+src/libm/sf_isinf.c             ?Cygnus Support              ?
+src/libm/sf_isnan.c             ?Cygnus Support              ?
+src/libm/sf_ldexp.c             Sun Microsystems             Free Use
+src/libm/sf_log1p.c             Sun Microsystems             Free Use
+src/libm/sf_logb.c              Sun Microsystems             Free Use
+src/libm/sf_modf.c              Sun Microsystems             Free Use
+src/libm/sf_nan.c               ?Cygnus Support              ?
+src/libm/sf_nextafter.c         Sun Microsystems             Free Use
+src/libm/sf_rint.c              Sun Microsystems             Free Use
+src/libm/sf_scalbn.c            Sun Microsystems             Free Use
+src/libm/sf_signif.c            Sun Microsystems             Free Use
+src/libm/sf_sin.c               Sun Microsystems             Free Use
+src/libm/sf_tan.c               Sun Microsystems             Free Use
+src/libm/sf_tanh.c              Sun Microsystems             Free Use
+src/libm/subsf.c                Sun Microsystems             Free Use
+src/misc/__bswap_32.S           People Power Co              Modified BSD
+src/misc/__bswap_64.S           People Power Co              Modified BSD
+src/stdlib/abort.S              Dmitry Dicky                 Unclaimed
+src/stdlib/abs.c                Marek Michalkiewicz          Unclaimed
+src/stdlib/atoi.c               Dmitry Dicky                 Unclaimed
+src/stdlib/atol.c               Marek Michalkiewicz          Unclaimed
+src/stdlib/bsearch.c            Regents U. CA                Modified BSD
+src/stdlib/div.S                Dmitry Dicky                 Unclaimed
+src/stdlib/errno.c              Marek Michalkiewicz          Unclaimed
+src/stdlib/exit.S               Dmitry Dicky                 FreeBSD
+src/stdlib/itoa.c               Chris Takahashi              FreeBSD
+src/stdlib/labs.c               Marek Michalkiewicz          Unclaimed
+src/stdlib/ldiv.S               Dmitry Dicky                 Unclaimed
+src/stdlib/ltoa.c               Chris Takahashi              FreeBSD
+src/stdlib/malloc.c             *Unknown                     *Unknown
+src/stdlib/printf.c             Peter A. Bigot               Modified BSD
+src/stdlib/puts.c               Peter A. Bigot               Modified BSD
+src/stdlib/rand.c               Regents U. CA                Modified BSD
+src/stdlib/setjmp.S             Dmitry Dicky                 FreeBSD
+src/stdlib/sprintf.c            Peter A. Bigot               Modified BSD
+src/stdlib/strtol.c             Regents U. CA                Modified BSD
+src/stdlib/strtoul.c            Regents U. CA                Modified BSD
+src/stdlib/ultoa.c              Chris Takahashi              FreeBSD
+src/stdlib/uprintf.c            Peter A. Bigot               Modified BSD
+src/stdlib/utoa.c               Chris Takahashi              FreeBSD
+src/stdlib/vuprintf.c           Chris Liechti, Peter A. Bigot Modified BSD
+src/string/bcmp.c               Regents U. CA                Modified BSD
+src/string/bcopy.c              Regents U. CA                Modified BSD
+src/string/bzero.c              Regents U. CA                Unclaimed
+src/string/ffs.c                Regents U. CA                Modified BSD
+src/string/index.c              Regents U. CA                Modified BSD
+src/string/isalnum.c            Dmitry Dicky                 Unclaimed
+src/string/isalpha.c            Dmitry Dicky                 Unclaimed
+src/string/isascii.c            Dmitry Dicky                 Unclaimed
+src/string/isblank.c            Dmitry Dicky                 Unclaimed
+src/string/iscntrl.c            Dmitry Dicky                 Unclaimed
+src/string/isdigit.c            Dmitry Dicky                 Unclaimed
+src/string/islower.c            Dmitry Dicky                 Unclaimed
+src/string/isprint.c            Dmitry Dicky                 Unclaimed
+src/string/ispunct.c            Dmitry Dicky                 Unclaimed
+src/string/isspace.c            Dmitry Dicky                 Unclaimed
+src/string/isupper.c            Dmitry Dicky                 Unclaimed
+src/string/isxdigit.c           Dmitry Dicky                 Unclaimed
+src/string/memccpy.c            Regents U. CA                Modified BSD
+src/string/memchr.c             Regents U. CA                Modified BSD
+src/string/memcmp.c             Regents U. CA                Modified BSD
+src/string/memcpy.c             Regents U. CA                Unclaimed
+src/string/memmove.c            Regents U. CA                Unclaimed
+src/string/memset.c             Regents U. CA                Modified BSD
+src/string/rindex.c             Regents U. CA                Modified BSD
+src/string/strcasecmp.c         Regents U. CA                Modified BSD
+src/string/strcat.c             Regents U. CA                Modified BSD
+src/string/strchr.c             Regents U. CA                Unclaimed
+src/string/strcmp.c             Regents U. CA                Modified BSD
+src/string/strcpy.c             Regents U. CA                Modified BSD
+src/string/strcspn.c            Regents U. CA                Modified BSD
+src/string/strdup.c             Regents U. CA                Modified BSD
+src/string/strlcat.c            Todd C. Miller               Modified BSD
+src/string/strlcpy.c            Todd C. Miller               Modified BSD
+src/string/strlen.c             Regents U. CA                Modified BSD
+src/string/strncasecmp.c        Regents U. CA                Modified BSD
+src/string/strncat.c            Regents U. CA                Modified BSD
+src/string/strncmp.c            Regents U. CA                Modified BSD
+src/string/strncpy.c            Regents U. CA                Modified BSD
+src/string/strpbrk.c            Regents U. CA                Modified BSD
+src/string/strrchr.c            Regents U. CA                Unclaimed
+src/string/strsep.c             Regents U. CA                Modified BSD
+src/string/strspn.c             Regents U. CA                Modified BSD
+src/string/strstr.c             Regents U. CA                Modified BSD
+src/string/strtok.c             Softweyr LLC, Regents U. CA  BSD
+src/string/swab.c               Regents U. CA                Modified BSD
+src/string/toascii.c            Dmitry Dicky                 Unclaimed
+src/string/tolower.c            Dmitry Dicky                 Unclaimed
+src/string/toupper.c            Dmitry Dicky                 Unclaimed

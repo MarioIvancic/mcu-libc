@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="all" />
+	<File name="CHANGELOG.txt" open="0" top="0" tabpos="1">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="Makefile" open="1" top="1" tabpos="0">
+		<Cursor position="3893" topLine="153" />
+	</File>
+	<File name="abs.c" open="0" top="0" tabpos="0">
+		<Cursor position="308" topLine="0" />
+	</File>
+	<File name="atoi.c" open="0" top="0" tabpos="0">
+		<Cursor position="348" topLine="6" />
+	</File>
+	<File name="atol.c" open="0" top="0" tabpos="0">
+		<Cursor position="126" topLine="0" />
+	</File>
+	<File name="atoll.c" open="0" top="0" tabpos="0">
+		<Cursor position="140" topLine="0" />
+	</File>
+	<File name="bsearch.c" open="0" top="0" tabpos="0">
+		<Cursor position="2062" topLine="37" />
+	</File>
+	<File name="ctype.c" open="0" top="0" tabpos="0">
+		<Cursor position="2285" topLine="0" />
+	</File>
+	<File name="div.c" open="0" top="0" tabpos="0">
+		<Cursor position="2595" topLine="0" />
+	</File>
+	<File name="inc\arm7\limits.h" open="0" top="0" tabpos="0">
+		<Cursor position="313" topLine="15" />
+	</File>
+	<File name="inc\ctype.h" open="0" top="0" tabpos="0">
+		<Cursor position="105" topLine="0" />
+	</File>
+	<File name="inc\stdarg.h" open="0" top="0" tabpos="0">
+		<Cursor position="1254" topLine="41" />
+	</File>
+	<File name="inc\stdio.h" open="0" top="0" tabpos="0">
+		<Cursor position="952" topLine="34" />
+	</File>
+	<File name="inc\stdlib.h" open="0" top="0" tabpos="0">
+		<Cursor position="97" topLine="30" />
+	</File>
+	<File name="inc\string.h" open="0" top="0" tabpos="0">
+		<Cursor position="1581" topLine="73" />
+	</File>
+	<File name="itoa.c" open="0" top="0" tabpos="0">
+		<Cursor position="2509" topLine="69" />
+	</File>
+	<File name="ldiv.c" open="0" top="0" tabpos="0">
+		<Cursor position="2603" topLine="54" />
+	</File>
+	<File name="lldiv.c" open="0" top="0" tabpos="0">
+		<Cursor position="2707" topLine="50" />
+	</File>
+	<File name="lltoa.c" open="0" top="0" tabpos="0">
+		<Cursor position="545" topLine="68" />
+	</File>
+	<File name="ltoa.c" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="67" />
+	</File>
+	<File name="memccpy.c" open="0" top="0" tabpos="0">
+		<Cursor position="40" topLine="0" />
+	</File>
+	<File name="memccpy_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="1353" topLine="0" />
+	</File>
+	<File name="memchr.c" open="0" top="0" tabpos="0">
+		<Cursor position="40" topLine="0" />
+	</File>
+	<File name="memchr_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="996" topLine="13" />
+	</File>
+	<File name="memcmp.c" open="0" top="0" tabpos="0">
+		<Cursor position="612" topLine="0" />
+	</File>
+	<File name="memcmp_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="575" topLine="0" />
+	</File>
+	<File name="memcpy.c" open="0" top="0" tabpos="0">
+		<Cursor position="542" topLine="1" />
+	</File>
+	<File name="memcpy_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="351" topLine="0" />
+	</File>
+	<File name="memmove.c" open="0" top="0" tabpos="0">
+		<Cursor position="564" topLine="19" />
+	</File>
+	<File name="memmove_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="2432" topLine="0" />
+	</File>
+	<File name="memset.c" open="0" top="0" tabpos="0">
+		<Cursor position="304" topLine="0" />
+	</File>
+	<File name="memset_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="1687" topLine="0" />
+	</File>
+	<File name="msp_printf.c" open="0" top="0" tabpos="0">
+		<Cursor position="24074" topLine="693" />
+	</File>
+	<File name="rand.c" open="0" top="0" tabpos="0">
+		<Cursor position="2344" topLine="58" />
+	</File>
+	<File name="strcasecmp.c" open="0" top="0" tabpos="0">
+		<Cursor position="751" topLine="12" />
+	</File>
+	<File name="strcat.c" open="0" top="0" tabpos="0">
+		<Cursor position="576" topLine="8" />
+	</File>
+	<File name="strchr.c" open="0" top="0" tabpos="0">
+		<Cursor position="580" topLine="21" />
+	</File>
+	<File name="strcmp.c" open="0" top="0" tabpos="0">
+		<Cursor position="795" topLine="5" />
+	</File>
+	<File name="strcmp_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="600" topLine="37" />
+	</File>
+	<File name="strcpy.c" open="0" top="0" tabpos="0">
+		<Cursor position="1354" topLine="17" />
+	</File>
+	<File name="strcspn.c" open="0" top="0" tabpos="0">
+		<Cursor position="447" topLine="5" />
+	</File>
+	<File name="strlcat.c" open="0" top="0" tabpos="0">
+		<Cursor position="844" topLine="0" />
+	</File>
+	<File name="strlcpy.c" open="0" top="0" tabpos="0">
+		<Cursor position="3422" topLine="81" />
+	</File>
+	<File name="strlen.c" open="0" top="0" tabpos="0">
+		<Cursor position="375" topLine="0" />
+	</File>
+	<File name="strncasecmp.c" open="0" top="0" tabpos="0">
+		<Cursor position="800" topLine="0" />
+	</File>
+	<File name="strncat.c" open="0" top="0" tabpos="0">
+		<Cursor position="827" topLine="11" />
+	</File>
+	<File name="strncmp.c" open="0" top="0" tabpos="0">
+		<Cursor position="1030" topLine="7" />
+	</File>
+	<File name="strncmp_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="735" topLine="15" />
+	</File>
+	<File name="strncpy.c" open="0" top="0" tabpos="0">
+		<Cursor position="1372" topLine="28" />
+	</File>
+	<File name="strncpy_fast.c" open="0" top="0" tabpos="0">
+		<Cursor position="2192" topLine="47" />
+	</File>
+	<File name="strnlen.c" open="0" top="0" tabpos="0">
+		<Cursor position="507" topLine="12" />
+	</File>
+	<File name="strpbrk.c" open="0" top="0" tabpos="0">
+		<Cursor position="409" topLine="0" />
+	</File>
+	<File name="strrchr.c" open="0" top="0" tabpos="0">
+		<Cursor position="633" topLine="15" />
+	</File>
+	<File name="strrev.c" open="0" top="0" tabpos="0">
+		<Cursor position="343" topLine="0" />
+	</File>
+	<File name="strsep.c" open="0" top="0" tabpos="0">
+		<Cursor position="2907" topLine="58" />
+	</File>
+	<File name="strspn.c" open="0" top="0" tabpos="0">
+		<Cursor position="339" topLine="8" />
+	</File>
+	<File name="strstr.c" open="0" top="0" tabpos="0">
+		<Cursor position="897" topLine="0" />
+	</File>
+	<File name="strtok.c" open="0" top="0" tabpos="0">
+		<Cursor position="6467" topLine="195" />
+	</File>
+	<File name="strtol.c" open="0" top="0" tabpos="0">
+		<Cursor position="6680" topLine="196" />
+	</File>
+	<File name="strtoll.c" open="0" top="0" tabpos="0">
+		<Cursor position="6459" topLine="135" />
+	</File>
+	<File name="strtoul.c" open="0" top="0" tabpos="0">
+		<Cursor position="6301" topLine="108" />
+	</File>
+	<File name="strtoull.c" open="0" top="0" tabpos="0">
+		<Cursor position="6561" topLine="129" />
+	</File>
+	<File name="strupr.c" open="0" top="0" tabpos="0">
+		<Cursor position="295" topLine="0" />
+	</File>
+	<File name="tfp_printf.c" open="0" top="0" tabpos="0">
+		<Cursor position="9306" topLine="220" />
+	</File>
+</CodeBlocks_layout_file>

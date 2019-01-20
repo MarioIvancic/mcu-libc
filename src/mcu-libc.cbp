@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mcu-libc" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile MCU=LPC2148 all" />
+			<CompileFile command="$make -f $makefile MCU=LPC2148 install" />
+			<Clean command="$make -f $makefile MCU=LPC2148 clean" />
+			<DistClean command="$make -f $makefile MCU=LPC2148 distclean" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -s -f $makefile $target" />
+		</MakeCommands>
+		<Build>
+			<Target title="all">
+				<Option output="bin\all\sys" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj\all\" />
+				<Option type="5" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile  MCU=LPC2148 all" />
+					<CompileFile command="$make -f $makefile MCU=LPC2148 install" />
+					<Clean command="$make -f $makefile  MCU=LPC2148 clean" />
+					<DistClean command="$make -f $makefile  MCU=LPC2148 distclean" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+			<Environment>
+				<Variable name="MCU" value="LPC2148" />
+			</Environment>
+		</Build>
+		<Unit filename="CHANGELOG.txt" />
+		<Unit filename="Makefile" />
+		<Unit filename="abs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="atoi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="atol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="atoll.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="bsearch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ctype.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="div.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="inc\arm7\limits.h" />
+		<Unit filename="inc\arm7\stdint.h" />
+		<Unit filename="inc\cm3\limits.h" />
+		<Unit filename="inc\cm3\stdint.h" />
+		<Unit filename="inc\ctype.h" />
+		<Unit filename="inc\stdarg.h" />
+		<Unit filename="inc\stdio.h" />
+		<Unit filename="inc\stdlib.h" />
+		<Unit filename="inc\string.h" />
+		<Unit filename="itoa.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ldiv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lldiv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lltoa.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ltoa.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memccpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memccpy_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memchr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memchr_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memcmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memcmp_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memcpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memcpy_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memmove.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memmove_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="memset_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="msp_printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="rand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="reverse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcasecmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strchr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcmp_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strcspn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strlcat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strlcpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strlen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncasecmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncmp_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strncpy_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strnlen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strpbrk.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strrchr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strrev.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strsep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strspn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strspn_fast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strstr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtok.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtoll.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtoul.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strtoull.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="strupr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tfp_printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
