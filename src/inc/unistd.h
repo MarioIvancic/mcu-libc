@@ -1,11 +1,17 @@
 #ifndef	__UNISTD_H_
 #define	__UNISTD_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <features.h>
+#include <libc_version.h>
+
+
+#define __need_NULL
+#define __need_size_t
+#define __need_ssize_t
+#define __need_useconds_t
+#define __need_intptr_t
+#include <bits/alltypes.h>
+
 
 #define STDIN_FILENO  0
 #define STDOUT_FILENO 1
@@ -15,11 +21,12 @@ extern "C" {
 #define SEEK_CUR 1
 #define SEEK_END 2
 
-#include <bits/_null.h>
-#include <bits/_size_t.h>
-#include <bits/_ssize_t.h>
-//#include <bits/_intptr_t.h>
-#include <bits/_useconds_t.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 int close(int);
 

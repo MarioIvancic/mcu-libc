@@ -1,18 +1,16 @@
 #ifndef __STDLIB_H__
 #define __STDLIB_H__
 
-#include <limits.h>
+#include <libc_version.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+#define __need_NULL
+#define __need_size_t
+#define __need_RAND_MAX
+#include <bits/alltypes.h>
 
 #define EXIT_FAILURE    1
 #define EXIT_SUCCESS    0
 #define MB_CUR_MAX      1
-
-#include <bits/_null.h>
-#include <bits/_size_t.h>
 
 
 typedef struct
@@ -32,6 +30,12 @@ typedef struct
 	long long quot;
 	long long rem;
 } lldiv_t;
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 
 int abs(int x);
@@ -65,6 +69,7 @@ char * _ultoac ( unsigned long n, char * s, unsigned char base, char uppercase);
 char * _ltoac ( long n, char * s, unsigned char base, char uppercase);
 char * _ulltoac ( unsigned long long n, char * s, unsigned char base, char uppercase);
 char * _lltoac ( long long n, char * s, unsigned char base, char uppercase);
+
 #define uitoa(n, s, b) _utoac((n), (s), (b), 0)
 #define itoa(n, s, b) _itoac((n), (s), (b), 0)
 #define ultoa(n, s, b) _ultoac((n), (s), (b), 0)

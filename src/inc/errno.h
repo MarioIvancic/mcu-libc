@@ -1,6 +1,8 @@
 #ifndef __ERRNO_H__
 #define __ERRNO_H__
 
+#include <libc_version.h>
+
 extern int errno;
 
 #define EPERM            1

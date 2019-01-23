@@ -38,6 +38,8 @@ Macro functions
 #ifndef __STDARG_H__
 #define __STDARG_H__
 
+#include <libc_version.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus

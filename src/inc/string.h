@@ -29,12 +29,16 @@
 #ifndef __STRING_H__
 #define	__STRING_H__
 
+#include <libc_version.h>
+
+#define __need_NULL
+#define __need_size_t
+#include <bits/alltypes.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-#include <bits/_null.h>
-#include <bits/_size_t.h>
 
 
 void *memccpy_fast(void *restrict dest, const void *restrict src, int c, size_t n);
@@ -80,7 +84,7 @@ size_t strnlen_fast(const char *s, size_t n);
 char *strpbrk(const char *s, const char *b);
 char *strrchr(const char *s, int c);
 char *strrev(char *str);
-void reverse(char s[], int len);
+void _reverse(char s[], size_t len);
 char * strsep(char **stringp, const char *delim);
 size_t strspn_fast(const char *s, const char *c);
 size_t strspn(const char *s1, const char *s2);

@@ -20,13 +20,28 @@
 #ARCH := cortex-m0
 
 PROJECT_OPTIONS := -D__LIBC__
-PROJECT_OPTIONS = -DGMTIME_OPTIMIZE_SIZE
-#PROJECT_OPTIONS = -DGMTIME_OPTIMIZE_SPEED
-#PROJECT_OPTIONS = -DGMTIME_LOOP_DAYS
-#PROJECT_OPTIONS = -DSYSTEM_TIME_USE_CLOCK_GETTIME
-#PROJECT_OPTIONS = -D__LIBC_PRINTF_SHIFT_AND_ADD_MULBY10__
-#PROJECT_OPTIONS = -D__LIBC_PRINTF_LONG__
-PROJECT_OPTIONS = -D__LIBC_PRINTF_LONGLONG__
+
+# systime options (defined only for some archs
+#PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
+
+# gmtime options
+PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
+#PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SPEED
+#PROJECT_OPTIONS += -DGMTIME_LOOP_DAYS
+
+# time options
+#PROJECT_OPTIONS += -DSYSTEM_TIME_USE_CLOCK_GETTIME
+
+# tiny printf options
+#PROJECT_OPTIONS += -DTFP_PRINTF_ENABLE_LONGLONG
+#PROJECT_OPTIONS += -DTFP_PRINTF_ENABLE_LONG
+#PROJECT_OPTIONS += -DTFP_PRINTF_USE_SHIFT_ADD
+#PROJECT_OPTIONS += -DTFP_PRINTF_USE_BUILTINS
+
+# msp printf options
+#PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONGLONG
+#PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONG
+
 
 
 ifndef SRCDIR
@@ -51,7 +66,7 @@ ifeq ($(ARCH),arm7tdmi-s)
     THUMB_IW := -mthumb-interwork
     CLASS_NAME := ARM7TDMI
     CLASS_DIR := arm7
-    #PROJECT_OPTIONS = -DSYSTEM_TIME_HAVE_DIV_INST
+    #PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 endif
 
 
@@ -61,7 +76,7 @@ ifeq ($(ARCH),cortex-m3)
     THUMB_ONLY := 1
     CLASS_NAME := CORTEXM3
     CLASS_DIR := cm3
-    PROJECT_OPTIONS = -DSYSTEM_TIME_HAVE_DIV_INST
+    PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 endif
 
 
@@ -71,7 +86,7 @@ ifeq ($(ARCH),cortex-m0)
     THUMB_ONLY := 1
     CLASS_NAME := CORTEXM0
     CLASS_DIR := cm0
-    #PROJECT_OPTIONS = -DSYSTEM_TIME_HAVE_DIV_INST
+    #PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 endif
 
 PROJECT_OPTIONS += -D$(CLASS_NAME)
@@ -123,83 +138,93 @@ CPPSRCARMO1 :=
 CPPSRCARMO2 :=
 CPPSRCARMO3 :=
 
+# stdlib functions
+SRCOs += stdlib/abs.c
+SRCOs += stdlib/atoi.c
+SRCOs += stdlib/atol.c
+SRCOs += stdlib/atoll.c
+SRCOs += stdlib/atoui.c
+SRCOs += stdlib/atoul.c
+SRCOs += stdlib/atoull.c
+SRCOs += stdlib/bsearch.c
+SRCOs += stdlib/ctype.c
+SRCOs += stdlib/div.c
+SRCOs += stdlib/itoa.c
+SRCOs += stdlib/ldiv.c
+SRCOs += stdlib/lldiv.c
+SRCOs += stdlib/lltoa.c
+SRCOs += stdlib/ltoa.c
+SRCOs += stdlib/rand.c
+SRCOs += stdlib/usleep.c
 
-SRCOs += abs.c
-SRCOs += atoi.c
-SRCOs += atol.c
-SRCOs += atoll.c
-SRCOs += bsearch.c
-SRCOs += ctype.c
-SRCOs += div.c
-SRCOs += itoa.c
-SRCOs += ldiv.c
-SRCOs += lldiv.c
-SRCOs += lltoa.c
-SRCOs += ltoa.c
-SRCOs += memccpy.c
-SRCO2 += memccpy_fast.c
-SRCOs += memchr.c
-SRCO2 += memchr_fast.c
-SRCOs += memcmp.c
-SRCO2 += memcmp_fast.c
-SRCOs += memcpy.c
-SRCO2 += memcpy_fast.c
-SRCOs += memmove.c
-SRCO2 += memmove_fast.c
-SRCOs += memset.c
-SRCO2 += memset_fast.c
-SRCOs += msp_printf.c
-SRCOs += rand.c
-SRCOs += reverse.c
-SRCOs += strcasecmp.c
-SRCO2 += strcat.c
-SRCO2 += strchr.c
-SRCOs += strcmp.c
-SRCO2 += strcmp_fast.c
-SRCO2 += strcpy.c
-SRCOs += strcspn.c
-SRCOs += strlcat.c
-SRCOs += strlcpy.c
-SRCO2 += strlen.c
-SRCOs += strncasecmp.c
-SRCOs += strncat.c
-SRCOs += strncmp.c
-SRCO2 += strncmp_fast.c
-SRCOs += strncpy.c
-SRCO2 += strncpy_fast.c
-SRCOs += strnlen.c
-SRCOs += strpbrk.c
-SRCOs += strrchr.c
-SRCOs += strrev.c
-SRCOs += strsep.c
-SRCOs += strspn.c
-SRCO2 += strspn_fast.c
-SRCOs += strstr.c
-SRCOs += strtok.c
-SRCO2 += strtol.c
-SRCO2 += strtoll.c
-SRCO2 += strtoul.c
-SRCO2 += strtoull.c
-SRCOs += strupr.c
-SRCOs += tfp_printf.c
+# string functions
+SRCOs += string/memccpy.c
+SRCO2 += string/memccpy_fast.c
+SRCOs += string/memchr.c
+SRCO2 += string/memchr_fast.c
+SRCOs += string/memcmp.c
+SRCO2 += string/memcmp_fast.c
+SRCOs += string/memcpy.c
+SRCO2 += string/memcpy_fast.c
+SRCOs += string/memmove.c
+SRCO2 += string/memmove_fast.c
+SRCOs += string/memset.c
+SRCO2 += string/memset_fast.c
+SRCOs += string/reverse.c
+SRCOs += string/strcasecmp.c
+SRCO2 += string/strcat.c
+SRCO2 += string/strchr.c
+SRCOs += string/strcmp.c
+SRCO2 += string/strcmp_fast.c
+SRCO2 += string/strcpy.c
+SRCOs += string/strcspn.c
+SRCOs += string/strlcat.c
+SRCOs += string/strlcpy.c
+SRCO2 += string/strlen.c
+SRCOs += string/strncasecmp.c
+SRCOs += string/strncat.c
+SRCOs += string/strncmp.c
+SRCO2 += string/strncmp_fast.c
+SRCOs += string/strncpy.c
+SRCO2 += string/strncpy_fast.c
+SRCOs += string/strnlen.c
+SRCOs += string/strpbrk.c
+SRCOs += string/strrchr.c
+SRCOs += string/strrev.c
+SRCOs += string/strsep.c
+SRCOs += string/strspn.c
+SRCO2 += string/strspn_fast.c
+SRCOs += string/strstr.c
+SRCOs += string/strtok.c
+SRCO2 += string/strtol.c
+SRCO2 += string/strtoll.c
+SRCO2 += string/strtoul.c
+SRCO2 += string/strtoull.c
+SRCOs += string/strupr.c
 
-SRCOs += asctime.c
-SRCOs += clock_getres.c
-SRCOs += clock_gettime.c
-SRCOs += clock_nanosleep.c
-SRCOs += clock_settime.c
-SRCOs += ctime.c
-SRCOs += gmtime.c
-SRCOs += localtime.c
-SRCOs += mktime.c
-SRCOs += systime_ms.c
-SRCOs += systime_sec.c
-SRCOs += systime_tick.c
-SRCOs += time.c
-SRCOs += time_get_timezone.c
-SRCOs += time_month_days.c
-SRCOs += tzset.c
-SRCOs += usleep.c
+# systime functions
+SRCOs += systime/systime_ms.c
+SRCOs += systime/systime_sec.c
+SRCOs += systime/systime_tick.c
+
+# time functions
+SRCOs += time/asctime.c
+SRCOs += time/clock_getres.c
+SRCOs += time/clock_gettime.c
+SRCOs += time/clock_nanosleep.c
+SRCOs += time/clock_settime.c
+SRCOs += time/ctime.c
+SRCOs += time/gmtime.c
+SRCOs += time/localtime.c
+SRCOs += time/mktime.c
+SRCOs += time/time.c
+SRCOs += time/time_get_timezone.c
+SRCOs += time/time_month_days.c
+SRCOs += time/tzset.c
+
+# printf functions
+SRCOs += printf/msp_printf.c
+SRCOs += printf/tfp_printf.c
 
 
 
@@ -433,14 +458,8 @@ endif
 all: begin gccversion buildlib finished end
 
 #buildlib: objdir a copytarget
-buildlib: objdir libc_version.h $(TARGETLIB).a
+buildlib: objdir $(TARGETLIB).a
 
-version: libc_version.h
-
-# svn macro expansion
-libc_version.h: libc_version.h.in
-	cp libc_version.h.in libc_version.h
-#	SubWCRev . libc_version.h.in libc_version.h
 
 # pravi se OBJDIR ako je definisan
 ifdef OBJDIR
@@ -649,25 +668,26 @@ $(CPPOBJARMO3) : %.o : %.cpp
 
 
 # Target: install
-install: libc_version.h $(OBJDIR)$(TARGETLIB).a
-	@if [ ! -d ./../libc/$(CLASS_DIR) ]; then mkdir ./../libc/$(CLASS_DIR); fi
-	@$(COPY) $(OBJDIR)$(TARGETLIB).a ./../libc/$(CLASS_DIR)
-	@$(COPY) libc_version.h ./../libc/$(CLASS_DIR)
-	@$(COPY) ./inc/*.h ./../libc/$(CLASS_DIR)
-	@$(COPY) ./inc/$(CLASS_DIR)/*.h ./../libc/$(CLASS_DIR)
+install: $(OBJDIR)$(TARGETLIB).a
+	@if [ ! -d ./../lib/$(CLASS_DIR) ]; then mkdir ./../lib/$(CLASS_DIR); fi
+	@if [ ! -d ./../lib/$(CLASS_DIR)/bits ]; then mkdir ./../lib/$(CLASS_DIR)/bits; fi
+	@$(COPY) $(OBJDIR)$(TARGETLIB).a ./../lib/$(CLASS_DIR)
+	@$(COPY) ./inc/*.h ./../lib/$(CLASS_DIR)
+	@$(COPY) ./inc/bits/*.h ./../lib/$(CLASS_DIR)/bits
+	@$(COPY) ./inc/$(CLASS_DIR)/bits/*.h ./../lib/$(CLASS_DIR)/bits
+
+
+
+distclean: clean_list
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/$(TARGETLIB).a
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/*.h
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/bits/*.h
+	@$(REMOVEDIR) ./../lib/$(CLASS_DIR)/bits
+	@$(REMOVEDIR) ./../lib/$(CLASS_DIR)
 
 
 # Target: clean project.
-#clean: begin clean_list finished end
-clean: clean_list
-
-distclean: clean_list
-	@$(REMOVE) ./../libc/$(CLASS_DIR)/$(TARGETLIB).a
-	@$(REMOVE) ./../libc/$(CLASS_DIR)/*.h
-#	@$(REMOVEDIR) ./../libc/*
-
-clean_list :
-	@$(REMOVE) libc_version.h
+clean :
 	@$(REMOVE) $(TARGETLIB).obj
 	@$(REMOVE) $(TARGETLIB).elf
 	@$(REMOVE) $(TARGETLIB).map

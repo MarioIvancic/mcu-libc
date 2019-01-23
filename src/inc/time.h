@@ -4,10 +4,17 @@
 #define __TIME_H__
 
 #include <stdint.h>
+#include <libc_version.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+#define __need_NULL
+#define __need_size_t
+#define __need_time_t
+#define __need_suseconds_t
+#define __need_useconds_t
+#define __need_clockid_t
+#define __need_struct_tm
+#include <bits/alltypes.h>
+
 
 /* convert calendar time (seconds since 1970) to broken-time
    This only works for dates between 01-01-1970 00:00:00 and
@@ -22,28 +29,6 @@ extern "C" {
 #define LEAPYEAR(year)   (!((year) % 4) && (((year) % 100) || !((year) % 400)))
 
 
-// struct tm
-struct tm                   // 16 bytes
-{
-    int16_t tm_sec;		    // 0 - 59
-    int16_t	tm_min;		    // 0 - 59
-    int16_t	tm_yday;	    // 0-365, 01-Jan == 0
-    int16_t	tm_year;	    // year - 1900
-    int8_t	tm_hour;	    // 0 - 23
-    int8_t	tm_mday;	    // 1 - 31
-    int8_t	tm_mon;		    // 0 - 11, January == 0
-    int8_t	tm_wday;	    // 0 - 6, Sunday == 0
-    int8_t	tm_isdst;	    // 0: DST not in effect, > 0: DST in effect, < 0: system will decide is DST in effect or not
-    int8_t	__tm_gmtoff;    // offset in hours to gm time. tm_gmtoff = local_time - gm_time
-    int8_t	_padding[2];
-};
-
-
-
-#include <bits/_time_t.h>
-#include <bits/_suseconds_t.h>
-#include <bits/_useconds_t.h>
-#include <bits/_clockid_t.h>
 
 struct timespec
 {
@@ -64,6 +49,11 @@ struct timezone
     int tz_minuteswest;     /* minutes west of Greenwich */
     int tz_dsttime;         /* type of DST correction */
 };
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 
 

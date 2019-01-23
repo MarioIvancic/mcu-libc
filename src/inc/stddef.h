@@ -1,17 +1,12 @@
-#ifndef _STDDEF_H
-#define _STDDEF_H
+#ifndef __STDDEF_H_
+#define __STDDEF_H_
 
-#ifdef __cplusplus
-#define NULL 0L
-#else
-#define NULL ((void*)0)
-#endif
+#include <libc_version.h>
 
-#define __NEED_ptrdiff_t
-//#define __NEED_wchar_t
-
-//#include <bits/alltypes.h>
-#include <stdlib.h>
+#define __need_NULL
+#define __need_ptrdiff_t
+#define __need_size_t
+#include <bits/alltypes.h>
 
 #if __GNUC__ > 3
 #define offsetof(type, member) __builtin_offsetof(type, member)
@@ -19,4 +14,4 @@
 #define offsetof(type, member) ((size_t)( (char *)&(((type *)0)->member) - (char *)0 ))
 #endif
 
-#endif
+#endif	// __STDDEF_H_

@@ -1,6 +1,8 @@
 #ifndef __CTYPE_H__
 #define	__CTYPE_H__
 
+#include <libc_version.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus

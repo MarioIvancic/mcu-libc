@@ -27,6 +27,8 @@
 #ifndef __SYSTIME_TICK_H__
 #define __SYSTIME_TICK_H__
 
+#include <libc_version.h>
+
 #ifdef _cplusplus
 extern "C" {
 #endif // _cplusplus
