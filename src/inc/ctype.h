@@ -23,6 +23,51 @@ int isxdigit(int c);
 int tolower(int c);
 int toupper(int c);
 
+// ' ' and '\t'
+#define ISBLANK(c) ( ( (c) == ' ' || (c) == '\t' ) ? 1 : 0 )
+
+// ABCDEFGHIJKLMNOPQRSTUVWXYZ
+#define ISUPPER(c) ( ( (unsigned)(c)-'A' < 26) ? 1 : 0 )
+
+// ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+#define ISALPHA(c) ( ( ( (unsigned)(c)|32)-'a' < 26 ) ? 1 : 0 )
+
+// ' ', '\t', '\v', '\f', '\r', '\n'
+#define ISSPACE(c) ( ( (c) == ' ' || (unsigned)(c)-'\t' < 5) ? 1 : 0 )
+
+// 0123456789
+#define ISDIGIT(c) ( ( (unsigned)(c)-'0' < 10) ? 1 : 0 )
+
+// 0123456789abcdefABCDEF
+#define ISXDIGIT(c) ( ( ( (unsigned)(c)-'0' < 10) || ( ( (unsigned)(c)|32 )-'a' < 6) ) ? 1 : 0 )
+
+// 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+#define ISALNUM(c) ( ( ( ( (unsigned)(c)|32 )-'a' < 26 ) || ( (unsigned)(c)-'0' < 10) ) ? 1 : 0)
+
+// abcdefghijklmnopqrstuvwxyz
+#define ISLOWER(c) ( ( (unsigned)(c)-'a' < 26 ) ? 1 : 0 )
+
+// ' ' and !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+// [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+// 0x20 .. 0x7e
+#define ISPRINT(c) ( ( (unsigned)(c)-0x20 < 0x5f ) ? 1 : 0 )
+
+// 0x00 .. 0x1f, 0x7f
+#define ISCNTRL(c) ( ( (unsigned)(c) < 0x20 || (c) == 0x7f) ? 1 : 0 )
+
+// !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+// [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+// 0x21 .. 0x7e
+#define ISGRAPH(c) ( ( (unsigned)(c)-0x21 < 0x5e ) ? 1 : 0 )
+
+// !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~
+#define ISPUNCT(c)	( ( ( (unsigned)(c)-0x21 < 0x5e ) && !( ( ( (unsigned)(c)|32 )-'a' < 26 ) || ( (unsigned)(c)-'0' < 10) ) ) ? 1 : 0 )
+
+#define TOLOWER(c) ( ( (unsigned)(c)-'A' < 26 ) ? (c)|32 : (c) )
+
+#define TOUPPER(c) ( ( (unsigned)(c)-'a' < 26 ) ? (c)&0x5f : (c) )
+
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus
