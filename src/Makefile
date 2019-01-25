@@ -673,7 +673,6 @@ install: $(OBJDIR)$(TARGETLIB).a
 	@if [ ! -d ./../lib/$(CLASS_DIR)/bits ]; then mkdir ./../lib/$(CLASS_DIR)/bits; fi
 	@$(COPY) $(OBJDIR)$(TARGETLIB).a ./../lib/$(CLASS_DIR)
 	@$(COPY) ./inc/*.h ./../lib/$(CLASS_DIR)
-	@$(COPY) ./inc/bits/*.h ./../lib/$(CLASS_DIR)/bits
 	@$(COPY) ./inc/$(CLASS_DIR)/bits/*.h ./../lib/$(CLASS_DIR)/bits
 
 

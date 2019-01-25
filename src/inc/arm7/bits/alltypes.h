@@ -3,7 +3,7 @@
  * Header file where all specific types are defined in one place.
  */
 
-#if !defined(__CPU_INT_SIZE__) || !defined(__CPU_PTR_SIZE__) || !defined(__CPU_INTPTR_SIZE__)
+//#if !defined(__CPU_INT_SIZE__) || !defined(__CPU_PTR_SIZE__) || !defined(__CPU_INTPTR_SIZE__)
 	#undef __CPU_INT_SIZE__
 	#undef __CPU_PTR_SIZE__
 	#undef __CPU_INTPTR_SIZE__
@@ -15,8 +15,16 @@
 	#else
 		#define __CPU_INTPTR_SIZE__ 	__CPU_PTR_SIZE__
 	#endif
+//#endif
+
+
+#if defined(__need_sig_atomic_t) && ! defined(__need_CHAR_MAX)
+	#define __need_CHAR_MAX
 #endif
 
+#if defined(__need_RAND_MAX) && ! defined(__need_CHAR_MAX)
+	#define __need_CHAR_MAX
+#endif
 
 
 
@@ -86,6 +94,19 @@
 
 
 
+
+
+
+#ifdef __need_RAND_MAX
+	#ifndef RAND_MAX
+		#define RAND_MAX	INT_MAX
+	#endif
+#endif // __need_RAND_MAX
+
+
+
+
+
 /* Limits of Integer types.  */
 #ifdef __need_INT8_MAX
 #ifndef INT8_MAX
@@ -114,8 +135,8 @@
 
 		/* this is from signal.h */
 		#if __CPU_INT_SIZE__ == 8
-			#define SIG_ATOMIC_MIN          INT8_MIN
-			#define SIG_ATOMIC_MAX          INT8_MAX
+			#define SIG_ATOMIC_MIN          CHAR_MIN
+			#define SIG_ATOMIC_MAX          CHAR_MAX
 			typedef char	sig_atomic_t;
 		#else
 			#define SIG_ATOMIC_MIN          INT_MIN
@@ -137,7 +158,7 @@
 		#if __CPU_INT_SIZE__ == 8
 			typedef unsigned char bool;
 		#else
-			typedef unsigned int bool;
+			typedef unsigned char bool;
 		#endif
 
 	#endif // __bool_defined
@@ -155,7 +176,7 @@
 		#if __CPU_INT_SIZE__ == 8
 			typedef signed char clockid_t;
 		#else
-			typedef int clockid_t;
+			typedef signed char clockid_t;
 		#endif
 
 	#endif // __clockid_t_defined
@@ -228,13 +249,13 @@
 		/* This one depends on pointer size */
 		#if __CPU_INTPTR_SIZE__ == 16
 			typedef unsigned int	size_t;
-			#define SIZE_MAX                UINT16_MAX
-		#elsif __CPU_INTPTR_SIZE__ == 32
+			#define SIZE_MAX                0xffffU
+		#elif __CPU_INTPTR_SIZE__ == 32
 			typedef unsigned long	size_t;
-			#define SIZE_MAX                UINT32_MAX
-		#elsif __CPU_INTPTR_SIZE__ == 64
+			#define SIZE_MAX                0xffffffffUL
+		#elif __CPU_INTPTR_SIZE__ == 64
 			typedef unsigned long long	size_t;
-			#define SIZE_MAX                UINT64_MAX
+			#define SIZE_MAX                0xffffffffffffffffULL
 		#else
 			#error "Pointer size not supported!"
 		#endif
@@ -253,9 +274,9 @@
 		/* This one depends on pointer size */
 		#if __CPU_INTPTR_SIZE__ == 16
 			typedef int	ssize_t;
-		#elsif __CPU_INTPTR_SIZE__ == 32
+		#elif __CPU_INTPTR_SIZE__ == 32
 			typedef long	ssize_t;
-		#elsif __CPU_INTPTR_SIZE__ == 64
+		#elif __CPU_INTPTR_SIZE__ == 64
 			typedef long long	ssize_t;
 		#else
 			#error "Pointer size not supported!"
@@ -275,19 +296,75 @@
 		/* This one depends on pointer size */
 		#if __CPU_INTPTR_SIZE__ == 16
 			typedef int	ptrdiff_t;
-			#define PTRDIFF_MAX             INT16_MAX
-			#define PTRDIFF_MIN             (-PTRDIFF_MAX - 1)
-		#elsif __CPU_INTPTR_SIZE__ == 32
+			#define PTRDIFF_MAX             0x7fff
+		#elif __CPU_INTPTR_SIZE__ == 32
 			typedef int	ptrdiff_t;
-			#define PTRDIFF_MAX             INT32_MAX
-			#define PTRDIFF_MIN             (-PTRDIFF_MAX - 1)
-		#elsif __CPU_INTPTR_SIZE__ == 64
+			#define PTRDIFF_MAX             0x7fffffffL
+		#elif __CPU_INTPTR_SIZE__ == 64
 			typedef long long	ptrdiff_t;
+			#define PTRDIFF_MAX             0x7fffffffffffffffLL
 		#else
 			#error "Pointer size not supported!"
 		#endif
+		
+		#define PTRDIFF_MIN             (-PTRDIFF_MAX - 1)
 
 	#endif // __ptrdiff_t_defined
 #endif // __need_ptrdiff_t
 
 
+
+
+#ifdef __need_struct_tm
+	#ifndef __struct_tm_defined
+	#define __struct_tm_defined
+	
+		#if __CPU_INT_SIZE__ == 8
+			typedef signed char __tm_sec_t;
+			typedef signed char __tm_min_t;
+			typedef signed char __tm_mday_t;
+			typedef signed char __tm_hour_t;
+			#define __tm_sec_max 127
+			#define __tm_min_max 127
+			#define __tm_mday_max 127
+			#define __tm_hour_max 127
+		#else
+			typedef short __tm_sec_t;
+			typedef short __tm_min_t;
+			typedef short __tm_mday_t;
+			typedef short __tm_hour_t;
+			#define __tm_sec_max 32767
+			#define __tm_min_max 32767
+			#define __tm_mday_max 32767
+			#define __tm_hour_max 32767
+		#endif
+		
+		typedef short __tm_yday_t;
+		typedef short __tm_year_t;
+		typedef signed char __tm_mon_t;
+		typedef signed char __tm_wday_t;
+		typedef signed char __tm_isdst_t;
+		typedef signed char __tm_gmtoff_t;
+		
+		#define __tm_yday_max 32767
+		#define __tm_year_max 32767
+		#define __tm_mon_max 127
+		#define __tm_wday_max 127
+		#define __tm_gmtoff_max 127
+			
+		struct tm
+		{
+			__tm_yday_t	tm_yday;	    // 0-365, 01-Jan == 0
+			__tm_year_t	tm_year;	    // year - 1900
+			__tm_sec_t tm_sec;		    // 0 - 59
+			__tm_min_t	tm_min;		    // 0 - 59
+			__tm_hour_t	tm_hour;	    // 0 - 23
+			__tm_mday_t	tm_mday;	    // 1 - 31
+			__tm_mon_t	tm_mon;		    // 0 - 11, January == 0
+			__tm_wday_t	tm_wday;	    // 0 - 6, Sunday == 0
+			__tm_isdst_t tm_isdst;	    // 0: DST not in effect, > 0: DST in effect, < 0: system will decide is DST in effect or not
+			__tm_gmtoff_t __tm_gmtoff;    // offset in hours to gm time. tm_gmtoff = local_time - gm_time
+		};
+		
+	#endif // __struct_tm_defined
+#endif	// __need_struct_tm

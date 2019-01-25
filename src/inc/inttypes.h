@@ -7,7 +7,7 @@ extern "C" {
 
 #include <features.h>
 #include <stdint.h>
-#include <bits/libc_version.h>
+#include <libc_version.h>
 
 typedef struct { intmax_t quot, rem; } imaxdiv_t;
 
