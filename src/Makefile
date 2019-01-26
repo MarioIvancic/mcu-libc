@@ -21,6 +21,13 @@
 
 PROJECT_OPTIONS := -D__LIBC__
 
+# itoa, ltoa, lltoa, uitoa, ultoa, ulltoa options
+# enable fast conversion for common base (2, 8, 10, 16)
+PROJECT_OPTIONS += -DITOA_ENABLE_FAST_HEX
+PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
+#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_OCT
+#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_BIN
+
 # systime options (defined only for some archs
 #PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 

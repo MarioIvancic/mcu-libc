@@ -160,9 +160,10 @@ void __TFP_PRINTF_FORMAT(3, 4) tfp_snprintf(char* s, int size, char *fmt, ...);
 // Function p should be void p(char);
 void tfp_printf_indirect_putc(void* p, char c);
 
-#define printf tfp_printf 
-#define sprintf tfp_sprintf 
-#define snprintf tfp_snprintf 
+#define printf 		tfp_printf
+#define sprintf 	tfp_sprintf
+#define snprintf	tfp_snprintf
+#define puts 		tfp_puts
 
 #ifdef __cplusplus
 }

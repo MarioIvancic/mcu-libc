@@ -50,24 +50,94 @@
  */
 char * _utoac ( unsigned int n, char * s, unsigned char base, char uppercase)
 {
-    int i;
-    int d10 = (uppercase ? 'A' : 'a') - 10;
+    unsigned i = 0;
+    unsigned d10 = (uppercase ? 'A' : 'a') - 10;
 
-    i = 0;
-    // this loop can be optimized for some constant base
-    // like for base 2, 8, 10 or 16
-    // for base 10 use MULBY10 macro
-    do
+    // this loop can be optimized for some constant base, like for base 2, 8, 10 or 16
+    
+#if defined(ITOA_ENABLE_FAST_HEX)
+    if(base == 16)
     {
-        /* generate digits in reverse order */
-        int d = n % base;
-        /* get next digit */
-        s[i++] = d + (d < 10) ? '0' : d10;
+        do
+        {
+            /* generate digits in reverse order */
+            unsigned d = n % 16;
+            n = n / 16;
+            /* get next digit */
+            s[i++] = d + ( (d < 10) ? '0' : d10 );
 
-    } while ((n /= base) > 0);     /* delete it */
+        } while (n);
+    }
+    else
+#endif // ITOA_ENABLE_FAST_HEX
+#if defined(ITOA_ENABLE_FAST_DEC)
+    if(base == 10)
+    {
+        do
+        {
+            /* generate digits in reverse order */
+            unsigned d = n % 10;
+            n = n / 10;
+            /* get next digit */
+            s[i++] = d + '0';
+
+        } while (n);
+    }
+    else
+#endif // ITOA_ENABLE_FAST_DEC
+#if defined(ITOA_ENABLE_FAST_OCT)
+    if(base == 8)
+    {
+        do
+        {
+            /* generate digits in reverse order */
+            unsigned d = n % 8;
+            n = n / 8;
+            /* get next digit */
+            s[i++] = d + '0';
+
+        } while (n);
+    }
+    else
+#endif // ITOA_ENABLE_FAST_OCT
+#if defined(ITOA_ENABLE_FAST_BIN)
+    if(base == 2)
+    {
+        do
+        {
+            /* generate digits in reverse order */
+            unsigned d = n % 2;
+            n = n / 2;
+            /* get next digit */
+            s[i++] = d + '0';
+
+        } while (n);
+    }
+    else
+#endif // ITOA_ENABLE_FAST_BIN
+    {
+        do
+        {
+            /* generate digits in reverse order */
+            unsigned d = n % base;
+            n = n / base;
+            /* get next digit */
+            s[i++] = d + ( (d < 10) ? '0' : d10 );
+
+        } while (n);
+    }
 
     s[i] = '\0';
-    _reverse(s, i);
+
+    // reversing string in place
+    // using d10 as second index
+    d10 = i - 1;
+    for (i = 0; i < d10; i++, d10--)
+    {
+        char c = s[i];
+        s[i] = s[d10];
+        s[d10] = c;
+    }
     return s;
 }
 

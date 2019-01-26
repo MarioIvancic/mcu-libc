@@ -383,6 +383,7 @@ void tfp_format(void* putp, void (*putf)(void*, char), char *fmt, va_list va)
     #error "Can't print intptr_t as integer"
 #endif
                     w = sizeof(intptr_t) * 2;
+                    lz = 1;
                     goto print_number;
 
                 case 'X':
@@ -479,6 +480,12 @@ void tfp_format(void* putp, void (*putf)(void*, char), char *fmt, va_list va)
 void init_tfp_printf(void (*putf) (char))
 {
     stdout_putf = putf;
+}
+
+
+void tfp_puts (const char *str)
+{
+    while (*str) stdout_putf(*str++);
 }
 
 
