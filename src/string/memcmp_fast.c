@@ -24,10 +24,14 @@ typedef unsigned int word;
 /* Threshhold for punting to the byte copier.  */
 #define TOO_SMALL(LEN)  ((LEN) < LITTLEBLOCKSIZE * 2)
 
+
 // default is to optimize for size
 #if !defined(LIBC_MEMCMP_OPTIMIZE_SIZE) && !defined(LIBC_MEMCMP_OPTIMIZE_SPEED)
 #define LIBC_MEMCMP_OPTIMIZE_SIZE
+#elif defined(LIBC_MEMCMP_OPTIMIZE_SIZE) && defined(LIBC_MEMCMP_OPTIMIZE_SPEED)
+#error "Only one of LIBC_MEMCMP_OPTIMIZE_SIZE or LIBC_MEMCMP_OPTIMIZE_SPEED can be defined!"
 #endif
+
 
 #if !defined(LIBC_MEMCMP_OPTIMIZE_SIZE) || defined(LIBC_MEMCMP_OPTIMIZE_SPEED)
 int memcmp(const void *vl, const void *vr, size_t n)

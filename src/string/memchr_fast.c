@@ -24,7 +24,10 @@
 // default is to optimize for size
 #if !defined(LIBC_MEMCHR_OPTIMIZE_SIZE) && !defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
 #define LIBC_MEMCHR_OPTIMIZE_SIZE
+#elif defined(LIBC_MEMCHR_OPTIMIZE_SIZE) && defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
+#error "Only one of LIBC_MEMCHR_OPTIMIZE_SIZE or LIBC_MEMCHR_OPTIMIZE_SPEED can be defined!"
 #endif
+
 
 #if !defined(LIBC_MEMCHR_OPTIMIZE_SIZE) || defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
 void *memchr(const void *src, int c, size_t n)

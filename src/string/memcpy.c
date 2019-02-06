@@ -25,7 +25,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
     
     if(!n) return dest;
 
-    do *d++ = *s++ while(--n);
+    do *d++ = *s++; while(--n);
 	return dest;
 }
 

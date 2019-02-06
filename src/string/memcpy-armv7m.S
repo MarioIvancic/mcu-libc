@@ -82,11 +82,11 @@
 	.syntax unified
 	.text
 	.align	2
-	.global	memcpy
+	.global	memcpy_7m
 	.thumb
 	.thumb_func
-	.type	memcpy, %function
-memcpy:
+	.type	memcpy_7m, %function
+memcpy_7m:
 	@ r0: dst
 	@ r1: src
 	@ r2: len
@@ -318,4 +318,4 @@ memcpy:
 #endif
 	bx	lr
 
-	.size	memcpy, .-memcpy
+	.size	memcpy_7m, .-memcpy_7m

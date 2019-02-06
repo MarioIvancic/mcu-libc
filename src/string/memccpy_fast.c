@@ -23,6 +23,8 @@
 // default is to optimize for size
 #if !defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)
 #define LIBC_MEMCCPY_OPTIMIZE_SIZE
+#elif defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) && defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)
+#error "Only one of LIBC_MEMCCPY_OPTIMIZE_SIZE or LIBC_MEMCCPY_OPTIMIZE_SPEED can be defined!"
 #endif
 
 #if defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) || defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)

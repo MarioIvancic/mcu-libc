@@ -28,6 +28,16 @@ PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
 #PROJECT_OPTIONS += -DITOA_ENABLE_FAST_OCT
 #PROJECT_OPTIONS += -DITOA_ENABLE_FAST_BIN
 
+# memcpy, memccpy, memcmp, memchr options
+#PROJECT_OPTIONS += -DLIBC_MEMCCPY_OPTIMIZE_SIZE
+PROJECT_OPTIONS += -DLIBC_MEMCCPY_OPTIMIZE_SPEED
+#PROJECT_OPTIONS += -DLIBC_MEMCHR_OPTIMIZE_SIZE
+PROJECT_OPTIONS += -DLIBC_MEMCHR_OPTIMIZE_SPEED
+#PROJECT_OPTIONS += -DLIBC_MEMCMP_OPTIMIZE_SIZE
+PROJECT_OPTIONS += -DLIBC_MEMCMP_OPTIMIZE_SPEED
+PROJECT_OPTIONS += -DLIBC_MEMCPY_OPTIMIZE_SIZE
+#PROJECT_OPTIONS += -DLIBC_MEMCPY_OPTIMIZE_SPEED
+
 # systime options (defined only for some archs
 #PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 
@@ -156,52 +166,56 @@ SRCOs += stdlib/atoull.c
 SRCOs += stdlib/bsearch.c
 SRCOs += stdlib/ctype.c
 SRCOs += stdlib/div.c
-SRCOs += stdlib/itoa.c
+SRCARMO2 += stdlib/itoa.c
 SRCOs += stdlib/ldiv.c
 SRCOs += stdlib/lldiv.c
-SRCOs += stdlib/lltoa.c
+SRCARMO2 += stdlib/lltoa.c
 SRCOs += stdlib/ltoa.c
 SRCOs += stdlib/rand.c
 SRCOs += stdlib/usleep.c
 
 # string functions
-SRCOs += string/memccpy.c
-SRCO2 += string/memccpy_fast.c
-SRCOs += string/memchr.c
-SRCO2 += string/memchr_fast.c
-SRCOs += string/memcmp.c
-SRCO2 += string/memcmp_fast.c
-SRCOs += string/memcpy.c
-SRCO2 += string/memcpy_fast.c
-SRCOs += string/memmove.c
-SRCO2 += string/memmove_fast.c
-SRCOs += string/memset.c
-SRCO2 += string/memset_fast.c
-SRCOs += string/reverse.c
+ifeq ($(ARCH),cortex-m3)
+    ASRCARM += string/memcpy-armv7m.S
+endif
+SRCARMO2 += string/memccpy.c
+SRCARMO2 += string/memccpy_fast.c
+SRCARMO2 += string/memchr.c
+SRCARMO2 += string/memchr_fast.c
+SRCARMO2 += string/memcmp.c
+SRCARMO2 += string/memcmp_fast.c
+SRCARMO2 += string/memcpy.c
+SRCARMO2 += string/memcpy_fast.c
+SRCARMO2 += string/memcpy_f9.c
+SRCARMO2 += string/memmove.c
+SRCARMO2 += string/memmove_fast.c
+SRCARMO2 += string/memset.c
+SRCARMO2 += string/memset_fast.c
+SRCO2 += string/reverse.c
 SRCOs += string/strcasecmp.c
 SRCO2 += string/strcat.c
 SRCO2 += string/strchr.c
-SRCOs += string/strcmp.c
-SRCO2 += string/strcmp_fast.c
+SRCO2 += string/strcmp.c
+SRCARMO2 += string/strcmp_fast.c
 SRCO2 += string/strcpy.c
 SRCOs += string/strcspn.c
 SRCOs += string/strlcat.c
 SRCOs += string/strlcpy.c
 SRCO2 += string/strlen.c
 SRCOs += string/strncasecmp.c
-SRCOs += string/strncat.c
-SRCOs += string/strncmp.c
-SRCO2 += string/strncmp_fast.c
-SRCOs += string/strncpy.c
-SRCO2 += string/strncpy_fast.c
-SRCOs += string/strnlen.c
+SRCO2 += string/strncat.c
+SRCO2 += string/strncmp.c
+SRCARMO2 += string/strncmp_fast.c
+SRCO2 += string/strncpy.c
+SRCARMO2 += string/strncpy_fast.c
+SRCO2 += string/strnlen.c
 SRCOs += string/strpbrk.c
 SRCOs += string/strrchr.c
 SRCOs += string/strrev.c
 SRCOs += string/strsep.c
 SRCOs += string/strspn.c
-SRCO2 += string/strspn_fast.c
-SRCOs += string/strstr.c
+SRCARMO2 += string/strspn_fast.c
+SRCO2 += string/strstr.c
 SRCOs += string/strtok.c
 SRCO2 += string/strtol.c
 SRCO2 += string/strtoll.c
@@ -237,6 +251,7 @@ SRCOs += printf/tfp_printf.c
 
 ifdef THUMB_ONLY
     # no ARM mode for cortex-mx
+    ASRC += $(ASRCARM)
     SRCOs += $(SRCARMOs)
     SRCO0 += $(SRCARMO0)
     SRCO1 += $(SRCARMO1)

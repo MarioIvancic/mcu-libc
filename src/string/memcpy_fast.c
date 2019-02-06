@@ -37,6 +37,13 @@
 
 typedef int word;
 
+// default is to optimize for size
+#if !defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
+#define LIBC_MEMCPY_OPTIMIZE_SIZE
+#elif defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
+#error "Only one of LIBC_MEMCPY_OPTIMIZE_SIZE or LIBC_MEMCPY_OPTIMIZE_SPEED can be defined!"
+#endif
+
 /* Nonzero if X is not aligned on a "word" boundary.  */
 #define UNALIGNED(X) ((intptr_t)X & (sizeof (word) - 1))
 
@@ -44,7 +51,7 @@ typedef int word;
 #define COPY_BY     4
 
 /* Unroll loop UNROLL_BY times (1, 2, 4).  */
-#define UNROLL_BY   2
+#define UNROLL_BY   1
 
 /* How many bytes are copied each iteration of the 4X unrolled loop.  */
 #define BIGBLOCKSIZE    (sizeof (word) * COPY_BY * UNROLL_BY)
@@ -55,10 +62,6 @@ typedef int word;
 /* Threshhold for punting to the byte copier.  */
 #define TOO_SMALL(LEN)  ((LEN) < BIGBLOCKSIZE)
 
-// default is to optimize for size
-#if !defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
-#define LIBC_MEMCPY_OPTIMIZE_SIZE
-#endif
 
 #if COPY_BY != 2 && COPY_BY != 4 && COPY_BY != 6 && COPY_BY != 8
 #error "COPY_BY is out of range! Must be 2, 4, 6 or 8"
@@ -141,11 +144,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
 #endif                
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
@@ -156,11 +159,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 *aligned_dst++ = w2;
                 *aligned_dst++ = w3;
 #endif
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 *aligned_dst++ = w4;
                 *aligned_dst++ = w5;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 *aligned_dst++ = w6;
                 *aligned_dst++ = w7;
 #endif
@@ -172,11 +175,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
 #endif                
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
@@ -187,11 +190,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 *aligned_dst++ = w2;
                 *aligned_dst++ = w3;
 #endif
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 *aligned_dst++ = w4;
                 *aligned_dst++ = w5;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 *aligned_dst++ = w6;
                 *aligned_dst++ = w7;
 #endif
@@ -204,11 +207,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
 #endif                
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
@@ -219,11 +222,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 *aligned_dst++ = w2;
                 *aligned_dst++ = w3;
 #endif
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 *aligned_dst++ = w4;
                 *aligned_dst++ = w5;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 *aligned_dst++ = w6;
                 *aligned_dst++ = w7;
 #endif
@@ -236,11 +239,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
 #endif                
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
@@ -251,11 +254,11 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
                 *aligned_dst++ = w2;
                 *aligned_dst++ = w3;
 #endif
-#elif COPY_BY > 4
+#if COPY_BY > 4
                 *aligned_dst++ = w4;
                 *aligned_dst++ = w5;
 #endif
-#elif COPY_BY > 6
+#if COPY_BY > 6
                 *aligned_dst++ = w6;
                 *aligned_dst++ = w7;
 #endif
@@ -267,15 +270,15 @@ void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
 
 #if UNROLL_BY > 1
                 REP(*aligned_dst++ = *aligned_src++);
-#ednif  // UNROLL_BY > 1
+#endif  // UNROLL_BY > 1
 
 #if UNROLL_BY > 2
                 REP(*aligned_dst++ = *aligned_src++);
-#ednif  // UNROLL_BY > 2
+#endif  // UNROLL_BY > 2
 
 #if UNROLL_BY > 3
                 REP(*aligned_dst++ = *aligned_src++);
-#ednif  // UNROLL_BY > 3
+#endif  // UNROLL_BY > 3
                 
 #endif  // MEMCPY_FAST_USE_LOCAL_VARS
                 n -= BIGBLOCKSIZE;
