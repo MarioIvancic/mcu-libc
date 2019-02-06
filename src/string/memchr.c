@@ -10,8 +10,12 @@
 
 */
 
+// default is to optimize for size
+#if !defined(LIBC_MEMCHR_OPTIMIZE_SIZE) && !defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
+#define LIBC_MEMCHR_OPTIMIZE_SIZE
+#endif
 
-
+#if defined(LIBC_MEMCHR_OPTIMIZE_SIZE) && !defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
 void *memchr(const void *src, int c, size_t n)
 {
     const unsigned char *s = src;
@@ -24,4 +28,4 @@ void *memchr(const void *src, int c, size_t n)
     }
     return NULL;
 }
-
+#endif // defined(LIBC_MEMCHR_OPTIMIZE_SIZE) && !defined(LIBC_MEMCHR_OPTIMIZE_SPEED)

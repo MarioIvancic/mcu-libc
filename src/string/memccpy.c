@@ -12,8 +12,14 @@
 */
 
 
-// from newlib
+// based on memccpy from newlib
 
+// default is to optimize for size
+#if !defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)
+#define LIBC_MEMCCPY_OPTIMIZE_SIZE
+#endif
+
+#if defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)
 void *memccpy(void *restrict dest, const void *restrict src, int c, size_t n)
 {
     unsigned char *d = dest;
@@ -23,14 +29,9 @@ void *memccpy(void *restrict dest, const void *restrict src, int c, size_t n)
 
 	while (n--)
     {
-        if ((*d++ = *s++) == c)
-        {
-            return d;
-        }
+        if ((*d++ = *s++) == c) return d;
     }
 
     return 0;
 }
-
-
-
+#endif // defined(LIBC_MEMCCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCCPY_OPTIMIZE_SPEED)

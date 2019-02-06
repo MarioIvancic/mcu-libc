@@ -11,7 +11,7 @@
     as type unsigned char) that differ in the objects being compared.
 */
 
-// from newlib
+// based on memcmp from newlib
 
 typedef unsigned int word;
 
@@ -24,7 +24,16 @@ typedef unsigned int word;
 /* Threshhold for punting to the byte copier.  */
 #define TOO_SMALL(LEN)  ((LEN) < LITTLEBLOCKSIZE * 2)
 
-int memcmp_fast(const void *vl, const void *vr, size_t n)
+// default is to optimize for size
+#if !defined(LIBC_MEMCMP_OPTIMIZE_SIZE) && !defined(LIBC_MEMCMP_OPTIMIZE_SPEED)
+#define LIBC_MEMCMP_OPTIMIZE_SIZE
+#endif
+
+#if !defined(LIBC_MEMCMP_OPTIMIZE_SIZE) || defined(LIBC_MEMCMP_OPTIMIZE_SPEED)
+int memcmp(const void *vl, const void *vr, size_t n)
+#else
+int __memcmp_fast(const void *vl, const void *vr, size_t n)
+#endif
 {
     const unsigned char *s1 = (const unsigned char *) vl;
     const unsigned char *s2 = (const unsigned char *) vr;

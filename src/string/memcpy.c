@@ -11,14 +11,23 @@
     indicate an error.
 */
 
-// from musl
+// default is to optimize for size
+#if !defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
+#define LIBC_MEMCPY_OPTIMIZE_SIZE
+#endif
+
+#if defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
 
 void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 {
-	unsigned char *d = dest;
+    unsigned char *d = dest;
 	const unsigned char *s = src;
+    
+    if(!n) return dest;
 
-	for (; n; n--) *d++ = *s++;
+    do *d++ = *s++ while(--n);
 	return dest;
 }
+
+#endif  // defined(LIBC_MEMCPY_OPTIMIZE_SIZE) && !defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
 
