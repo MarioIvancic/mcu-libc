@@ -8,7 +8,7 @@
 
        size_t strlcpy(char *dest, const char *src, size_t size);
 
-    This function is similar to strncpy(), but it copies at most size-1
+    This function is similar to strncpy(), but it copies at most size - 1
     bytes to dest, always adds a terminating null byte, and does not pad
     the target with (further) null bytes.  This function fixes some of
     the problems of strcpy() and strncpy(), but the caller must still
@@ -22,40 +22,19 @@
     library.
 */
 
-// from musl
-#define ALIGN (sizeof(size_t)-1)
-#define ONES ((size_t)-1/UCHAR_MAX)
-#define HIGHS (ONES * (UCHAR_MAX/2+1))
-#define HASZERO(x) (((x)-ONES) & ~(x) & HIGHS)
 
-size_t strlcpy_fast(char *d, const char *s, size_t n)
-{
-	char *d0 = d;
-	size_t *wd;
-	const size_t *ws;
-
-	if (!n--) goto finish;
-	if (((uintptr_t)s & ALIGN) == ((uintptr_t)d & ALIGN))
-	{
-		for (; ((uintptr_t)s & ALIGN) && n && (*d=*s); n--, s++, d++);
-		if (n && *s)
-		{
-			wd=(void *)d;
-			ws=(const void *)s;
-			for (; n>=sizeof(size_t) && !HASZERO(*ws);
-			       n-=sizeof(size_t), ws++, wd++) *wd = *ws;
-			d=(void *)wd;
-			s=(const void *)ws;
-		}
-	}
-	for (; n && (*d=*s); n--, s++, d++);
-	*d = 0;
-finish:
-	return d-d0 + strlen(s);
-}
+// default is to optimize for size
+#if !defined(LIBC_STRLCPY_OPTIMIZE_SIZE) && !defined(LIBC_STRLCPY_OPTIMIZE_SPEED)
+#define LIBC_STRLCPY_OPTIMIZE_SIZE
+#elif defined(LIBC_STRLCPY_OPTIMIZE_SIZE) && defined(LIBC_STRLCPY_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRLCPY_OPTIMIZE_SIZE or LIBC_STRLCPY_OPTIMIZE_SPEED can be defined!"
+#endif
 
 
-// from newlib
+#if defined(LIBC_STRLCPY_OPTIMIZE_SIZE)
+
+// implementation from newlib by Todd C. Miller
+// processing byte at a time
 
 /*
  * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
@@ -83,8 +62,6 @@ finish:
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 
 /*
  * Copy src to string dst of size siz.  At most siz-1 characters
@@ -116,4 +93,51 @@ size_t strlcpy(char *dst, const char *src, size_t siz)
 
     return(s - src - 1);	/* count does not include NUL */
 }
+
+
+#elif defined(LIBC_STRLCPY_OPTIMIZE_SPEED)
+
+
+// speed optimized implementation from musl
+// processing word at a time
+
+#define ALIGN (sizeof(size_t)-1)
+#define ONES ((size_t)-1/UCHAR_MAX)
+#define HIGHS (ONES * (UCHAR_MAX/2+1))
+#define HASZERO(x) (((x)-ONES) & ~(x) & HIGHS)
+
+size_t strlcpy(char *d, const char *s, size_t n)
+{
+	char *d0 = d;
+	size_t *wd;
+	const size_t *ws;
+
+	if (!n--) goto finish;
+    
+    // if s && d are aligned with each other
+	if (((uintptr_t)s & ALIGN) == ((uintptr_t)d & ALIGN))
+	{
+        // align s && d to word address
+		for (; ((uintptr_t)s & ALIGN) && n && (*d = *s); n--, s++, d++);
+        
+        // if not done ...
+		if (n && *s)
+		{
+			wd = (void *)d;
+			ws = (const void *)s;
+            
+            // process word at a time
+			for (; n >= sizeof(size_t) && !HASZERO(*ws); n -= sizeof(size_t), ws++, wd++) *wd = *ws;
+			d = (void *)wd;
+			s = (const void *)ws;
+		}
+	}
+    // copy leftover
+	for (; n && (*d = *s); n--, s++, d++);
+	*d = 0;
+finish:
+	return d - d0 + strlen(s);
+}
+
+#endif // defined(LIBC_STRLCPY_OPTIMIZE_SIZE)
 

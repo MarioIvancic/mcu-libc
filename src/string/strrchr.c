@@ -13,12 +13,10 @@
 // from musl
 #if 0
 
-void *__memrchr(const void *, int, size_t);
-
 // it's questinable how fast is this double-pass algorithm
-char *strrchr_fast(const char *s, int c)
+char *strrchr(const char *s, int c)
 {
-	return __memrchr(s, c, strlen_fast(s) + 1);
+	return memrchr(s, c, strlen(s) + 1);
 }
 #endif
 

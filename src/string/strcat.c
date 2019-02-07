@@ -11,6 +11,17 @@
 
 */
 
+
+// default is to optimize for size
+#if !defined(LIBC_STRCAT_OPTIMIZE_SIZE) && !defined(LIBC_STRCAT_OPTIMIZE_SPEED)
+#define LIBC_STRCAT_OPTIMIZE_SIZE
+#elif defined(LIBC_STRCAT_OPTIMIZE_SIZE) && defined(LIBC_STRCAT_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRCAT_OPTIMIZE_SIZE or LIBC_STRCAT_OPTIMIZE_SPEED can be defined!"
+#endif
+
+
+#if defined(LIBC_STRCAT_OPTIMIZE_SIZE)
+
 // from musl
 
 char *strcat(char *restrict dest, const char *restrict src)
@@ -23,10 +34,16 @@ char *strcat(char *restrict dest, const char *restrict src)
 }
 
 
+#elif defined(LIBC_STRCAT_OPTIMIZE_SPEED)
 
+#if !defined(LIBC_STRCPY_OPTIMIZE_SPEED) || !defined(LIBC_STRLEN_OPTIMIZE_SPEED)
+#error "If you define LIBC_STRCAT_OPTIMIZE_SPEED symbols LIBC_STRCPY_OPTIMIZE_SPEED and LIBC_STRLEN_OPTIMIZE_SPEED must be defined!"
+#endif
 
-char *strcat_fast(char *restrict d, const char *restrict s)
+char *strcat(char *restrict d, const char *restrict s)
 {
-    stpcpy_fast(d + strlen_fast(d), s);
+    stpcpy(d + strlen(d), s);
 	return d;
 }
+
+#endif // defined(LIBC_STRCAT_OPTIMIZE_SIZE)

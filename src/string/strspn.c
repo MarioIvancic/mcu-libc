@@ -10,7 +10,19 @@
 */
 
 
-// from newlib
+// default is to optimize for size
+#if !defined(LIBC_STRSPN_OPTIMIZE_SIZE) && !defined(LIBC_STRSPN_OPTIMIZE_SPEED)
+#define LIBC_STRSPN_OPTIMIZE_SIZE
+#elif defined(LIBC_STRSPN_OPTIMIZE_SIZE) && defined(LIBC_STRSPN_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRSPN_OPTIMIZE_SIZE or LIBC_STRSPN_OPTIMIZE_SPEED can be defined!"
+#endif
+
+
+
+#if defined(LIBC_STRSPN_OPTIMIZE_SIZE)
+
+// trivial implementation from newlib
+// processing byte at a time
 
 size_t strspn(const char *s1, const char *s2)
 {
@@ -29,3 +41,31 @@ size_t strspn(const char *s1, const char *s2)
 
     return s1 - s;
 }
+
+#elif defined(LIBC_STRSPN_OPTIMIZE_SPEED)
+
+
+// optimized implementation from musl
+
+#define BITOP(a,b,op) \
+ ((a)[(size_t)(b)/(8*sizeof *(a))] op (size_t)1<<((size_t)(b)%(8*sizeof *(a))))
+
+size_t strspn(const char *s, const char *c)
+{
+	const char *a = s;
+	size_t byteset[32 / sizeof(size_t)] = { 0 };
+
+	if (!c[0]) return 0;
+	if (!c[1])
+	{
+		for (; *s == *c; s++);
+		return s - a;
+	}
+
+	for (; *c && BITOP(byteset, *(const unsigned char *)c, |=); c++);
+	for (; *s && BITOP(byteset, *(const unsigned char *)s, &); s++);
+	return s - a;
+}
+
+#endif // defined(LIBC_STRSPN_OPTIMIZE_SIZE)
+

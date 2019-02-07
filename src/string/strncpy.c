@@ -33,6 +33,17 @@
     stpncpy function is a GNU extension.
 */
 
+
+// default is to optimize for size
+#if !defined(LIBC_STRNCPY_OPTIMIZE_SIZE) && !defined(LIBC_STRNCPY_OPTIMIZE_SPEED)
+#define LIBC_STRNCPY_OPTIMIZE_SIZE
+#elif defined(LIBC_STRNCPY_OPTIMIZE_SIZE) && defined(LIBC_STRNCPY_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRNCPY_OPTIMIZE_SIZE or LIBC_STRNCPY_OPTIMIZE_SPEED can be defined!"
+#endif
+
+
+#if defined(LIBC_STRNCPY_OPTIMIZE_SIZE)
+
 // from newlib
 char *strncpy(char *restrict d, const char *restrict s, size_t n)
 {
@@ -50,4 +61,38 @@ char *strncpy(char *restrict d, const char *restrict s, size_t n)
 }
 
 
+#elif defined(LIBC_STRNCPY_OPTIMIZE_SPEED)
+
+// from musl
+#define ALIGN (sizeof(size_t)-1)
+#define ONES ((size_t)-1/UCHAR_MAX)
+#define HIGHS (ONES * (UCHAR_MAX/2+1))
+#define HASZERO(x) (((x)-ONES) & ~(x) & HIGHS)
+
+char *stpncpy(char *restrict d, const char *restrict s, size_t n)
+{
+	size_t *wd;
+	const size_t *ws;
+
+	if (((uintptr_t)s & ALIGN) == ((uintptr_t)d & ALIGN))
+	{
+		for (; ((uintptr_t)s & ALIGN) && n && (*d = *s); n--, s++, d++);
+		if (!n || !*s) goto tail;
+        
+		wd = (void *)d; ws = (const void *)s;
+        
+		for (; n >= sizeof(size_t) && !HASZERO(*ws); n -= sizeof(size_t), ws++, wd++)
+        {
+            *wd = *ws;
+        }
+		d = (void *)wd;
+        s = (const void *)ws;
+	}
+	for (; n && (*d = *s); n--, s++, d++);
+tail:
+	memset(d, 0, n);
+	return d;
+}
+
+#endif // defined(LIBC_STRNCPY_OPTIMIZE_SIZE)
 

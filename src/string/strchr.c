@@ -16,7 +16,39 @@
     strchrnul() is a GNU extension.
 */
 
-// from musl
+
+// default is to optimize for size
+#if !defined(LIBC_STRCHR_OPTIMIZE_SIZE) && !defined(LIBC_STRCHR_OPTIMIZE_SPEED)
+#define LIBC_STRCHR_OPTIMIZE_SIZE
+#elif defined(LIBC_STRCHR_OPTIMIZE_SIZE) && defined(LIBC_STRCHR_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRCHR_OPTIMIZE_SIZE or LIBC_STRCHR_OPTIMIZE_SPEED can be defined!"
+#endif
+
+
+#if defined(LIBC_STRCHR_OPTIMIZE_SIZE)
+
+// trivial implementation from NewLib
+// processing byte at a time
+
+char *__strchrnul(const char *s, int c)
+{
+    while (*s && *s != c) s++;
+    return s;
+}
+
+char *strchr(const char *s, int c)
+{
+    while (*s && *s != c) s++;
+    if (*s == c) return s;
+    return NULL;
+}
+
+
+#elif defined(LIBC_STRCHR_OPTIMIZE_SPEED)
+
+
+// speed optimized implementation from musl
+// processing word at a time
 
 #define ALIGN (sizeof(size_t))
 #define ONES ((size_t)-1/UCHAR_MAX)
@@ -30,30 +62,24 @@ char *__strchrnul(const char *s, int c)
 
 	c = (unsigned char)c;
 	// we dont have to optimize non-common case
-	// if (!c) return (char *)s + strlen_fast(s);
+	// if (!c) return (char *)s + strlen(s);
 
 	for (; (uintptr_t)s % ALIGN; s++)
-		if (!*s || *(const unsigned char *)s == c) return s;
+    {
+        if (!*s || *(const unsigned char *)s == c) return s;
+    }
+		
 	k = ONES * c;
-	for (w = (const void *)s; (!HASZERO(*w)) && (!HASZERO(*w^k)); w++);
+	for (w = (const void *)s; (!HASZERO(*w)) && (!HASZERO(*w ^ k)); w++);
 	for (s = (const void *)w; (*s) && (*(const unsigned char *)s != c); s++);
 	return s;
 }
 
-// weak_alias(__strchrnul, strchrnul);
 
-char *strchr_fast(const char *s, int c)
+char *strchr(const char *s, int c)
 {
 	char *r = __strchrnul(s, c);
 	return *(unsigned char *)r == (unsigned char)c ? r : 0;
 }
 
-
-// from NewLib
-
-char *strchr(const char *s, int c)
-{
-    while (*s && *s != c) s++;
-    if (*s == c) return s;
-    return NULL;
-}
+#endif // defined(LIBC_STRCHR_OPTIMIZE_SIZE)

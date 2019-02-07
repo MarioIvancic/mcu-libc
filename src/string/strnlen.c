@@ -13,7 +13,18 @@
     This function is a GNU extension.
 */
 
-// from newlib
+
+// default is to optimize for size
+#if !defined(LIBC_STRNLEN_OPTIMIZE_SIZE) && !defined(LIBC_STRNLEN_OPTIMIZE_SPEED)
+#define LIBC_STRNLEN_OPTIMIZE_SIZE
+#elif defined(LIBC_STRNLEN_OPTIMIZE_SIZE) && defined(LIBC_STRNLEN_OPTIMIZE_SPEED)
+#error "Only one of LIBC_STRNLEN_OPTIMIZE_SIZE or LIBC_STRNLEN_OPTIMIZE_SPEED can be defined!"
+#endif
+
+#if defined(LIBC_STRNLEN_OPTIMIZE_SIZE)
+
+// trivial implementation from newlib
+// processing byte at a time
 
 size_t strnlen(const char *s, size_t n)
 {
@@ -25,11 +36,18 @@ size_t strnlen(const char *s, size_t n)
 }
 
 
-// from musl
+#elif defined(LIBC_STRNLEN_OPTIMIZE_SPEED)
 
-size_t strnlen_fast(const char *s, size_t n)
+// speed optimized implementation from musl
+
+#if !defined(LIBC_MEMCHR_OPTIMIZE_SPEED)
+#error "If LIBC_STRNLEN_OPTIMIZE_SPEED is defined symbol LIBC_MEMCHR_OPTIMIZE_SPEED must also be defined!"
+#endif
+
+size_t strnlen(const char *s, size_t n)
 {
-	const char *p = memchr_fast(s, 0, n);
-	return ((p)? (size_t)(p-s) : n);
+	const char *p = memchr(s, 0, n);
+	return ((p)? (size_t)(p - s) : n);
 }
 
+#endif // defined(LIBC_STRNLEN_OPTIMIZE_SIZE)
