@@ -202,6 +202,7 @@ SRCOs += stdlib/usleep.c
 # string functions
 ifeq ($(ARCH),cortex-m3)
     ASRC += string/memcpy-armv7m.S
+    ASRC += string/memcpy-cm3.S
 endif
 SRCARMO2 += string/memccpy.c
 SRCARMO2 += string/memchr.c
