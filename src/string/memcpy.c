@@ -92,6 +92,7 @@ typedef int word;
 #endif
 
 
+/*
 #define REP1(X) X
 #define REP2(X) REP1(X) X
 #define REP3(X) REP2(X) X
@@ -113,6 +114,7 @@ typedef int word;
 #else
 #define REP(X) X; X; X; X; X; X; X; X
 #endif
+*/
 
 void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 {
@@ -130,7 +132,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
             *d++ = *s++;
             --n;
         }
-        
+
         // if src and dst have the same alignement
         if (!UNALIGNED(d))
         {
@@ -159,7 +161,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #if COPY_BY > 2
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
-#endif                
+#endif
 #if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
@@ -168,7 +170,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
-                
+
                 *aligned_dst++ = w0;
                 *aligned_dst++ = w1;
 #if COPY_BY > 2
@@ -190,7 +192,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #if COPY_BY > 2
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
-#endif                
+#endif
 #if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
@@ -199,7 +201,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
-                
+
                 *aligned_dst++ = w0;
                 *aligned_dst++ = w1;
 #if COPY_BY > 2
@@ -222,7 +224,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #if COPY_BY > 2
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
-#endif                
+#endif
 #if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
@@ -231,7 +233,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
-                
+
                 *aligned_dst++ = w0;
                 *aligned_dst++ = w1;
 #if COPY_BY > 2
@@ -254,7 +256,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #if COPY_BY > 2
                 w2 = *aligned_src++;
                 w3 = *aligned_src++;
-#endif                
+#endif
 #if COPY_BY > 4
                 w4 = *aligned_src++;
                 w5 = *aligned_src++;
@@ -263,7 +265,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
                 w6 = *aligned_src++;
                 w7 = *aligned_src++;
 #endif
-                
+
                 *aligned_dst++ = w0;
                 *aligned_dst++ = w1;
 #if COPY_BY > 2
@@ -280,22 +282,75 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #endif
 #endif  // UNROLL_BY > 3
 
-                
+
 #else   // ! MEMCPY_FAST_USE_LOCAL_VARS
-                REP(*aligned_dst++ = *aligned_src++);
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#if COPY_BY > 2
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 4
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 6
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+
 
 #if UNROLL_BY > 1
-                REP(*aligned_dst++ = *aligned_src++);
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#if COPY_BY > 2
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 4
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 6
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
 #endif  // UNROLL_BY > 1
 
 #if UNROLL_BY > 2
-                REP(*aligned_dst++ = *aligned_src++);
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#if COPY_BY > 2
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 4
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 6
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
 #endif  // UNROLL_BY > 2
 
 #if UNROLL_BY > 3
-                REP(*aligned_dst++ = *aligned_src++);
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#if COPY_BY > 2
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 4
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
+#if COPY_BY > 6
+                *aligned_dst++ = *aligned_src++;
+                *aligned_dst++ = *aligned_src++;
+#endif
 #endif  // UNROLL_BY > 3
-                
+
 #endif  // MEMCPY_FAST_USE_LOCAL_VARS
                 n -= BIGBLOCKSIZE;
             }
@@ -316,9 +371,9 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
             // Code for missaligned data. Load COPY_BY words at a time, store short at a time
             const word *aligned_src = (const word*)(const void*)s;
             unsigned short *aligned_dst = (unsigned short*)(void*)d;
-            
+
             /* Copy COPY_BY words at a time if possible.  */
-            while (n >= BIGBLOCKSIZE)
+            while (n >= COPY_BY * sizeof(int))
             {
 #ifdef MEMCPY_FAST_USE_LOCAL_VARS
                 word w0, w1;
@@ -371,10 +426,30 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
 #endif
 
 #else   // ! MEMCPY_FAST_USE_LOCAL_VARS
-                REP(*aligned_dst++ = (unsigned short)*aligned_src; \
-                    *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16));
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+#if COPY_BY > 2
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+#endif
+#if COPY_BY > 4
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+#endif
+#if COPY_BY > 6
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+                *aligned_dst++ = (unsigned short)*aligned_src;
+                *aligned_dst++ = (unsigned short)(*aligned_src++ >> 16);
+#endif
 #endif  // MEMCPY_FAST_USE_LOCAL_VARS
-                n -= 4 * sizeof(int);
+                n -= COPY_BY * sizeof(int);
             }
 
             /* Pick up any residual with a byte copier.  */
@@ -387,7 +462,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
             const word *aligned_src;
 
             aligned_src = (const word*)(const void*)s;
-            
+
             /* Copy COPY_BY words at a time if possible.  */
             while (n >= COPY_BY * sizeof(int))
             {
@@ -481,7 +556,7 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n)
                     *d++ = (unsigned char)(w7 >> 8);
 #endif
                 }
-                n -= 2 * sizeof(int);
+                n -= COPY_BY * sizeof(int);
             }
 
             /* Pick up any residual with a byte copier.  */
