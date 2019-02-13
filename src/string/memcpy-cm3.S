@@ -36,7 +36,40 @@
 
 #define BYTE_COPY_SIZE  16
 #define BIG_BLOCK_SIZE  32
-#define _TEST_	1
+
+    .macro unaligned_copy_loop offset
+        /* we will read words from memory so we have to align src pointer and load the first word */
+        bic r1, #3
+        ldr	r4, [r1], #4
+1:
+        /* adjust first word */
+        lsrs r4, r4, #8*\offset
+        /* load second word */
+        ldr	r0, [r1], #4
+        /* adjust second word */
+        lsls r6, r0, #32-8*\offset
+        /* combine and store words */
+        orr	r6, r4
+        str	r6, [r3], #4
+        /* prepare first word for next iteration */
+        mov	r4, r0
+        /* adjust count, loop again if not 0 */
+        subs r2, #4
+        bhs	1b
+    .endm
+
+#if BIG_BLOCK_SIZE == 8
+    #define REP_PATTERN 1
+#elif BIG_BLOCK_SIZE == 16
+    #define REP_PATTERN 1,2
+#elif BIG_BLOCK_SIZE == 24
+    #define REP_PATTERN 1,2,3
+#elif BIG_BLOCK_SIZE == 32
+    #define REP_PATTERN 1,2,3,4
+#else
+    #error "BIG_BLOCK_SIZE must be 8, 16, 24 or 32!"
+#endif
+
 
 	.syntax unified
 	.text
@@ -58,104 +91,54 @@ memcpy_cm3:
 	cmp	r2, #BYTE_COPY_SIZE
 	blo	.Lbyte_copy_loop
     
-    /* it's more than BYTE_COPY_SIZE bytes.
-       We need more working registers here */
-    push {r0, r6}
-    
+    /* it's more than BYTE_COPY_SIZE bytes. */
     /* Next step is to align dst pointer */
 
     ands r5, r3, #3
 	beq	2f
-	subs r2, r5
 1:
 	ldrb r4, [r1], #1	/* load *src */
-	subs r5, #1
     strb r4, [r3], #1	/* store *dst */
+    subs r2, #1
+	ands r5, r3, #3
 	bne	1b
 
 2:
     /* dst is aligned now, but we have to test src alignement */
     ands r5, r1, #3
+    push {r0, r6}
     beq .Lsrc_aligned_0
-    
+
     /* we have to subtract 4 from count, to have simpler test on the end of copy loop.
-       It's easier to subtract 4 here and test for >= 0 then 
+       It's easier to subtract 4 here and test carry/borrow then 
        to mask lower 2 bits of count and restore it later */
     subs r2, #4
-    
+
     cmp r5, #1
     beq .Lsrc_aligned_1
     cmp r5, #2
     beq .Lsrc_aligned_2
     
 .Lsrc_aligned_3:
-    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is working reg, r6 is working reg */
-    /* we will read words from memory so we have to align src pointer and load the first word */
-    bic r1, #3
-    ldr	r4, [r1], #4
-1:
-    /* adjust first word */
-    lsrs r4, r4, #24
-    /* load second word */
-	ldr	r0, [r1], #4
-    /* adjust second word */
-	lsls r6, r0, #32-24
-    /* combine and store words */
-	orr	r6, r4
-	str	r6, [r3], #4
-    /* prepare first word for next iteration */
-	mov	r4, r0
-    /* adjust count, loop again if not 0 */
-	subs r2, #4
-	bhs	1b
+    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is src alignment, r6 is working reg */
+    
+    unaligned_copy_loop 3
     
     /* The rest is done in byte copy loop, but first we have to readjust count and src */
     b .Lmisaligned_copy_end
-
+    
 .Lsrc_aligned_2:
-    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is working reg, r6 is working reg */
-    /* we will read words from memory so we have to align src pointer and load the first word */
-    subs r1, r1, r5
-    ldr	r4, [r1], #4
-1:
-    /* adjust first word */
-    lsrs r4, r4, #16
-    /* load second word */
-	ldr	r0, [r1], #4
-    /* adjust second word */
-	lsls r6, r0, #32-16
-    /* combine and store words */
-	orr	r6, r6, r4
-	str	r6, [r3], #4
-    /* prepare first word for next iteration */
-	mov	r4, r0
-    /* adjust count, loop again if not 0 */
-	subs r2, #4
-	bhs	1b
+    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is src alignment, r6 is working reg */
+    
+    unaligned_copy_loop 2
     
     /* The rest is done in byte copy loop, but first we have to readjust count and src */
     b .Lmisaligned_copy_end
     
 .Lsrc_aligned_1:
-    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is working reg, r6 is working reg */
-    /* we will read words from memory so we have to align src pointer and load the first word */
-    subs r1, r1, r5
-    ldr	r4, [r1], #4
-1:
-    /* adjust first word */
-    lsrs r4, r4, #8
-    /* load second word */
-	ldr	r0, [r1], #4
-    /* adjust second word */
-	lsls r6, r0, #32-8
-    /* combine and store words */
-	orr	r6, r6, r4
-	str	r6, [r3], #4
-    /* prepare first word for next iteration */
-	mov	r4, r0
-    /* adjust count, loop again if not 0 */
-	subs r2, #4
-	bhs	1b
+    /* r0 is working reg, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is src alignment, r6 is working reg */
+    
+    unaligned_copy_loop 1
     
     /* The rest is done in byte copy loop, but first we have to readjust count and src */
     b .Lmisaligned_copy_end
@@ -169,20 +152,11 @@ memcpy_cm3:
     /* r0 is return value, r1 is src, r2 count, r3 is dst, r4 is working reg, r5 is working reg.
        Since we have 2 working registers we can use LDM/STM and process 2 words at a time */
 1:
+    .irp repcount, REP_PATTERN
     ldm r1!, {r4, r5}
 	stm r3!, {r4, r5}
-#if BIG_BLOCK_SIZE > 8
-    ldm r1!, {r4, r5}
-	stm r3!, {r4, r5}
-#endif
-#if BIG_BLOCK_SIZE > 16
-    ldm r1!, {r4, r5}
-	stm r3!, {r4, r5}
-#endif
-#if BIG_BLOCK_SIZE > 24
-    ldm r1!, {r4, r5}
-	stm r3!, {r4, r5}
-#endif
+    .endr
+
     subs r2, #BIG_BLOCK_SIZE
     bhs 1b
     
@@ -196,13 +170,15 @@ memcpy_cm3:
 1:
 	ldr	r4, [r1], #4
 	str	r4, [r3], #4
-	subs	r2, #4
+	subs r2, #4
 	bhs	1b
     
 .Lword_copy_end:
     /* The rest is done in byte copy loop, but first we have to readjust count */
-    mov r5, #0
-    /* fall through to .Lmisaligned_copy_end */
+    /* now we have to readjust count in r2 and src pointer in r1 */
+    adds r2, #4
+    pop {r0, r6}
+    b .Lbyte_copy_loop
     
 .Lmisaligned_copy_end:
     /* now we have to readjust count in r2 and src pointer in r1 */
@@ -215,15 +191,13 @@ memcpy_cm3:
 
 .Lbyte_copy_loop:
     /* if count is 0 we have nothing to do */
-    cbz	r2, 2f
-    
+    cbz	r2, .Ldo_return
 1:
 	ldrb r4, [r1], #1
     subs r2, #1
     strb r4, [r3], #1
     bne 1b
-    
-2:
+.Ldo_return:
     pop {r4, r5}
 	bx	lr
     nop
