@@ -1,0 +1,4 @@
+// errno.c
+
+int errno;
+

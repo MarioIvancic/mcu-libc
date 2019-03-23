@@ -181,6 +181,7 @@ CPPSRCARMO2 :=
 CPPSRCARMO3 :=
 
 # stdlib functions
+SRCOs += stdlib/errno.c
 SRCOs += stdlib/abs.c
 SRCOs += stdlib/atoi.c
 SRCOs += stdlib/atol.c
