@@ -1,0 +1,685 @@
+		cortex-m3 O2	cortex-m3 Os	cortex-m3 O2
+		speed			size			size
+		COPY_BY		4
+		UNROLL_BY	2
+memset					16 bytes		20 bytes
+memcmp	291 bytes		32 bytes
+memcpy	397 bytes		22 bytes		28 bytes
+
+memcpy_f9 760 bytes (cortex-m3 O2)
+memcpy_7m 236 bytes
+memcpy_m3 ?? bytes
+
+
+char A[1024], B[1024];
+void *memcpy_m3 (void *dst, const void *src, size_t count);
+void *memcpy_7m (void *dst, const void *src, size_t count);
+void *memcpy_f9 (void *dst, const void *src, size_t count);
+
+
+void loop_cm3(int ao. bo, len)
+{
+    uint32_t, s, e;
+    char *a, *b;
+    int i;
+    
+    for(i = 0, a = A+ao, b = B+bo, s = systime_tick(); i < 1000/10; i++)
+    {
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+        memcpy_m3(a, b, len);
+    }
+    e = systime_tick();
+    printf("1000 * memcpy_m3(%d, %d, %d) = %d x10^-7 sec\r\n", ao, bo, len, e - s);
+}
+
+void loop_7m(int ao. bo, len)
+{
+    uint32_t, s, e;
+    char *a, *b;
+    int i;
+    
+    for(i = 0, a = A+ao, b = B+bo, s = systime_tick(); i < 1000/10; i++)
+    {
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+        memcpy_7m(a, b, len);
+    }
+    e = systime_tick();
+    printf("1000 * memcpy_7m(%d, %d, %d) = %d x10^-7 sec\r\n", ao, bo, len, e - s);
+}
+
+
+void loop_f9(int ao. bo, len)
+{
+    uint32_t, s, e;
+    char *a, *b;
+    int i;
+    
+    for(i = 0, a = A+ao, b = B+bo, s = systime_tick(); i < 1000/10; i++)
+    {
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+        memcpy_f9(a, b, len);
+    }
+    e = systime_tick();
+    printf("1000 * memcpy_f9(%d, %d, %d) = %d x10^-7 sec\r\n", ao, bo, len, e - s);
+}
+
+void test_memcpy(void)
+{
+    int ao bo, len;
+    
+    // testing memcpy_m3
+    for(len = 4; len < 1024; )
+    {
+        for(ao = 0, bo = 0; ao < 4; ao++)
+        {
+            loop_cm3(ao, bo, len);
+        }
+        for(ao = 0, bo = 0; bo < 4; bo++)
+        {
+            loop_cm3(ao, bo, len);
+        }
+        switch(len)
+        {
+            case 4:     len = 10; break;
+            case 10:    len = 30; break;
+            case 30:    len = 100; break;
+            case 100:   len = 300; break;
+            case 300:   len = 1000; break;
+            case 1000:  len = 2000; break;
+        }
+    }
+    
+    // testing memcpy_7m
+    for(len = 4; len < 1024; )
+    {
+        for(ao = 0, bo = 0; ao < 4; ao++)
+        {
+            loop_7m(ao, bo, len);
+        }
+        for(ao = 0, bo = 0; bo < 4; bo++)
+        {
+            loop_7m(ao, bo, len);
+        }
+        switch(len)
+        {
+            case 4:     len = 10; break;
+            case 10:    len = 30; break;
+            case 30:    len = 100; break;
+            case 100:   len = 300; break;
+            case 300:   len = 1000; break;
+            case 1000:  len = 2000; break;
+        }
+    }
+    
+    // testing memcpy_f9
+    for(len = 4; len < 1024; )
+    {
+        for(ao = 0, bo = 0; ao < 4; ao++)
+        {
+            loop_f9(ao, bo, len);
+        }
+        for(ao = 0, bo = 0; bo < 4; bo++)
+        {
+            loop_f9(ao, bo, len);
+        }
+        switch(len)
+        {
+            case 4:     len = 10; break;
+            case 10:    len = 30; break;
+            case 30:    len = 100; break;
+            case 100:   len = 300; break;
+            case 300:   len = 1000; break;
+            case 1000:  len = 2000; break;
+        }
+    }
+}
+
+
+// size, cortex-m3 -Os
+// void *memset(void *dest, int c, size_t n)
+   	mov	r3, r0
+   	add	r2, r0
+2:	cmp	r3, r2
+	bne 1f
+   	bx	lr
+1:	strb r1, [r3], #1
+   	b 2b
+
+
+
+// size, cortex-m3 -O2
+// void *memset(void *dest, int c, size_t n)
+    cbz	r2, 2f
+    mov	r3, r0
+    add	r2, r0
+1:
+    strb r1, [r3], #1
+    cmp	r3, r2
+    bne 1b
+2:
+    bx	lr
+    nop
+
+
+
+
+
+// size, cortex-m3 -Os
+//int memcmp(const void *vl, const void *vr, size_t n)
+    push {r4, lr}
+    subs r1, #1
+    add	r2, r0
+2:
+	cmp	r0, r2
+    beq 2f
+    ldrb r3, [r0, #0]
+    ldrb r4, [r1, #1]!
+    cmp	r3, r4
+    beq	1f
+	subs r0, r3, r4
+    pop	{r4, pc}
+1:
+	adds r0, #1
+    b 2b
+2:
+	movs r0, #0
+    pop	{r4, pc}
+
+
+// size, cortex-m3 -Os
+// void *memcpy(void *restrict dest, const void *restrict src, size_t n)
+    push {r4, lr}
+    subs r3, r0, #1
+    add	r2, r1
+2:
+	cmp	r1, r2
+    bne 1f
+	pop {r4, pc}
+1:	
+ 	ldrb r4, [r1], #1
+    strb r4, [r3, #1]!
+    b 2b
+
+
+// size, cortex-m3 -O2
+// void *memcpy(void *restrict dest, const void *restrict src, size_t n)
+    push {r4, r5}
+    cbz	r2, 2f
+    mov	r3, r1
+    add	r2, r1
+    subs r4, r0, #1
+1:
+	ldrb r5, [r3], #1
+    cmp	r3, r2
+    strb r5, [r4, #1]!
+    bne 1b
+2:  pop	{r4, r5}
+	bx	lr
+    nop
+
+
+
+// speed, cortex-m3 -O2
+00006ca0 <memcmp>:
+    const unsigned char *s2 = (const unsigned char *) vr;
+
+    /* If the size is too small, or either pointer is unaligned,
+     then we punt to the byte compare loop.  Hopefully this will
+     not turn up in inner loops.  */
+    if (!TOO_SMALL(n) && (UNALIGNED(s1) == UNALIGNED(s2)))
+    6ca0:	2a07      	cmp	r2, #7
+{
+    6ca2:	b470      	push	{r4, r5, r6}
+    if (!TOO_SMALL(n) && (UNALIGNED(s1) == UNALIGNED(s2)))
+    6ca4:	d92d      	bls.n	6d02 <memcmp+0x62>
+    6ca6:	ea81 0300 	eor.w	r3, r1, r0
+    6caa:	079d      	lsls	r5, r3, #30
+    6cac:	d12a      	bne.n	6d04 <memcmp+0x64>
+    {
+        const word *a1;
+        const word *a2;
+
+        // align s1 and s2
+        while(UNALIGNED(s1))
+    6cae:	0784      	lsls	r4, r0, #30
+    6cb0:	d014      	beq.n	6cdc <memcmp+0x3c>
+        {
+            if (*s1 != *s2) return *s1 - *s2;
+    6cb2:	7803      	ldrb	r3, [r0, #0]
+    6cb4:	780e      	ldrb	r6, [r1, #0]
+    6cb6:	42b3      	cmp	r3, r6
+    6cb8:	d139      	bne.n	6d2e <memcmp+0x8e>
+    6cba:	1c44      	adds	r4, r0, #1
+    6cbc:	1c4d      	adds	r5, r1, #1
+    6cbe:	e005      	b.n	6ccc <memcmp+0x2c>
+    6cc0:	f814 3b01 	ldrb.w	r3, [r4], #1
+    6cc4:	f815 6b01 	ldrb.w	r6, [r5], #1
+    6cc8:	42b3      	cmp	r3, r6
+    6cca:	d130      	bne.n	6d2e <memcmp+0x8e>
+        while(UNALIGNED(s1))
+    6ccc:	07a3      	lsls	r3, r4, #30
+            s1++;
+            s2++;
+            --n;
+    6cce:	f102 32ff 	add.w	r2, r2, #4294967295	; 0xffffffff
+            s1++;
+    6cd2:	4620      	mov	r0, r4
+            s2++;
+    6cd4:	4629      	mov	r1, r5
+        while(UNALIGNED(s1))
+    6cd6:	d1f3      	bne.n	6cc0 <memcmp+0x20>
+        }
+
+        a1 = (const word*)(const void*)s1;
+        a2 = (const word*)(const void*)s2;
+
+        while (n >= LITTLEBLOCKSIZE)
+    6cd8:	2a03      	cmp	r2, #3
+    6cda:	d912      	bls.n	6d02 <memcmp+0x62>
+        {
+            if (*a1 != *a2) break;
+    6cdc:	6804      	ldr	r4, [r0, #0]
+    6cde:	680b      	ldr	r3, [r1, #0]
+    6ce0:	429c      	cmp	r4, r3
+    6ce2:	d10f      	bne.n	6d04 <memcmp+0x64>
+    6ce4:	3004      	adds	r0, #4
+    6ce6:	3104      	adds	r1, #4
+    6ce8:	e006      	b.n	6cf8 <memcmp+0x58>
+    6cea:	681e      	ldr	r6, [r3, #0]
+    6cec:	6825      	ldr	r5, [r4, #0]
+    6cee:	3004      	adds	r0, #4
+    6cf0:	42ae      	cmp	r6, r5
+    6cf2:	f101 0104 	add.w	r1, r1, #4
+    6cf6:	d11d      	bne.n	6d34 <memcmp+0x94>
+            a1++;
+            a2++;
+            n -= LITTLEBLOCKSIZE;
+    6cf8:	3a04      	subs	r2, #4
+        while (n >= LITTLEBLOCKSIZE)
+    6cfa:	2a03      	cmp	r2, #3
+            a1++;
+    6cfc:	4603      	mov	r3, r0
+            a2++;
+    6cfe:	460c      	mov	r4, r1
+        while (n >= LITTLEBLOCKSIZE)
+    6d00:	d8f3      	bhi.n	6cea <memcmp+0x4a>
+
+        s1 = (const unsigned char*)a1;
+        s2 = (const unsigned char*)a2;
+    }
+
+    while (n--)
+    6d02:	b172      	cbz	r2, 6d22 <memcmp+0x82>
+    {
+        if (*s1 != *s2) return *s1 - *s2;
+    6d04:	7803      	ldrb	r3, [r0, #0]
+    6d06:	780c      	ldrb	r4, [r1, #0]
+    6d08:	429c      	cmp	r4, r3
+    6d0a:	d10d      	bne.n	6d28 <memcmp+0x88>
+    6d0c:	440a      	add	r2, r1
+    6d0e:	3101      	adds	r1, #1
+    6d10:	e005      	b.n	6d1e <memcmp+0x7e>
+    6d12:	f810 3f01 	ldrb.w	r3, [r0, #1]!
+    6d16:	f811 4b01 	ldrb.w	r4, [r1], #1
+    6d1a:	42a3      	cmp	r3, r4
+    6d1c:	d104      	bne.n	6d28 <memcmp+0x88>
+    while (n--)
+    6d1e:	428a      	cmp	r2, r1
+    6d20:	d1f7      	bne.n	6d12 <memcmp+0x72>
+        s1++;
+        s2++;
+    }
+
+    return 0;
+    6d22:	2000      	movs	r0, #0
+}
+    6d24:	bc70      	pop	{r4, r5, r6}
+    6d26:	4770      	bx	lr
+        if (*s1 != *s2) return *s1 - *s2;
+    6d28:	1b18      	subs	r0, r3, r4
+}
+    6d2a:	bc70      	pop	{r4, r5, r6}
+    6d2c:	4770      	bx	lr
+            if (*s1 != *s2) return *s1 - *s2;
+    6d2e:	1b98      	subs	r0, r3, r6
+}
+    6d30:	bc70      	pop	{r4, r5, r6}
+    6d32:	4770      	bx	lr
+            a2++;
+    6d34:	4621      	mov	r1, r4
+            a1++;
+    6d36:	4618      	mov	r0, r3
+    6d38:	e7e4      	b.n	6d04 <memcmp+0x64>
+    6d3a:	bf00      	nop
+
+
+
+
+// speed, cortex-m3 -O2
+00006d3c <memcpy>:
+#if !defined(LIBC_MEMCPY_OPTIMIZE_SIZE) || defined(LIBC_MEMCPY_OPTIMIZE_SPEED)
+void *memcpy(void *restrict dest, const void *restrict src, size_t n)
+#else
+void *__memcpy_fast(void *restrict dest, const void *restrict src, size_t n)
+#endif
+{
+    6d3c:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
+	const unsigned char *s = src;
+
+    /* If the size is small, or either SRC or DST is unaligned,
+     then punt into the byte copy loop.  This should be rare.  */
+    /* The real problem is not alignment but out-of-sync alignment */
+    if (!TOO_SMALL(n))
+    6d40:	2a1f      	cmp	r2, #31
+{
+    6d42:	b083      	sub	sp, #12
+    if (!TOO_SMALL(n))
+    6d44:	d969      	bls.n	6e1a <memcpy+0xde>
+    {
+        // align src
+        while(UNALIGNED(s))
+    6d46:	078d      	lsls	r5, r1, #30
+    6d48:	bf18      	it	ne
+    6d4a:	4603      	movne	r3, r0
+    6d4c:	f000 80f6 	beq.w	6f3c <memcpy+0x200>
+        {
+            *d++ = *s++;
+    6d50:	f811 4b01 	ldrb.w	r4, [r1], #1
+            --n;
+    6d54:	3a01      	subs	r2, #1
+            *d++ = *s++;
+    6d56:	f803 4b01 	strb.w	r4, [r3], #1
+        while(UNALIGNED(s))
+    6d5a:	078c      	lsls	r4, r1, #30
+    6d5c:	d1f8      	bne.n	6d50 <memcpy+0x14>
+        }
+        
+        // if src and dst have the same alignement
+        if (!UNALIGNED(d))
+    6d5e:	f013 0403 	ands.w	r4, r3, #3
+    6d62:	d15c      	bne.n	6e1e <memcpy+0xe2>
+
+            aligned_dst = (word*)(void*)d;
+            aligned_src = (const word*)(const void*)s;
+
+            /* Copy COPY_BY words at a time if possible.  */
+            while (n >= BIGBLOCKSIZE)
+    6d64:	2a1f      	cmp	r2, #31
+    6d66:	d938      	bls.n	6dda <memcpy+0x9e>
+        if (!UNALIGNED(d))
+    6d68:	4690      	mov	r8, r2
+    6d6a:	f103 0c20 	add.w	ip, r3, #32
+    6d6e:	f101 0e20 	add.w	lr, r1, #32
+#endif
+#endif  // UNROLL_BY > 3
+
+                
+#else   // ! MEMCPY_FAST_USE_LOCAL_VARS
+                REP(*aligned_dst++ = *aligned_src++);
+    6d72:	f85e 4c1c 	ldr.w	r4, [lr, #-28]
+    6d76:	f85e 5c20 	ldr.w	r5, [lr, #-32]
+    6d7a:	f84c 4c1c 	str.w	r4, [ip, #-28]
+
+#if UNROLL_BY > 1
+                REP(*aligned_dst++ = *aligned_src++);
+    6d7e:	f85e 4c08 	ldr.w	r4, [lr, #-8]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d82:	f85e 7c14 	ldr.w	r7, [lr, #-20]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d86:	9401      	str	r4, [sp, #4]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d88:	f85e 4c18 	ldr.w	r4, [lr, #-24]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d8c:	f85e 6c10 	ldr.w	r6, [lr, #-16]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d90:	f84c 4c18 	str.w	r4, [ip, #-24]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d94:	9c01      	ldr	r4, [sp, #4]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d96:	f84c 5c20 	str.w	r5, [ip, #-32]
+                REP(*aligned_dst++ = *aligned_src++);
+    6d9a:	f84c 4c08 	str.w	r4, [ip, #-8]
+    6d9e:	f85e 5c0c 	ldr.w	r5, [lr, #-12]
+    6da2:	f85e 4c04 	ldr.w	r4, [lr, #-4]
+#if UNROLL_BY > 3
+                REP(*aligned_dst++ = *aligned_src++);
+#endif  // UNROLL_BY > 3
+                
+#endif  // MEMCPY_FAST_USE_LOCAL_VARS
+                n -= BIGBLOCKSIZE;
+    6da6:	f1a8 0820 	sub.w	r8, r8, #32
+            while (n >= BIGBLOCKSIZE)
+    6daa:	f1b8 0f1f 	cmp.w	r8, #31
+                REP(*aligned_dst++ = *aligned_src++);
+    6dae:	f84c 7c14 	str.w	r7, [ip, #-20]
+                REP(*aligned_dst++ = *aligned_src++);
+    6db2:	f84c 6c10 	str.w	r6, [ip, #-16]
+    6db6:	f84c 5c0c 	str.w	r5, [ip, #-12]
+    6dba:	f84c 4c04 	str.w	r4, [ip, #-4]
+    6dbe:	f10e 0e20 	add.w	lr, lr, #32
+    6dc2:	f10c 0c20 	add.w	ip, ip, #32
+            while (n >= BIGBLOCKSIZE)
+    6dc6:	d8d4      	bhi.n	6d72 <memcpy+0x36>
+    6dc8:	f1a2 0420 	sub.w	r4, r2, #32
+    6dcc:	f024 041f 	bic.w	r4, r4, #31
+    6dd0:	3420      	adds	r4, #32
+    6dd2:	4423      	add	r3, r4
+    6dd4:	4421      	add	r1, r4
+    6dd6:	f002 021f 	and.w	r2, r2, #31
+            }
+
+            /* Copy one word at a time if possible.  */
+            while (n >= LITTLEBLOCKSIZE)
+    6dda:	2a03      	cmp	r2, #3
+    6ddc:	d911      	bls.n	6e02 <memcpy+0xc6>
+    6dde:	460e      	mov	r6, r1
+    6de0:	4614      	mov	r4, r2
+    6de2:	1f1d      	subs	r5, r3, #4
+            {
+                *aligned_dst++ = *aligned_src++;
+    6de4:	f856 7b04 	ldr.w	r7, [r6], #4
+                n -= LITTLEBLOCKSIZE;
+    6de8:	3c04      	subs	r4, #4
+            while (n >= LITTLEBLOCKSIZE)
+    6dea:	2c03      	cmp	r4, #3
+                *aligned_dst++ = *aligned_src++;
+    6dec:	f845 7f04 	str.w	r7, [r5, #4]!
+            while (n >= LITTLEBLOCKSIZE)
+    6df0:	d8f8      	bhi.n	6de4 <memcpy+0xa8>
+    6df2:	1f14      	subs	r4, r2, #4
+    6df4:	f024 0403 	bic.w	r4, r4, #3
+    6df8:	3404      	adds	r4, #4
+                *aligned_dst++ = *aligned_src++;
+    6dfa:	4421      	add	r1, r4
+    6dfc:	4423      	add	r3, r4
+    6dfe:	f002 0203 	and.w	r2, r2, #3
+            /* Pick up any residual with a byte copier.  */
+            s = (const unsigned char*)aligned_src;
+        }
+    }
+
+    while (n--) *d++ = *s++;
+    6e02:	b13a      	cbz	r2, 6e14 <memcpy+0xd8>
+    6e04:	3b01      	subs	r3, #1
+    6e06:	440a      	add	r2, r1
+    6e08:	f811 4b01 	ldrb.w	r4, [r1], #1
+    6e0c:	428a      	cmp	r2, r1
+    6e0e:	f803 4f01 	strb.w	r4, [r3, #1]!
+    6e12:	d1f9      	bne.n	6e08 <memcpy+0xcc>
+
+    return dest;
+}
+    6e14:	b003      	add	sp, #12
+    6e16:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+    unsigned char *d = dest;
+    6e1a:	4603      	mov	r3, r0
+    6e1c:	e7f1      	b.n	6e02 <memcpy+0xc6>
+        else if((sizeof(int) > 2) && (UNALIGNED(d) == sizeof(short)))
+    6e1e:	2c02      	cmp	r4, #2
+    6e20:	d053      	beq.n	6eca <memcpy+0x18e>
+            while (n >= COPY_BY * sizeof(int))
+    6e22:	2a0f      	cmp	r2, #15
+    6e24:	d9ed      	bls.n	6e02 <memcpy+0xc6>
+        else if((sizeof(int) > 2) && (UNALIGNED(d) == sizeof(short)))
+    6e26:	4690      	mov	r8, r2
+    6e28:	f101 0e10 	add.w	lr, r1, #16
+    6e2c:	f103 0410 	add.w	r4, r3, #16
+                w0 = *aligned_src++;
+    6e30:	f85e 7c10 	ldr.w	r7, [lr, #-16]
+                w1 = *aligned_src++;
+    6e34:	f85e 6c0c 	ldr.w	r6, [lr, #-12]
+                    *d++ = (unsigned char)(w0 >> 8);
+    6e38:	ea4f 2927 	mov.w	r9, r7, asr #8
+                    *d++ = (unsigned char)w0;
+    6e3c:	f804 7c10 	strb.w	r7, [r4, #-16]
+                    *d++ = (unsigned char)(w0 >> 8);
+    6e40:	f804 9c0f 	strb.w	r9, [r4, #-15]
+                    *d++ = (unsigned char)(w0 >> 16);
+    6e44:	ea4f 4927 	mov.w	r9, r7, asr #16
+                    *d++ = (unsigned char)(w0 >> 24);
+    6e48:	163f      	asrs	r7, r7, #24
+    6e4a:	f804 7c0d 	strb.w	r7, [r4, #-13]
+                    *d++ = (unsigned char)(w1 >> 8);
+    6e4e:	1237      	asrs	r7, r6, #8
+                    *d++ = (unsigned char)w1;
+    6e50:	f804 6c0c 	strb.w	r6, [r4, #-12]
+                    *d++ = (unsigned char)(w1 >> 8);
+    6e54:	f804 7c0b 	strb.w	r7, [r4, #-11]
+                    *d++ = (unsigned char)(w1 >> 16);
+    6e58:	1437      	asrs	r7, r6, #16
+                    *d++ = (unsigned char)(w1 >> 24);
+    6e5a:	1636      	asrs	r6, r6, #24
+                w3 = *aligned_src++;
+    6e5c:	e91e 1020 	ldmdb	lr, {r5, ip}
+                    *d++ = (unsigned char)(w1 >> 16);
+    6e60:	f804 7c0a 	strb.w	r7, [r4, #-10]
+                    *d++ = (unsigned char)(w1 >> 24);
+    6e64:	f804 6c09 	strb.w	r6, [r4, #-9]
+                    *d++ = (unsigned char)(w2 >> 8);
+    6e68:	122f      	asrs	r7, r5, #8
+                    *d++ = (unsigned char)(w2 >> 16);
+    6e6a:	142e      	asrs	r6, r5, #16
+                    *d++ = (unsigned char)w2;
+    6e6c:	f804 5c08 	strb.w	r5, [r4, #-8]
+                n -= 2 * sizeof(int);
+    6e70:	f1a8 0808 	sub.w	r8, r8, #8
+                    *d++ = (unsigned char)(w2 >> 24);
+    6e74:	162d      	asrs	r5, r5, #24
+                    *d++ = (unsigned char)(w2 >> 8);
+    6e76:	f804 7c07 	strb.w	r7, [r4, #-7]
+                    *d++ = (unsigned char)(w2 >> 16);
+    6e7a:	f804 6c06 	strb.w	r6, [r4, #-6]
+                    *d++ = (unsigned char)(w2 >> 24);
+    6e7e:	f804 5c05 	strb.w	r5, [r4, #-5]
+                    *d++ = (unsigned char)(w3 >> 8);
+    6e82:	ea4f 272c 	mov.w	r7, ip, asr #8
+                    *d++ = (unsigned char)(w3 >> 16);
+    6e86:	ea4f 462c 	mov.w	r6, ip, asr #16
+                    *d++ = (unsigned char)(w3 >> 24);
+    6e8a:	ea4f 652c 	mov.w	r5, ip, asr #24
+            while (n >= COPY_BY * sizeof(int))
+    6e8e:	f1b8 0f0f 	cmp.w	r8, #15
+                    *d++ = (unsigned char)(w0 >> 16);
+    6e92:	f804 9c0e 	strb.w	r9, [r4, #-14]
+                    *d++ = (unsigned char)w3;
+    6e96:	f804 cc04 	strb.w	ip, [r4, #-4]
+                    *d++ = (unsigned char)(w3 >> 8);
+    6e9a:	f804 7c03 	strb.w	r7, [r4, #-3]
+                    *d++ = (unsigned char)(w3 >> 16);
+    6e9e:	f804 6c02 	strb.w	r6, [r4, #-2]
+                    *d++ = (unsigned char)(w3 >> 24);
+    6ea2:	f804 5c01 	strb.w	r5, [r4, #-1]
+    6ea6:	f10e 0e10 	add.w	lr, lr, #16
+    6eaa:	f104 0410 	add.w	r4, r4, #16
+            while (n >= COPY_BY * sizeof(int))
+    6eae:	d8bf      	bhi.n	6e30 <memcpy+0xf4>
+    6eb0:	f1a2 0410 	sub.w	r4, r2, #16
+    6eb4:	08e4      	lsrs	r4, r4, #3
+    6eb6:	1c65      	adds	r5, r4, #1
+    6eb8:	012d      	lsls	r5, r5, #4
+    6eba:	3a08      	subs	r2, #8
+    6ebc:	ebc4 7444 	rsb	r4, r4, r4, lsl #29
+    6ec0:	eb02 02c4 	add.w	r2, r2, r4, lsl #3
+    6ec4:	442b      	add	r3, r5
+                w3 = *aligned_src++;
+    6ec6:	4429      	add	r1, r5
+    6ec8:	e79c      	b.n	6e04 <memcpy+0xc8>
+            while (n >= BIGBLOCKSIZE)
+    6eca:	2a1f      	cmp	r2, #31
+    6ecc:	d999      	bls.n	6e02 <memcpy+0xc6>
+        else if((sizeof(int) > 2) && (UNALIGNED(d) == sizeof(short)))
+    6ece:	4694      	mov	ip, r2
+    6ed0:	f103 0410 	add.w	r4, r3, #16
+    6ed4:	f101 0510 	add.w	r5, r1, #16
+                REP(*aligned_dst++ = (unsigned short)*aligned_src; \
+    6ed8:	f855 6c08 	ldr.w	r6, [r5, #-8]
+    6edc:	f855 ec10 	ldr.w	lr, [r5, #-16]
+    6ee0:	f855 7c0c 	ldr.w	r7, [r5, #-12]
+    6ee4:	f855 8c04 	ldr.w	r8, [r5, #-4]
+    6ee8:	f824 6c08 	strh.w	r6, [r4, #-8]
+                n -= 4 * sizeof(int);
+    6eec:	f1ac 0c10 	sub.w	ip, ip, #16
+                REP(*aligned_dst++ = (unsigned short)*aligned_src; \
+    6ef0:	1436      	asrs	r6, r6, #16
+    6ef2:	f824 ec10 	strh.w	lr, [r4, #-16]
+    6ef6:	f824 7c0c 	strh.w	r7, [r4, #-12]
+    6efa:	f824 6c06 	strh.w	r6, [r4, #-6]
+    6efe:	ea4f 4e2e 	mov.w	lr, lr, asr #16
+    6f02:	143f      	asrs	r7, r7, #16
+    6f04:	ea4f 4628 	mov.w	r6, r8, asr #16
+            while (n >= BIGBLOCKSIZE)
+    6f08:	f1bc 0f1f 	cmp.w	ip, #31
+                REP(*aligned_dst++ = (unsigned short)*aligned_src; \
+    6f0c:	f824 ec0e 	strh.w	lr, [r4, #-14]
+    6f10:	f824 7c0a 	strh.w	r7, [r4, #-10]
+    6f14:	f824 8c04 	strh.w	r8, [r4, #-4]
+    6f18:	f824 6c02 	strh.w	r6, [r4, #-2]
+    6f1c:	f105 0510 	add.w	r5, r5, #16
+    6f20:	f104 0410 	add.w	r4, r4, #16
+            while (n >= BIGBLOCKSIZE)
+    6f24:	d8d8      	bhi.n	6ed8 <memcpy+0x19c>
+    6f26:	f1a2 0520 	sub.w	r5, r2, #32
+    6f2a:	f025 040f 	bic.w	r4, r5, #15
+    6f2e:	4625      	mov	r5, r4
+    6f30:	3a10      	subs	r2, #16
+    6f32:	3410      	adds	r4, #16
+    6f34:	1b52      	subs	r2, r2, r5
+                REP(*aligned_dst++ = (unsigned short)*aligned_src; \
+    6f36:	4421      	add	r1, r4
+    6f38:	4423      	add	r3, r4
+    6f3a:	e763      	b.n	6e04 <memcpy+0xc8>
+        if (!UNALIGNED(d))
+    6f3c:	f010 0303 	ands.w	r3, r0, #3
+    6f40:	d004      	beq.n	6f4c <memcpy+0x210>
+        else if((sizeof(int) > 2) && (UNALIGNED(d) == sizeof(short)))
+    6f42:	2b02      	cmp	r3, #2
+    6f44:	4603      	mov	r3, r0
+    6f46:	f47f af6e 	bne.w	6e26 <memcpy+0xea>
+    6f4a:	e7c0      	b.n	6ece <memcpy+0x192>
+        if (!UNALIGNED(d))
+    6f4c:	4603      	mov	r3, r0
+    6f4e:	e70b      	b.n	6d68 <memcpy+0x2c>
