@@ -5,24 +5,17 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <libc_version.h>
+
+#define __need_time_t
+#define __need_suseconds_t
+#define __need_struct_timeval
+#define __need_struct_timezone
+#include <bits/alltypes.h>
 
 #ifdef _cplusplus
 extern "C" {
 #endif // _cplusplus
-
-// the number of seconds and microseconds since the Epoch
-struct timeval
-{
-    time_t      tv_sec;     /* seconds */
-    suseconds_t tv_usec;    /* microseconds */
-};
-
-
-struct timezone
-{
-    int tz_minuteswest;     /* minutes west of Greenwich */
-    int tz_dsttime;         /* type of DST correction */
-};
 
 
 // The functions gettimeofday() and settimeofday() can get and set the time as well as a timezone.

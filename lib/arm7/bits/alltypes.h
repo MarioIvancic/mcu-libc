@@ -368,3 +368,56 @@
 		
 	#endif // __struct_tm_defined
 #endif	// __need_struct_tm
+
+
+
+
+#ifdef __need_struct_timespec
+	#ifndef __struct_timespec_defined
+	#define __struct_timespec_defined
+	
+	struct timespec
+	{
+		time_t   tv_sec;        /* seconds */
+		long     tv_nsec;       /* nanoseconds */
+	};
+		
+	#endif // __struct_timespec_defined
+#endif	// __need_struct_timespec
+
+
+
+
+#ifdef __need_struct_timeval
+	#ifndef __struct_timeval_defined
+	#define __struct_timeval_defined
+	
+	// the number of seconds and microseconds since the Epoch
+	struct timeval
+	{
+		time_t      tv_sec;     /* seconds */
+		suseconds_t tv_usec;    /* microseconds */
+	};
+		
+	#endif // __struct_timeval_defined
+#endif	// __need_struct_timeval
+
+
+
+
+
+#ifdef __need_struct_timezone
+	#ifndef __struct_timezone_defined
+	#define __struct_timezone_defined
+	
+	struct timezone
+	{
+		int tz_minuteswest;     /* minutes west of Greenwich */
+		int tz_dsttime;         /* type of DST correction */
+	};
+		
+	#endif // __struct_timezone_defined
+#endif	// __need_struct_timezone
+
+
+
