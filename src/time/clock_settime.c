@@ -12,7 +12,7 @@ int clock_settime(clockid_t clk, const struct timespec *ts)
     clock_gettime(clk, &now);
     if(clk != CLOCK_REALTIME)
     {
-        errno =  EINVAL;
+        errno = EINVAL;
         return -1;
     }
     offset.tv_nsec = ts->tv_nsec - now.tv_nsec;

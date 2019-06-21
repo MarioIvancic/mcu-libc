@@ -133,7 +133,7 @@ endif
 
 PROJECT_OPTIONS += -D$(CLASS_NAME)
 
-# direktorij gdje idu obj fajlovi
+# place for object files
 #OBJDIR := obj/
 #OBJDIR := obj
 
@@ -259,6 +259,7 @@ SRCOs += time/time.c
 SRCOs += time/time_get_timezone.c
 SRCOs += time/time_month_days.c
 SRCOs += time/tzset.c
+SRCOs += time/gettimeofday.c
 
 # printf functions
 SRCOs += printf/msp_printf.c

@@ -32,27 +32,42 @@ int settimeofday(const struct timeval *__restrict tv, const struct timezone *__r
 
 // timeradd() adds the time values in a and b, and places the sum in the timeval pointed to by res.
 // The result is normalized such that res->tv_usec has a value in the range 0 to 999,999.
-void timeradd(struct timeval *a, struct timeval *b, struct timeval *res);
+// void timeradd(struct timeval *a, struct timeval *b, struct timeval *res);
+# define timeradd(a, b, res) do {														\
+		(res)->tv_sec = (a)->tv_sec + (b)->tv_sec; 										\
+		(res)->tv_usec = (a)->tv_usec + (b)->tv_usec;                          			\
+		if( (res)->tv_usec >= 1000000 ) { ++(res)->tv_sec; (res)->tv_usec -= 1000000; } \
+	} while (0)
 
 
 // timersub() subtracts the time value in b from the time value in a, and places the result in the timeval
 // pointed to by res. The result is normalized such that res->tv_usec has a value in the range 0 to 999,999.
-void timersub(struct timeval *a, struct timeval *b, struct timeval *res);
+// void timersub(struct timeval *a, struct timeval *b, struct timeval *res);
+# define timersub(a, b, res) do {                                              	\
+		(res)->tv_sec = (a)->tv_sec - (b)->tv_sec;                             	\
+		(res)->tv_usec = (a)->tv_usec - (b)->tv_usec;                          	\
+		if ((res)->tv_usec < 0) { --(res)->tv_sec; (res)->tv_usec += 1000000; }	\
+	} while (0)
 
 
 // timerclear() zeros out the timeval structure pointed to by tvp, so that it represents the
 // Epoch: 1970-01-01 00:00:00 +0000 (UTC).
-void timerclear(struct timeval *tvp);
+// void timerclear(struct timeval *tvp);
+#define timerclear(tvp) do { (tvp)->tv_sec = 0; (tvp)->tv_usec = 0; } while(0)
 
 // timerisset() returns true (nonzero) if either field of the timeval structure pointed to by tvp contains a nonzero value.
-int timerisset(struct timeval *tvp);
+// int timerisset(struct timeval *tvp);
+#define timerisset(tvp) ( (tvp)->tv_sec || (tvp)->tv_usec )
 
 
 // timercmp() compares the timer values in a and b using the comparison operator CMP,
 // and returns true (nonzero) or false (0) depending on the result of the comparison.
 // Some systems (but not Linux/glibc), have a broken timercmp() implementation,
 // in which CMP of >=, <=, and == do not work; portable applications can instead use
-int timercmp(struct timeval *a, struct timeval *b, CMP);
+// int timercmp(struct timeval *a, struct timeval *b, CMP);
+# define timercmp(a, b, CMP) ( 																				\
+	( (a)->tv_sec == (b)->tv_sec ) ? ( (a)->tv_usec CMP (b)->tv_usec ) : ( (a)->tv_sec CMP (b)->tv_sec ) 	\
+)
 
 
 #ifdef _cplusplus
