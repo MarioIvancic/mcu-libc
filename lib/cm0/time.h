@@ -130,6 +130,8 @@ extern struct timespec __clock_time_offset_timespec;
 extern unsigned long __clock_time_nanosec4tick;
 
 
+void _clock_time_init(unsigned long nanosec4systime_tick);
+
 int clock_settime(clockid_t clk, const struct timespec *ts);
 
 int clock_nanosleep(clockid_t clk, int flags, const struct timespec *req, struct timespec *rem);
