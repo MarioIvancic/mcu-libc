@@ -30,8 +30,6 @@ int clock_gettime(clockid_t clk, struct timespec *ts)
 
     last_ticks_for_timespec += diff;
 
-    if(clk == CLOCK_REALTIME) curr_ns += __clock_time_offset_timespec.tv_nsec;
-
     diff = 0;       // counting seconds
     while(curr_ns >= NANOSEC_IN_SEC)
     {
@@ -50,7 +48,7 @@ int clock_gettime(clockid_t clk, struct timespec *ts)
     }
 
     curr_ns += __clock_time_offset_timespec.tv_nsec;
-    diff = 0;
+    diff = 0;		// counting seconds
     while(curr_ns >= NANOSEC_IN_SEC)
     {
         curr_ns -= NANOSEC_IN_SEC;
