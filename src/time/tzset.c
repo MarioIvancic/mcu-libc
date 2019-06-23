@@ -60,15 +60,29 @@ int8_t  __timezone_dst_hour;
     TODO:
     Make a function like tzset to interpret TZ string in the same
     format as tzset expect TZ environment variable to be.
+    
+    https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
+    
     For instance, for Central European (Summer) Time
     TZ="CET-01:00:00CEST-02:00:00/02:00,M3.5.0,M10.5.0/03:00"
     TZ="CET-1CEST,M3.5.0,M10.5.0/03"
+    
+    std offset dst [offset],start[/time],end[/time]
+    std: 3 or more chars, standard timezone name
+    offset: [+|-]hh[:mm[:ss]]
+    dst: 3 or more chars, Daylight Saving timezone name
+    start, end: Mm.w.d	This specifies day d of week w of month m. 
+    The day d must be between 0 (Sunday) and 6.
+    The week w must be between 1 and 5;
+    week 1 is the first week in which day d occurs, and week 5 specifies
+    the last d day in the month. The month m should be between 1 and 12. 
 */
 
 // set timezone (1 for GMT+1, 2 for GMT+2 ...), set is daylight saving observed,
 // set dst shift in hours, set last acceptable DST start yday, set DST start hour in GM time,
 // set last acceptable DST end yday, set DST end hour in GM time
 // remark: if dst_hour == 0 dst_observed is ignored and treated as 0
+// arguments for CET/CEST: 1, 1, 1, 89, 1, 303, 1
 void _time_set_timezone(
 	int8_t tz_hour,
 	int8_t dst_observed,
