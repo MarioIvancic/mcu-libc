@@ -33,7 +33,7 @@ void _time_set(time_t current)
 {
     struct timespec curr;
     curr.tv_sec = current;
-    curr.tv_usec = 0;
+    curr.tv_nsec = 0;
 
     clock_settime(CLOCK_REALTIME, &curr);
 }

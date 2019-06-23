@@ -21,10 +21,13 @@
 
 PROJECT_OPTIONS := -D__LIBC__
 
+# include project specific options
+include project_make_options
+
 # itoa, ltoa, lltoa, uitoa, ultoa, ulltoa options
 # enable fast conversion for common base (2, 8, 10, 16)
-PROJECT_OPTIONS += -DITOA_ENABLE_FAST_HEX
-PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
+#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_HEX
+#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
 #PROJECT_OPTIONS += -DITOA_ENABLE_FAST_OCT
 #PROJECT_OPTIONS += -DITOA_ENABLE_FAST_BIN
 
@@ -67,7 +70,7 @@ PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
 #PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
 
 # gmtime options
-PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
+#PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
 #PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SPEED
 #PROJECT_OPTIONS += -DGMTIME_LOOP_DAYS
 
@@ -709,6 +712,7 @@ $(CPPOBJARMO3) : %.o : %.cpp
 
 # Target: install
 install: $(OBJDIR)$(TARGETLIB).a
+	@if [ ! -d ./../lib ]; then mkdir ./../lib; fi
 	@if [ ! -d ./../lib/$(CLASS_DIR) ]; then mkdir ./../lib/$(CLASS_DIR); fi
 	@if [ ! -d ./../lib/$(CLASS_DIR)/bits ]; then mkdir ./../lib/$(CLASS_DIR)/bits; fi
 	@$(COPY) $(OBJDIR)$(TARGETLIB).a ./../lib/$(CLASS_DIR)
