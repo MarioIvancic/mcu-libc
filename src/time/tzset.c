@@ -4,9 +4,6 @@
 
 #define YEAR0	1900
 
-//struct _time_tz_config_t* _time_tz_config;
-//struct _time_tz_config_t _time_tz_config;
-
 // offset in seconds from GMT to local time (TZ = GM - local_time)
 long  timezone = 0;
 char *tzname[2] = { 0, 0 };
@@ -57,8 +54,7 @@ int8_t  __timezone_dst_hour;
 
 
 /*
-    TODO:
-    Make a function like tzset to interpret TZ string in the same
+    function like tzset to interpret TZ string in the same
     format as tzset expect TZ environment variable to be.
     
     https://www.gnu.org/software/libc/manual/html_node/TZ-Variable.html
@@ -68,15 +64,192 @@ int8_t  __timezone_dst_hour;
     TZ="CET-1CEST,M3.5.0,M10.5.0/03"
     
     std offset dst [offset],start[/time],end[/time]
-    std: 3 or more chars, standard timezone name
-    offset: [+|-]hh[:mm[:ss]]
-    dst: 3 or more chars, Daylight Saving timezone name
-    start, end: Mm.w.d	This specifies day d of week w of month m. 
-    The day d must be between 0 (Sunday) and 6.
-    The week w must be between 1 and 5;
-    week 1 is the first week in which day d occurs, and week 5 specifies
-    the last d day in the month. The month m should be between 1 and 12. 
 */
+
+static const uint16_t last_yday_in_month[] =
+{
+    31 - 1,                                                         // jan
+    31 + 28 - 1,                                                    // feb
+    31 + 28 + 31 - 1,                                               // mar
+    31 + 28 + 31 + 30 - 1,                                          // apr
+    31 + 28 + 31 + 30 + 31 - 1,                                     // may
+    31 + 28 + 31 + 30 + 31 + 30 - 1,                                // jun
+    31 + 28 + 31 + 30 + 31 + 30 + 31 - 1,                           // july
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 - 1,                      // aug
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 - 1,                 // sep
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 - 1,            // oct
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30 - 1,       // nov
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30 + 31 - 1,  // dec
+};
+
+
+static char* parse_m_rule(char* p, int* params)
+{
+    // M3.5.0/02:00
+    //  m,w,d/t
+
+    // default time is 2
+    params[3] = 2;
+
+    // get month
+    if(*p == 'M')
+    {
+        p++;
+        params[0] = (int)strtol(p, (char**)&p, 10);
+    }
+
+    // get week
+    if(*p == '.')
+    {
+        p++;
+        params[1] = (int)strtol(p, (char**)&p, 10);
+    }
+
+    // get day
+    if(*p == '.')
+    {
+        p++;
+        params[2] = (int)strtol(p, (char**)&p, 10);
+    }
+
+    // get local time
+    if(*p == '/')
+    {
+        p++;
+        params[3] = (int)strtol(p, (char**)&p, 10);
+    }
+
+    return (char*)p;
+}
+
+
+/*
+    Function like tzset to interpret TZ string in the same
+    format as tzset expect TZ environment variable to be.
+
+    For instance, for Central European (Summer) Time
+    TZ="CET-01:00:00CEST-02:00:00,M3.5.0/02:00,M10.5.0/03:00"
+    TZ="CET-1CEST,M3.5.0,M10.5.0/03"
+        CET-1CEST,M3.5.0,M10.5.0/3
+
+    std offset dst [offset],start[/time],end[/time]
+*/
+void _time_tzset(const char* tz)
+{
+    const char *p = tz;
+    char* ec;
+    int std_hour = 0;
+    int dst_hour = 25;
+    int start_mparams[4];
+    int stop_mparams[4];
+    start_mparams[0] = -1;
+    start_mparams[3] = 2;
+    stop_mparams[0] = -1;
+    stop_mparams[3] = 2;
+
+    do
+    {
+        // first field is name of the time zone
+        // we don't need it
+        while(isalpha(*p))p++;
+        if(!*p) break;
+        std_hour = (int)strtol(p, &ec, 10);
+        p = ec;
+        if(!*p) break;
+
+        // we are ignoring minutes and seconds in timezone
+        // and we are searching DST timezone name
+        while(*p && !isalpha(*p))p++;
+        if(!*p) break;
+
+        // we don't need DST timezone name
+        while(isalpha(*p))p++;
+        if(!*p) break;
+
+        if(*p == ',') dst_hour = std_hour - 1;
+        else
+        {
+            dst_hour = (int)strtol(p, &ec, 10);
+            p = ec;
+            if(!*p) break;
+
+            // now we search end of offset field
+            while(*p && *p != ',')p++;
+            if(!*p) break;
+        }
+
+        // p points to , after dst offset
+        p++;
+        if(!*p) break;
+
+        // now we can have M, Jn or n rule. Only M rule is supported
+        if(*p == 'M')
+        {
+            // M10.5.0/3
+            p = parse_m_rule(p, start_mparams);
+            if(!*p) break;
+        }
+        else break;
+
+        // p points to , after start M rule
+        p++;
+        if(!*p) break;
+
+        if(*p == 'M')
+        {
+            // M10.5.0/3
+            p = parse_m_rule(p, stop_mparams);
+            if(!*p) break;
+        }
+        else break;
+    } while(0);
+
+    // now we have parsed values
+    if(dst_hour == 25)
+    {
+        // no DST, just standard time
+        _time_set_timezone(-std_hour, 0, 0, 0, 0, 0, 0);
+        return;
+    }
+
+    if(start_mparams[0] == -1 || stop_mparams[0] == -1)
+    {
+        // we have DST timezone but don't know start and end date
+        // so, we are ignoring DST
+        _time_set_timezone(-std_hour, 0, 0, 0, 0, 0, 0);
+        return;
+    }
+
+    // now we have to convert mparams to dst_start_yday and dst_start_gmt_hour,
+    // m.w.d => day d (0 <= d <= 6) of week w (1 <= w <= 5) of month m (1 <= m <= 12).
+    // Week 1 is the first week in which day d occurs and week 5 is the last week in which day d occurs.
+    // Day 0 is a Sunday.
+    // Currently, only rules with d=0 (Sunday) and w=5 (last week) are supported.
+    if(start_mparams[2] || stop_mparams[2])
+    {
+        // day part of M rule is not 0 (Sunday), we are ignoring DST
+        _time_set_timezone(-std_hour, 0, 0, 0, 0, 0, 0);
+        return;
+    }
+
+    if(start_mparams[1] != 5 || stop_mparams[1] != 5)
+    {
+        // week part of M rule is not 5 (last week), we are ignoring DST
+        _time_set_timezone(-std_hour, 0, 0, 0, 0, 0, 0);
+        return;
+    }
+
+    // now we have to find year day of the last possible Sunday in week w of month m.
+    _time_set_timezone(
+                       -std_hour,               // standard time
+                       1,                       // DST observed
+                       std_hour - dst_hour,     // this is added to std time to get dst
+                       last_yday_in_month[start_mparams[0] - 1],
+                       start_mparams[3] + std_hour,                 // start GMT time
+                       last_yday_in_month[stop_mparams[0] - 1],
+                       stop_mparams[3] + dst_hour                   // stop GMT time
+                       );
+}
 
 // set timezone (1 for GMT+1, 2 for GMT+2 ...), set is daylight saving observed,
 // set dst shift in hours, set last acceptable DST start yday, set DST start hour in GM time,

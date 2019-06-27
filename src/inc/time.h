@@ -87,6 +87,20 @@ void _time_set_timezone(int8_t tz_hour, int8_t dst_observed, int8_t dst_hour, in
 #define SET_WET_TIMEZONE() set_timezone(0, 1, 1, 89, 1, 303, 1)
 
 
+/*
+    Function like tzset to interpret TZ string in the same
+    format as tzset expect TZ environment variable to be.
+
+    For instance, for Central European (Summer) Time
+    TZ="CET-01:00:00CEST-02:00:00,M3.5.0/02:00,M10.5.0/03:00"
+    TZ="CET-1CEST,M3.5.0,M10.5.0/03"
+        CET-1CEST,M3.5.0,M10.5.0/3
+
+    std offset dst [offset],start[/time],end[/time]
+*/
+void _time_tzset(const char* tz);
+
+
 // get current timezone offset and dst offset
 void __time_get_timezone(int8_t *__restrict tz_hour, int8_t *__restrict dst_hour);
 
