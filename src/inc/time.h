@@ -80,11 +80,11 @@ void _time_set_timezone(int8_t tz_hour, int8_t dst_observed, int8_t dst_hour, in
     int8_t dst_start_gmt_hour, int16_t dst_end_yday, int8_t dst_end_gmt_hour);
 // for CET (Central European Time): GMT+1, DST observed, DST: 1h, start last sunday in Mar,
 // start time 01:00 GMT, end last sunday in Oct, end time 01:00 GMT
-#define SET_CET_TIMEZONE() set_timezone(1, 1, 1, 89, 1, 303, 1)
+#define SET_CET_TIMEZONE() _time_set_timezone(1, 1, 1, 89, 1, 303, 1)
 // EET (Eastern European Time)
-#define SET_EET_TIMEZONE() set_timezone(2, 1, 1, 89, 1, 303, 1)
+#define SET_EET_TIMEZONE() _time_set_timezone(2, 1, 1, 89, 1, 303, 1)
 // WET (Western European Time)
-#define SET_WET_TIMEZONE() set_timezone(0, 1, 1, 89, 1, 303, 1)
+#define SET_WET_TIMEZONE() _time_set_timezone(0, 1, 1, 89, 1, 303, 1)
 
 
 /*
