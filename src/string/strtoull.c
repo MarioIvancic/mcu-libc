@@ -45,6 +45,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <features.h>
 //#include <reent.h>
 
 
@@ -186,7 +187,7 @@ unsigned long long strtoull(const char *nptr, char **endptr, int base)
 	} else if (neg)
 		acc = -acc;
 	if (endptr != 0)
-		*endptr = (char *) (any ? (char *)s - 1 : (char *)nptr);
+		*endptr = (any ? __to_pchar(s) - 1 : __to_pchar(nptr));
 	return (acc);
 }
 

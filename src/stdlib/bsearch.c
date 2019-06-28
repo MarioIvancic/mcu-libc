@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <features.h>
 
 /*
     The bsearch() function shall search an array of nel objects, the initial element
@@ -47,7 +48,7 @@ void *bsearch(const void *key, const void *base, size_t nel, size_t width, int (
 		//try = (char *)base + width*(nel/2);
 		try = (const char *)base + width*(nel/2);
 		sign = cmp(key, try);
-		if (!sign) return try;
+		if (!sign) return __to_pchar(try);
 		else if (nel == 1) break;
 		else if (sign < 0) nel /= 2;
 		else

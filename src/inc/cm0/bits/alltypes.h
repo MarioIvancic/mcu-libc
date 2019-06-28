@@ -228,7 +228,7 @@
 
 		#define __TIME_UNSIGNED			1
 		
-		/* This must be 32 bits */
+		/* This must be 32 bits or more */
 		#if __CPU_INT_SIZE__ < 32
 			typedef unsigned long time_t;
 		#else
@@ -319,38 +319,29 @@
 	#ifndef __struct_tm_defined
 	#define __struct_tm_defined
 	
-		#if __CPU_INT_SIZE__ == 8
-			typedef signed char __tm_sec_t;
-			typedef signed char __tm_min_t;
-			typedef signed char __tm_mday_t;
-			typedef signed char __tm_hour_t;
-			#define __tm_sec_max 127
-			#define __tm_min_max 127
-			#define __tm_mday_max 127
-			#define __tm_hour_max 127
-		#else
-			typedef short __tm_sec_t;
-			typedef short __tm_min_t;
-			typedef short __tm_mday_t;
-			typedef short __tm_hour_t;
-			#define __tm_sec_max 32767
-			#define __tm_min_max 32767
-			#define __tm_mday_max 32767
-			#define __tm_hour_max 32767
-		#endif
+		typedef short __tm_sec_t;
+		typedef short __tm_min_t;
+		typedef short __tm_mday_t;
+		typedef short __tm_hour_t;
+		#define __tm_sec_max 32767
+		#define __tm_min_max 32767
+		#define __tm_mday_max 32767
+		#define __tm_hour_max 32767
 		
 		typedef short __tm_yday_t;
 		typedef short __tm_year_t;
-		typedef signed char __tm_mon_t;
+		//typedef signed char __tm_mon_t;
+		typedef short __tm_mon_t;
 		typedef signed char __tm_wday_t;
 		typedef signed char __tm_isdst_t;
-		typedef signed char __tm_gmtoff_t;
+		//typedef signed char __tm_gmtoff_t;
 		
 		#define __tm_yday_max 32767
 		#define __tm_year_max 32767
-		#define __tm_mon_max 127
+		//#define __tm_mon_max 127
+		#define __tm_mon_max 32767
 		#define __tm_wday_max 127
-		#define __tm_gmtoff_max 127
+		//#define __tm_gmtoff_max 127
 			
 		struct tm
 		{
@@ -363,7 +354,7 @@
 			__tm_mon_t	tm_mon;		    // 0 - 11, January == 0
 			__tm_wday_t	tm_wday;	    // 0 - 6, Sunday == 0
 			__tm_isdst_t tm_isdst;	    // 0: DST not in effect, > 0: DST in effect, < 0: system will decide is DST in effect or not
-			__tm_gmtoff_t __tm_gmtoff;    // offset in hours to gm time. tm_gmtoff = local_time - gm_time
+			//__tm_gmtoff_t __tm_gmtoff;    // offset in hours to gm time. tm_gmtoff = local_time - gm_time
 		};
 		
 	#endif // __struct_tm_defined

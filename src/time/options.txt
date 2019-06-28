@@ -1,0 +1,6 @@
+ASCTIME_SNPRINF
+TZSET_MUSL
+TZSET_SIMPLE
+GMTIME_OPTIMIZE_SIZE    (valid only if TZSET_SIMPLE is defined)
+GMTIME_OPTIMIZE_SPEED   (valid only if TZSET_SIMPLE is defined)
+GMTIME_LOOP_DAYS		(valid only if TZSET_SIMPLE is defined)

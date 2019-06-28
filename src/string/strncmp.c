@@ -37,7 +37,7 @@ int strncmp(const char *_l, const char *_r, size_t n)
     
 	if (!n--) return 0;
 	
-    for (; n && *l && *l == *r ; l++, r++, n--);
+    for (; n && *l && *l == *r ; l++, r++, n--) { ; }
 	return *(const unsigned char *)l - *(const unsigned char *)r;
 }
 
@@ -80,7 +80,7 @@ int strncmp(const char *l, const char *r, size_t n)
 		r = (const void *)wr;
 	}
 
-	for (; n && *l && *l == *r ; l++, r++, n--);
+	for (; n && *l && *l == *r ; l++, r++, n--) { ; }
 	return *(const unsigned char *)l - *(const unsigned char *)r;
 }
 

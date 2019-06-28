@@ -259,8 +259,8 @@ SRCOs += time/gmtime.c
 SRCOs += time/localtime.c
 SRCOs += time/mktime.c
 SRCOs += time/time.c
-SRCOs += time/time_get_timezone.c
-SRCOs += time/time_month_days.c
+#SRCOs += time/time_get_timezone.c
+#SRCOs += time/time_month_days.c
 SRCOs += time/tzset.c
 SRCOs += time/gettimeofday.c
 

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <features.h>
 
 /*
     The strpbrk() function shall locate the first occurrence in the string
@@ -13,5 +14,5 @@
 char *strpbrk(const char *s, const char *b)
 {
 	s += strcspn(s, b);
-	return *s ? s : NULL;
+	return *s ? __to_pchar(s) : NULL;
 }

@@ -1,7 +1,25 @@
 // gmtime.c
 
 #include <time.h>
-#include "_time_data.h"
+#include <errno.h>
+
+struct tm __time_last_tm;
+
+struct tm *gmtime (const time_t *timep)
+{
+    return gmtime_r(timep, &__time_last_tm);
+}
+
+
+#if defined(TZSET_SIMPLE)
+
+// for gmtime, mktime
+const unsigned char __time_month_days[2][12] =
+{
+    {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+    {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+};
+
 
 /*
  * TODO: in speed optimized case half of the code comes from _time_year_start
@@ -10,10 +28,6 @@
  * TODO: in speed optimized code try to calculate year and month directly
  * using modulo and division.
  * */
-
-
-struct tm _time_last_time;
-
 
 #if !defined(GMTIME_OPTIMIZE_SIZE) && !defined(GMTIME_OPTIMIZE_SPEED)
 #define GMTIME_OPTIMIZE_SIZE	1
@@ -29,8 +43,8 @@ struct tm _time_last_time;
 
 /*
 	using:
-	* struct tm _time_last_time,
-	* const unsigned char _time_month_days[];
+	* struct tm __time_last_tm,
+	* const unsigned char __time_month_days[];
 	Performace:
 	* 10.32uS, 336 bytes @ 60MHz, ARM code, O2 optimization
 	* 44.32uS, 208 bytes @ 60MHz, Thumb code, Os optimization
@@ -75,7 +89,7 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 
 	for(month = 0; month < 12; month++)
 	{
-		unsigned char monthLength = _time_month_days[LEAP_YEAR(year)][month];
+		unsigned char monthLength = __time_month_days[LEAP_YEAR(year)][month];
 
     	if(days >= monthLength) days -= monthLength;
 		else break;
@@ -85,7 +99,7 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 
 	tmp->tm_isdst = 0;
 
-	return &_time_last_time;
+	return &__time_last_tm;
 }
 
 #else // ! GMTIME_OPTIMIZE_SIZE
@@ -96,8 +110,8 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 
 /*
 	using:
-	* struct tm _time_last_time,
-	* const unsigned char _time_month_days[],
+	* struct tm __time_last_tm,
+	* const unsigned char __time_month_days[],
 	* const time_t _time_year_start[],
 	performace:
 	* 5.48uS, 1056 bytes @ 60MHz, ARM code, O2 optimization
@@ -243,7 +257,7 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 	    days = 0;
         while( (month < 12 ) && (epoch >= (24UL * 60UL * 60UL)) )
         {
-            unsigned char monthLength = _time_month_days[LEAP_YEAR(year)][month];
+            unsigned char monthLength = __time_month_days[LEAP_YEAR(year)][month];
 #ifdef GMTIME_LOOP_DAYS
             days = 0;
             while(days < monthLength)
@@ -301,7 +315,7 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 
         tmp->tm_isdst = 0;
 
-        return &_time_last_time;
+        return &__time_last_tm;
 	}
 	return 0;
 }
@@ -318,10 +332,22 @@ struct tm *gmtime_r (const time_t *__restrict timep, struct tm *__restrict tmp)
 
 #endif // GMTIME_OPTIMIZE_SIZE
 
+#elif defined(TZSET_MUSL) // ! TZSET_SIMPLE
 
-struct tm *gmtime (const time_t *timep)
+extern const char __gmt[];
+
+int __secs_to_tm(long long t, struct tm *tm);
+
+struct tm *gmtime_r(const time_t *__restrict t, struct tm *__restrict tm)
 {
-    return gmtime_r(timep, &_time_last_time);
+	if (__secs_to_tm(*t, tm) < 0) {
+		errno = EOVERFLOW;
+		return 0;
+	}
+	tm->tm_isdst = 0;
+	//tm->__tm_gmtoff = 0;
+	//tm->__tm_zone = __gmt;
+	return tm;
 }
 
-
+#endif  // TZSET_SIMPLE, TZSET_MUSL

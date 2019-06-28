@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
+#include <features.h>
 
 /*
     The strchr() function shall locate the first occurrence of c
@@ -33,13 +34,13 @@
 char *__strchrnul(const char *s, int c)
 {
     while (*s && *s != c) s++;
-    return s;
+    return __to_pchar(s);
 }
 
 char *strchr(const char *s, int c)
 {
     while (*s && *s != c) s++;
-    if (*s == c) return s;
+    if (*s == c) return __to_pchar(s);
     return NULL;
 }
 
@@ -66,13 +67,13 @@ char *__strchrnul(const char *s, int c)
 
 	for (; (uintptr_t)s % ALIGN; s++)
     {
-        if (!*s || *(const unsigned char *)s == c) return s;
+        if (!*s || *(const unsigned char *)s == c) return __to_pchar(s);
     }
 		
 	k = ONES * c;
-	for (w = (const void *)s; (!HASZERO(*w)) && (!HASZERO(*w ^ k)); w++);
-	for (s = (const void *)w; (*s) && (*(const unsigned char *)s != c); s++);
-	return s;
+	for (w = (const void *)s; (!HASZERO(*w)) && (!HASZERO(*w ^ k)); w++) { ; }
+	for (s = (const void *)w; (*s) && (*(const unsigned char *)s != c); s++) { ; }
+	return __to_pchar(s);
 }
 
 

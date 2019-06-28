@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
+#include <features.h>
 
 /*
     The memchr() function shall locate the first occurrence of c (converted to
@@ -30,7 +31,7 @@ void *memchr(const void *src, int c, size_t n)
 
     while (n--)
     {
-        if (*s == c) return s;
+        if (*s == c) return __to_pchar(s);
         s++;
     }
     return NULL;

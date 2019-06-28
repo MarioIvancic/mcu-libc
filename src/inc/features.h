@@ -19,4 +19,20 @@
 #define _Noreturn
 #endif
 
+/* Define ALIASNAME as a weak alias for NAME.
+   If weak aliases are not available, this defines a strong alias.  */
+# define weak_alias(name, aliasname) _weak_alias (name, aliasname)
+# define _weak_alias(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
+
+ 
+// cast any pointer to char*
+#define __to_pchar(p) ((char*)((size_t)(p)))
+
+// cast any pointer to unsigned char*
+#define __to_puchar(p) ((unsigned char*)((size_t)(p)))
+
+// cast any pointer to char*
+#define __to_ppchar(p) ((char**)((size_t)(p)))
+
 #endif	// __FEATURES_H__

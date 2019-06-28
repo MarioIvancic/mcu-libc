@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdint.h>
+#include <features.h>
 
 /*
     The strstr() function shall locate the first occurrence in the string
@@ -20,7 +21,7 @@ char *strstr(const char *searchee, const char *lookfor)
     if (*searchee == 0)
     {
         if (*lookfor) return NULL;
-        return searchee;
+        return __to_pchar(searchee);
     }
 
     while (*searchee)
@@ -29,7 +30,7 @@ char *strstr(const char *searchee, const char *lookfor)
 
         while (1)
         {
-            if (!lookfor[i]) return searchee;
+            if (!lookfor[i]) return __to_pchar(searchee);
             if (lookfor[i] != searchee[i]) break;
             i++;
         }

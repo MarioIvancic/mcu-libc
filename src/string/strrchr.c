@@ -1,4 +1,5 @@
 #include <string.h>
+#include <features.h>
 
 /*
     The strrchr() function shall locate the last occurrence of c (converted to a char)
@@ -10,17 +11,25 @@
 */
 
 
+#if !defined(LIBC_STRRCHR_USE_MEMRCHR) && !defined(LIBC_STRRCHR_USE_LOOP)
+#define LIBC_STRRCHR_USE_LOOP
+#endif
+
+
+#if defined(LIBC_STRRCHR_USE_MEMRCHR)
+
 // from musl
-#if 0
 
 // it's questinable how fast is this double-pass algorithm
 char *strrchr(const char *s, int c)
 {
 	return memrchr(s, c, strlen(s) + 1);
 }
+
 #endif
 
 
+#if defined(LIBC_STRRCHR_USE_LOOP)
 // naive implementation, but single pass
 char *strrchr(const char *s, int c)
 {
@@ -32,5 +41,7 @@ char *strrchr(const char *s, int c)
         if (!*s++) break;
     }
 
-    return p;
+    return __to_pchar(p);
 }
+
+#endif

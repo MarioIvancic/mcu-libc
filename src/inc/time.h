@@ -47,7 +47,7 @@ extern long  timezone;
 extern char *tzname[2];
 
 // is DST observed or not, depends on country/geographical region
-extern int8_t  daylight;
+extern int  daylight;
 
 // convert GMT calendar time to broken GTM time
 struct tm *gmtime (const time_t *);
@@ -70,7 +70,10 @@ char *ctime (const time_t *);
 char *ctime_r (const time_t *, char *);
 
 // convert broken GMT time to calendar GMT time (seconds since 1970)
-time_t _mkgmtime(struct tm *timeptr);
+time_t timegm(struct tm *timeptr);
+
+// set internal and global data based on timezone rule from tz string
+void _time_tzset(const char* tz);
 
 
 // set timezone (1 for GMT+1, 2 for GMT+2 ...), set is daylight saving observed,
@@ -80,38 +83,26 @@ void _time_set_timezone(int8_t tz_hour, int8_t dst_observed, int8_t dst_hour, in
     int8_t dst_start_gmt_hour, int16_t dst_end_yday, int8_t dst_end_gmt_hour);
 // for CET (Central European Time): GMT+1, DST observed, DST: 1h, start last sunday in Mar,
 // start time 01:00 GMT, end last sunday in Oct, end time 01:00 GMT
-#define SET_CET_TIMEZONE() _time_set_timezone(1, 1, 1, 89, 1, 303, 1)
+#define SET_CET_TIMEZONE() set_timezone(1, 1, 1, 89, 1, 303, 1)
 // EET (Eastern European Time)
-#define SET_EET_TIMEZONE() _time_set_timezone(2, 1, 1, 89, 1, 303, 1)
+#define SET_EET_TIMEZONE() set_timezone(2, 1, 1, 89, 1, 303, 1)
 // WET (Western European Time)
-#define SET_WET_TIMEZONE() _time_set_timezone(0, 1, 1, 89, 1, 303, 1)
+#define SET_WET_TIMEZONE() set_timezone(0, 1, 1, 89, 1, 303, 1)
 
-
-/*
-    Function like tzset to interpret TZ string in the same
-    format as tzset expect TZ environment variable to be.
-
-    For instance, for Central European (Summer) Time
-    TZ="CET-01:00:00CEST-02:00:00,M3.5.0/02:00,M10.5.0/03:00"
-    TZ="CET-1CEST,M3.5.0,M10.5.0/03"
-        CET-1CEST,M3.5.0,M10.5.0/3
-
-    std offset dst [offset],start[/time],end[/time]
-*/
-void _time_tzset(const char* tz);
-
-
-// get current timezone offset and dst offset
-void __time_get_timezone(int8_t *__restrict tz_hour, int8_t *__restrict dst_hour);
 
 // convert GMT to local time in-place, no memory allocation is performed
-struct tm* _gm2localtime(struct tm* gm);
+struct tm* __gm2localtime(struct tm* gm);
 
 // convert local to GMT time in-place, no memory allocation is performed
-struct tm* _local2gmtime(struct tm* lt);
+struct tm* __local2gmtime(struct tm* lt);
 
-// validate and normalize the tm structure
-void _check_time(struct tm *timeptr);
+/** Validate the tm structure
+The original values of the members tm_wday and tm_yday of struct tm are ignored, and the ranges of values for the rest of its
+members are not restricted to their normal values (like tm_mday being between 1 and 31).
+The object pointed by timeptr is modified, setting the tm_wday and tm_yday to their appropriate values,
+and modifying the other members as necessary to values within the normal range representing the specified time.
+*/
+void __check_time(struct tm *timeptr);
 
 
 extern time_t __time_current_time_t;

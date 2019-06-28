@@ -46,7 +46,7 @@ int clock_settime(clockid_t clk, const struct timespec *ts)
 		offset.tv_nsec += NANOSEC_IN_SEC;
 		offset.tv_sec--;
 	}
-	else if(offset.tv_nsec >= NANOSEC_IN_SEC)
+	else if(offset.tv_nsec >= (long)NANOSEC_IN_SEC)
 	{
 		offset.tv_nsec -= NANOSEC_IN_SEC;
 		offset.tv_sec++;

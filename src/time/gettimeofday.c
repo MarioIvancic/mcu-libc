@@ -11,6 +11,7 @@
 int gettimeofday(struct timeval *__restrict tv, struct timezone *__restrict tz)
 {
 	struct timespec ts;
+	(void) tz;
 	
 	if (!tv) return 0;
 	
@@ -27,6 +28,7 @@ int gettimeofday(struct timeval *__restrict tv, struct timezone *__restrict tz)
 int settimeofday(const struct timeval *__restrict tv, const struct timezone *__restrict tz)
 {
 	struct timespec ts;
+	(void) tz;
 	
 	if (!tv) return 0;
 	
