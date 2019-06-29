@@ -402,14 +402,14 @@ void __timezone_dst_fix(struct tm* timep, char local_time)
         // from localtime to GMT
         timep->tm_hour += __timezone_hour;
         timep->tm_isdst = 0;
-        timep->__tm_gmtoff = 0;
+        // timep->__tm_gmtoff = 0;
     }
     else
     {
         // from GMT to localtime
         timep->tm_hour -= __timezone_hour;
         timep->tm_isdst = -1;
-        timep->__tm_gmtoff = -__timezone_hour;
+        // timep->__tm_gmtoff = -__timezone_hour;
     }
 
     // fix dst
@@ -425,7 +425,7 @@ void __timezone_dst_fix(struct tm* timep, char local_time)
 	        // from GMT to localtime
             timep->tm_hour += __timezone_dst_hour;
             timep->tm_isdst = 1;
-            timep->__tm_gmtoff += __timezone_dst_hour;
+            // timep->__tm_gmtoff += __timezone_dst_hour;
 	    }
 	}
     else if(!local_time)timep->tm_isdst = 0;

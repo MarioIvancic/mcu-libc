@@ -20,7 +20,7 @@ extern void _timezone_dst_fix(struct tm* timep, char local_time);
 struct tm *localtime_r (const time_t *__restrict timer, struct tm *__restrict tmp)
 {
     gmtime_r(timer, tmp);        /* tm->tm_isdst == 0 */
-    _timezone_dst_fix(tmp, 0);
+    __timezone_dst_fix(tmp, 0);
 	return tmp;
 }
 
@@ -40,7 +40,7 @@ struct tm *localtime_r(const time_t *__restrict t, struct tm *__restrict tm)
 	//	errno = EOVERFLOW;
 	//	return 0;
 	//}
-	
+
 	//__secs_to_zone(*t, 0, &tm->tm_isdst, &tm->__tm_gmtoff, 0, &tm->__tm_zone);
 	//if (__secs_to_tm((long long)*t - tm->__tm_gmtoff, tm) < 0)
 	long tm_gmtoff;
