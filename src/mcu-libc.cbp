@@ -16,18 +16,18 @@
 		</MakeCommands>
 		<Build>
 			<Target title="all">
-				<Option output="bin\all\sys" prefix_auto="0" extension_auto="0" />
+				<Option output="bin/all/sys" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="" />
-				<Option object_output="obj\all\" />
+				<Option object_output="obj/all/" />
 				<Option type="5" />
 				<Option compiler="gcc" />
 				<MakeCommands>
-					<Build command="$make -f $makefile  MCU=LPC2148 all" />
-					<CompileFile command="$make -f $makefile MCU=LPC2148 install" />
-					<Clean command="$make -f $makefile  MCU=LPC2148 clean" />
+					<Build command="$make -f $makefile  ARCH=cortex-m3" />
+					<CompileFile command="$make -f $makefile ARCH=cortex-m3 install" />
+					<Clean command="$make -f $makefile  ARCH=cortex-m3 clean" />
 					<DistClean command="$make -f $makefile  MCU=LPC2148 distclean" />
 					<AskRebuildNeeded command="$make -q -f $makefile $target" />
-					<SilentBuild command="$make -s -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile  ARCH=cortex-m3 &gt; $(CMD_NULL)" />
 				</MakeCommands>
 			</Target>
 			<Environment>
@@ -36,189 +36,268 @@
 		</Build>
 		<Unit filename="CHANGELOG.txt" />
 		<Unit filename="Makefile" />
-		<Unit filename="abs.c">
+		<Unit filename="inc/arm7/bits/alltypes.h" />
+		<Unit filename="inc/assert.h" />
+		<Unit filename="inc/cm0/bits/alltypes.h" />
+		<Unit filename="inc/cm3/bits/alltypes.h" />
+		<Unit filename="inc/ctype.h" />
+		<Unit filename="inc/errno.h" />
+		<Unit filename="inc/features.h" />
+		<Unit filename="inc/inttypes.h" />
+		<Unit filename="inc/libc_version.h" />
+		<Unit filename="inc/limits.h" />
+		<Unit filename="inc/msp_printf.h" />
+		<Unit filename="inc/stdarg.h" />
+		<Unit filename="inc/stdbool.h" />
+		<Unit filename="inc/stddef.h" />
+		<Unit filename="inc/stdint.h" />
+		<Unit filename="inc/stdio.h" />
+		<Unit filename="inc/stdlib.h" />
+		<Unit filename="inc/string.h" />
+		<Unit filename="inc/sys/time.h" />
+		<Unit filename="inc/systime_tick.h" />
+		<Unit filename="inc/tfp_printf.h" />
+		<Unit filename="inc/time.h" />
+		<Unit filename="inc/tlsf.h" />
+		<Unit filename="inc/unistd.h" />
+		<Unit filename="printf/doc/convert.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="atoi.c">
+		<Unit filename="printf/msp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="atol.c">
+		<Unit filename="printf/tfp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="atoll.c">
+		<Unit filename="stdlib/abs.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="bsearch.c">
+		<Unit filename="stdlib/atoi.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ctype.c">
+		<Unit filename="stdlib/atol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="div.c">
+		<Unit filename="stdlib/atoll.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="inc\arm7\limits.h" />
-		<Unit filename="inc\arm7\stdint.h" />
-		<Unit filename="inc\cm3\limits.h" />
-		<Unit filename="inc\cm3\stdint.h" />
-		<Unit filename="inc\ctype.h" />
-		<Unit filename="inc\stdarg.h" />
-		<Unit filename="inc\stdio.h" />
-		<Unit filename="inc\stdlib.h" />
-		<Unit filename="inc\string.h" />
-		<Unit filename="itoa.c">
+		<Unit filename="stdlib/atoui.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ldiv.c">
+		<Unit filename="stdlib/atoul.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="lldiv.c">
+		<Unit filename="stdlib/atoull.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="lltoa.c">
+		<Unit filename="stdlib/bsearch.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ltoa.c">
+		<Unit filename="stdlib/ctype.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memccpy.c">
+		<Unit filename="stdlib/div.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memccpy_fast.c">
+		<Unit filename="stdlib/errno.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memchr.c">
+		<Unit filename="stdlib/itoa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memchr_fast.c">
+		<Unit filename="stdlib/ldiv.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memcmp.c">
+		<Unit filename="stdlib/lldiv.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memcmp_fast.c">
+		<Unit filename="stdlib/lltoa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memcpy.c">
+		<Unit filename="stdlib/ltoa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memcpy_fast.c">
+		<Unit filename="stdlib/rand.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memmove.c">
+		<Unit filename="stdlib/suitoa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memmove_fast.c">
+		<Unit filename="stdlib/usleep.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memset.c">
+		<Unit filename="string/memccpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="memset_fast.c">
+		<Unit filename="string/memchr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="msp_printf.c">
+		<Unit filename="string/memcmp.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="rand.c">
+		<Unit filename="string/memcpy-armv7m.S" />
+		<Unit filename="string/memcpy-cm3.S" />
+		<Unit filename="string/memcpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="reverse.c">
+		<Unit filename="string/memcpy_f9.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcasecmp.c">
+		<Unit filename="string/memmove.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcat.c">
+		<Unit filename="string/memset.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strchr.c">
+		<Unit filename="string/reverse.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcmp.c">
+		<Unit filename="string/strcasecmp.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcmp_fast.c">
+		<Unit filename="string/strcat.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcpy.c">
+		<Unit filename="string/strchr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strcspn.c">
+		<Unit filename="string/strcmp.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strlcat.c">
+		<Unit filename="string/strcpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strlcpy.c">
+		<Unit filename="string/strcspn.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strlen.c">
+		<Unit filename="string/strlcat.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncasecmp.c">
+		<Unit filename="string/strlcpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncat.c">
+		<Unit filename="string/strlen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncmp.c">
+		<Unit filename="string/strncasecmp.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncmp_fast.c">
+		<Unit filename="string/strncat.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncpy.c">
+		<Unit filename="string/strncmp.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strncpy_fast.c">
+		<Unit filename="string/strncpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strnlen.c">
+		<Unit filename="string/strnlen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strpbrk.c">
+		<Unit filename="string/strpbrk.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strrchr.c">
+		<Unit filename="string/strrchr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strrev.c">
+		<Unit filename="string/strrev.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strsep.c">
+		<Unit filename="string/strsep.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strspn.c">
+		<Unit filename="string/strspn.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strspn_fast.c">
+		<Unit filename="string/strstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strstr.c">
+		<Unit filename="string/strtok.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strtok.c">
+		<Unit filename="string/strtol.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strtol.c">
+		<Unit filename="string/strtoll.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strtoll.c">
+		<Unit filename="string/strtoul.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strtoul.c">
+		<Unit filename="string/strtoull.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strtoull.c">
+		<Unit filename="string/strupr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="strupr.c">
+		<Unit filename="systime/systime_ms.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="tfp_printf.c">
+		<Unit filename="systime/systime_sec.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="systime/systime_tick.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/memcpy-cm3.S" />
+		<Unit filename="test/memcpy_test/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/memcpy_test/memcpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/memcpy_test/memcpy_f9.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/test_memcpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="test/time_test/time_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/asctime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/clock_getres.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/clock_gettime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/clock_nanosleep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/clock_settime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/ctime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/gettimeofday.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/gmtime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/localtime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/mktime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/time.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="time/tzset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tlsf_malloc/malloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tlsf_malloc/tlsf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tlsf_malloc/tlsfbits.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

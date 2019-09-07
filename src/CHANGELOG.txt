@@ -2,10 +2,13 @@ Version 0.9.0
 2014-01-06
 	- First version
 	- Compiled from bits and peaces of NewLib, MSP430-LibC and Musl code
-	
+
 Version 0.9.1
 2019-01-22
 	- Code cleaning and refactoring
 	- Added systime and time functions
 	- Made first real test on hardware
 
+Version 0.9.4
+2019-09-07
+	- Added malloc/free based on public domain implementation of TLSF malloc (Two Level Segregated Fit)

@@ -87,6 +87,11 @@ include project_make_options
 #PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONGLONG
 #PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONG
 
+# TLSF malloc options
+# how many bits are used for addressing memory
+#PROJECT_OPTIONS += -DTLSF_MALLOC_FL_INDEX_BITS=15
+# how many bits is used to calculate subdivisions between 2^n and 2^(n+1)
+#PROJECT_OPTIONS += -DTLSF_MALLOC_SL_INDEX_BITS=2
 
 
 ifndef SRCDIR
@@ -202,6 +207,10 @@ SRCARMO2 += stdlib/lltoa.c
 SRCOs += stdlib/ltoa.c
 SRCOs += stdlib/rand.c
 SRCOs += stdlib/usleep.c
+
+# TLSF malloc functions (malloc, calloc, realloc, free)
+SRCARMO2 += tlsf_malloc/malloc.c
+SRCARMO2 += tlsf_malloc/tlsf.c
 
 # string functions
 ifeq ($(ARCH),cortex-m3)
@@ -383,8 +392,8 @@ ASFLAGS += $(ADEFS) -Wa,-adhlns=$(OBJDIR)$(<:.S=.lst),-g$(DEBUG)
 # ---------------------------------------------------------------------------
 
 # Define directories, if needed.
-DIRARM := c:/bin/WinARM/
-DIRARMUTILS := $(DIRARM)utils/bin/
+#DIRARM := c:/bin/WinARM/
+#DIRARMUTILS := $(DIRARM)utils/bin/
 
 # Define programs and commands.
 #SHELL := $(DIRARMUTILS)sh
