@@ -6,6 +6,7 @@
 
 
 extern struct tm __time_last_tm;
+extern void __timezone_dst_fix(struct tm* timep, char local_time);
 
 struct tm * localtime(const time_t *timer)
 {
