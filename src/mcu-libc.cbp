@@ -37,15 +37,21 @@
 		<Unit filename="CHANGELOG.txt" />
 		<Unit filename="Makefile" />
 		<Unit filename="inc/arm7/bits/alltypes.h" />
+		<Unit filename="inc/arm7/bits/float.h" />
 		<Unit filename="inc/assert.h" />
 		<Unit filename="inc/cm0/bits/alltypes.h" />
+		<Unit filename="inc/cm0/bits/float.h" />
 		<Unit filename="inc/cm3/bits/alltypes.h" />
+		<Unit filename="inc/cm3/bits/float.h" />
+		<Unit filename="inc/complex.h" />
 		<Unit filename="inc/ctype.h" />
 		<Unit filename="inc/errno.h" />
 		<Unit filename="inc/features.h" />
+		<Unit filename="inc/float.h" />
 		<Unit filename="inc/inttypes.h" />
 		<Unit filename="inc/libc_version.h" />
 		<Unit filename="inc/limits.h" />
+		<Unit filename="inc/math.h" />
 		<Unit filename="inc/msp_printf.h" />
 		<Unit filename="inc/stdarg.h" />
 		<Unit filename="inc/stdbool.h" />
@@ -60,6 +66,37 @@
 		<Unit filename="inc/time.h" />
 		<Unit filename="inc/tlsf.h" />
 		<Unit filename="inc/unistd.h" />
+		<Unit filename="init/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ceil.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ceilf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ceill.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/floor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/floorf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/floorl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/libm.h" />
+		<Unit filename="math/round.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/roundf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/roundl.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="printf/doc/convert.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -299,9 +336,6 @@
 		</Unit>
 		<Unit filename="tlsf_malloc/tlsfbits.h" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
 			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>

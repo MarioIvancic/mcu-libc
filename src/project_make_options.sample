@@ -66,11 +66,21 @@ PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
 #PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONGLONG
 #PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONG
 
+# printf options
+#PROJECT_OPTIONS += -DPRINTF_USE_MSP
+PROJECT_OPTIONS += -DPRINTF_USE_TFP
+
+
 # TLSF malloc options
 # how many bits are used for addressing memory
 #PROJECT_OPTIONS += -DTLSF_MALLOC_FL_INDEX_BITS=15
 # how many bits is used to calculate subdivisions between 2^n and 2^(n+1)
 #PROJECT_OPTIONS += -DTLSF_MALLOC_SL_INDEX_BITS=2
+
+
+# startup options
+#PROJECT_OPTIONS += -DHAVE_INITFINI_ARRAY
+
 
 
 

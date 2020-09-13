@@ -2,12 +2,12 @@
  * Mario Ivancic, 2019
  * This code is based on MSP430-Libc *printf.c
  * It implements *reentrant* printf, sprintf and friends.
- * 
+ *
  * Changes to original code:
  * Changed I/O API to Kustaa Nyholm Tiny Printf style to make all functions reentrant.
- * 
+ *
  * User have to supply int putchar(int) function to init_msp_printf().
- * 
+ *
  * msp_vuprintf is core function and it's self-contained except memfill.
  * Specifically, it use built-in number conversion code rather than
  * some library functions like itoa.
@@ -95,9 +95,12 @@ int __MSP_PRINTF_FORMAT(2, 3)     msp_sprintf (char *buf, const char *fmt, ...);
 int __MSP_PRINTF_FORMAT(3, 4)     msp_snprintf (char *buf, size_t size, const char *fmt, ...);
 
 
-#define printf msp_printf 
-#define sprintf msp_sprintf 
-#define snprintf msp_snprintf 
+//#define printf msp_printf
+//#define sprintf msp_sprintf
+//#define snprintf msp_snprintf
+//#define vprintf msp_vprintf
+//#define vsprintf msp_vsprintf
+//#define vsnprintf msp_vsnprintf
 
 #ifdef __cplusplus
 }

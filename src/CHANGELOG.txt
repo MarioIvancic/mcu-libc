@@ -12,3 +12,9 @@ Version 0.9.1
 Version 0.9.4
 2019-09-07
 	- Added malloc/free based on public domain implementation of TLSF malloc (Two Level Segregated Fit)
+
+Version 0.9.5
+2020-09-13
+	- Added support to explicitly specify which printf implementation to use
+    - Added mactos to define vprintf, vsprintf and vsnprintf if MSP printf is used
+    - Added math.h and some math functions

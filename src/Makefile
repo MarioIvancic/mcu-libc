@@ -24,75 +24,6 @@ PROJECT_OPTIONS := -D__LIBC__
 # include project specific options
 include project_make_options
 
-# itoa, ltoa, lltoa, uitoa, ultoa, ulltoa options
-# enable fast conversion for common base (2, 8, 10, 16)
-#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_HEX
-#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_DEC
-#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_OCT
-#PROJECT_OPTIONS += -DITOA_ENABLE_FAST_BIN
-
-# memcpy, memccpy, memcmp, memchr options
-#PROJECT_OPTIONS += -DLIBC_MEMCCPY_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMCCPY_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_MEMCHR_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMCHR_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_MEMCMP_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMCMP_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_MEMCPY_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMCPY_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_MEMMOVE_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMMOVE_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_MEMSET_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_MEMSET_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRCAT_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRCAT_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRCHR_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRCHR_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRCMP_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRCMP_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRCPY_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRCPY_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRLCPY_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRLCPY_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRLEN_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRLEN_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRNCAT_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRNCAT_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRNCPY_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRNCPY_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRNLEN_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRNLEN_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DLIBC_STRSPN_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DLIBC_STRSPN_OPTIMIZE_SPEED
-
-
-# systime options (defined only for some archs
-#PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
-
-# gmtime options
-#PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
-#PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SPEED
-#PROJECT_OPTIONS += -DGMTIME_LOOP_DAYS
-
-# time options
-#PROJECT_OPTIONS += -DSYSTEM_TIME_USE_CLOCK_GETTIME
-
-# tiny printf options
-#PROJECT_OPTIONS += -DTFP_PRINTF_ENABLE_LONGLONG
-#PROJECT_OPTIONS += -DTFP_PRINTF_ENABLE_LONG
-#PROJECT_OPTIONS += -DTFP_PRINTF_USE_SHIFT_ADD
-#PROJECT_OPTIONS += -DTFP_PRINTF_USE_BUILTINS
-
-# msp printf options
-#PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONGLONG
-#PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONG
-
-# TLSF malloc options
-# how many bits are used for addressing memory
-#PROJECT_OPTIONS += -DTLSF_MALLOC_FL_INDEX_BITS=15
-# how many bits is used to calculate subdivisions between 2^n and 2^(n+1)
-#PROJECT_OPTIONS += -DTLSF_MALLOC_SL_INDEX_BITS=2
-
 
 ifndef SRCDIR
 SRCDIR := .
@@ -188,6 +119,10 @@ CPPSRCARMO1 :=
 CPPSRCARMO2 :=
 CPPSRCARMO3 :=
 
+# startup functions
+SRCOs += init/init.c
+
+
 # stdlib functions
 SRCOs += stdlib/errno.c
 SRCOs += stdlib/abs.c
@@ -276,6 +211,18 @@ SRCOs += time/gettimeofday.c
 # printf functions
 SRCOs += printf/msp_printf.c
 SRCOs += printf/tfp_printf.c
+SRCOs += printf/printf.c
+
+# math functions
+SRCOs += math/ceil.c
+SRCOs += math/ceilf.c
+SRCOs += math/ceill.c
+SRCOs += math/round.c
+SRCOs += math/roundf.c
+SRCOs += math/roundl.c
+SRCOs += math/floor.c
+SRCOs += math/floorf.c
+SRCOs += math/floorl.c
 
 
 
@@ -506,14 +453,16 @@ else
 endif
 
 
+
 # Default target.
 all: begin gccversion buildlib finished end
+
 
 #buildlib: objdir a copytarget
 buildlib: objdir $(TARGETLIB).a
 
 
-# pravi se OBJDIR ako je definisan
+# create OBJDIR if defined
 ifdef OBJDIR
 objdir:
 	@if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi
@@ -522,9 +471,9 @@ objdir:
 
 endif
 
-# kopira se target iz OBJDIR direktorija
+# copy target from OBJDIR dirctory
 copytarget:
-	@echo "kopira se target iz OBJDIR direktorija"
+	@echo "copy target from OBJDIR dirctory"
 	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGET).hex ]; then $(COPY) $(OBJDIR)/$(TARGET).hex . ; fi
 	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGETLIB).a ]; then $(COPY) $(OBJDIR)/$(TARGETLIB).a . ; fi
 

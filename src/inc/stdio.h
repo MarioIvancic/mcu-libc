@@ -21,13 +21,21 @@ extern "C" {
 #define EOF -1
 #endif
 
-// tfp_printf have smaller memory footprint so we will us it as default
-// printf implementation.
-// But you can #include <msp_printf.h> or #include <tfp_printf.h>
-// Both header files defines printf, sprintf and snprintf macros, so
-// if you want to use msp_* and tfp_* functions in the same C file
-// you must undef all three mactos befor including another file.
-#include <tfp_printf.h>
+#ifdef __GNUC__
+    #define __LIBC_PRINTF_FORMAT(a, b) __attribute__((format (printf, a, b)))
+#else // ! __GNUC__
+    #define __LIBC_PRINTF_FORMAT(a, b)
+#endif
+
+int puts ( const char * str );
+
+int vprintf (const char *fmt, va_list argp);
+int vsprintf (char *buf, const char *fmt, va_list argp);
+int vsnprintf (char *buf, size_t size, const char *fmt, va_list argp);
+
+int __LIBC_PRINTF_FORMAT(1, 2)     printf (const char *fmt, ...);
+int __LIBC_PRINTF_FORMAT(2, 3)     sprintf (char *buf, const char *fmt, ...);
+int __LIBC_PRINTF_FORMAT(3, 4)     snprintf (char *buf, size_t size, const char *fmt, ...);
 
 
 #ifdef __cplusplus

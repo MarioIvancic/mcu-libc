@@ -278,7 +278,7 @@ n   Print nothing, but write number of characters successfully written so far in
 #endif
 
 
-void tfp_format(void* putp, void (*putf)(void*, char), char *fmt, va_list va)
+void tfp_format(void* putp, void (*putf)(void*, char), const char *fmt, va_list va)
 {
     char bf[BUFF_SIZE];
 
@@ -501,7 +501,7 @@ void tfp_printf_indirect_putc(void* p, char c)
 
 
 // printf implementation
-void tfp_printf(char *fmt, ...)
+void tfp_printf(const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
@@ -511,13 +511,21 @@ void tfp_printf(char *fmt, ...)
 
 
 // printf implementation using void outf(char) output function
-void tfp_uprintf(void (*outf)(char), char *fmt, ...)
+void tfp_uprintf(void (*outf)(char), const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
     tfp_format(outf, tfp_printf_indirect_putc, fmt, va);
     va_end(va);
 }
+
+
+int tfp_vprintf (const char *fmt, va_list argp)
+{
+    tfp_format (stdout_putf, tfp_printf_indirect_putc, fmt, argp);
+    return 0;
+}
+
 
 
 // output function for sprintf
@@ -530,7 +538,7 @@ static void putcp(void* p, char c)
 
 
 // sprintf implementation
-void tfp_sprintf(char* s, char *fmt, ...)
+void tfp_sprintf(char* s, const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
@@ -538,6 +546,18 @@ void tfp_sprintf(char* s, char *fmt, ...)
     putcp(&s, 0);
     va_end(va);
 }
+
+
+// reentrant vsprintf implementation
+// returns 0
+int tfp_vsprintf (char *buf, const char *fmt, va_list argp)
+{
+    tfp_format (&buf, putcp, fmt, argp);
+    putcp(&buf, 0);
+    va_end(argp);
+    return 0;
+}
+
 
 
 // structure for snprintf output function
@@ -564,8 +584,22 @@ static void putcpsc(void* p, char c)
 }
 
 
+// reentrant vsnprintf implementation
+// returns 0
+int tfp_vsnprintf (char *buf, size_t size, const char *fmt, va_list argp)
+{
+    scp p;
+    p.p = buf;
+    p.size = size - 1;
+    tfp_format (&p, putcpsc, fmt, argp);
+    if(p.size) *(p.p) = 0;
+    va_end(argp);
+    return 0;
+}
+
+
 // snprintf implementation
-void tfp_snprintf(char* s, int size, char *fmt, ...)
+void tfp_snprintf(char* s, int size, const char *fmt, ...)
 {
     scp p;
     p.p = s;

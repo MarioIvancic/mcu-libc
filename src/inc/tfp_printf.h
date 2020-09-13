@@ -139,22 +139,34 @@ extern "C" {
 void init_tfp_printf(void (*putf) (char));
 
 // main *printf formating function
-void tfp_format(void*, void (*)(void*, char), char*, va_list);
+void tfp_format(void*, void (*)(void*, char), const char*, va_list);
+
+// reentrant vsnprintf implementation
+// returns 0
+int tfp_vsnprintf (char *buf, size_t size, const char *fmt, va_list argp);
+
+
+// reentrant vsprintf implementation
+// returns 0
+int tfp_vsprintf (char *buf, const char *fmt, va_list argp);
+
+
+int tfp_vprintf (const char *fmt, va_list argp);
 
 
 void tfp_puts (const char *str);
 
 // printf implementation using void outf(char) output function
-void __TFP_PRINTF_FORMAT(2, 3) tfp_uprintf(void (*outf)(char), char *fmt, ...);
+void __TFP_PRINTF_FORMAT(2, 3) tfp_uprintf(void (*outf)(char), const char *fmt, ...);
 
 // printf
-void __TFP_PRINTF_FORMAT(1, 2) tfp_printf(char *fmt, ...);
+void __TFP_PRINTF_FORMAT(1, 2) tfp_printf(const char *fmt, ...);
 
 // sprintf
-void __TFP_PRINTF_FORMAT(2, 3) tfp_sprintf(char* s, char *fmt, ...);
+void __TFP_PRINTF_FORMAT(2, 3) tfp_sprintf(char* s, const char *fmt, ...);
 
 // snprintf
-void __TFP_PRINTF_FORMAT(3, 4) tfp_snprintf(char* s, int size, char *fmt, ...);
+void __TFP_PRINTF_FORMAT(3, 4) tfp_snprintf(char* s, int size, const char *fmt, ...);
 
 
 // Print character using user specified blocking output function p.
@@ -163,10 +175,10 @@ void __TFP_PRINTF_FORMAT(3, 4) tfp_snprintf(char* s, int size, char *fmt, ...);
 // Function p should be void p(char);
 void tfp_printf_indirect_putc(void* p, char c);
 
-#define printf 		tfp_printf
-#define sprintf 	tfp_sprintf
-#define snprintf	tfp_snprintf
-#define puts 		tfp_puts
+//#define printf 		tfp_printf
+//#define sprintf 	tfp_sprintf
+//#define snprintf	tfp_snprintf
+//#define puts 		tfp_puts
 
 #ifdef __cplusplus
 }

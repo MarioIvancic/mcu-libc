@@ -7,7 +7,7 @@
 	#undef __CPU_INT_SIZE__
 	#undef __CPU_PTR_SIZE__
 	#undef __CPU_INTPTR_SIZE__
-	
+
 	#define __CPU_INT_SIZE__ 32
 	#define __CPU_PTR_SIZE__ 32
 	#if __CPU_INT_SIZE__ > __CPU_PTR_SIZE__
@@ -49,7 +49,7 @@
 		#define CHAR_MIN	(-128)		/* mimimum char value */
 		#define SHRT_MAX	32767		/* maximum (signed) short value */
 		#define SHRT_MIN	(-32768)	/* minimum (signed) short value */
-		
+
 		#define LONG_LONG_MAX   9223372036854775807LL
 		#define LONG_LONG_MIN   (-LONG_LONG_MAX - 1)
 
@@ -65,9 +65,9 @@
 		#define UCHAR_MIN	0		/* minimum unsigned char value */
 		#define USHRT_MAX	0xffff		/* maximum unsigned short value */
 		#define USHRT_MIN	0		/* minimum unsigned short value */
-		
+
 		#define ULONG_LONG_MAX	0xffffffffffffffffull
-		
+
 		#if __CPU_INT_SIZE__ < 64
 			#define ULONG_MAX	0xfffffffful	/* maximum unsigned long value */
 		#else
@@ -85,7 +85,7 @@
 			#define INT_MAX		2147483647L		/* maximum (signed) int value */
 			#define UINT_MAX	0xfffffffful		/* maximum unsigned int value */
 		#endif // __CPU_INT_SIZE__
-		
+
 		#define INT_MIN		(-INT_MAX - 1)	/* minimum (signed) int value */
 		#define UINT_MIN	0		/* minimum unsigned int value */
 
@@ -167,6 +167,28 @@
 
 
 
+#ifdef __need_float_t
+	#ifndef __float_t_defined
+		#define __float_t_defined	1
+
+		typedef float float_t;
+
+	#endif // __float_t_defined
+#endif // __need_float_t
+
+
+#ifdef __need_double_t
+	#ifndef __double_t_defined
+		#define __double_t_defined	1
+
+		typedef double double_t;
+
+	#endif // __double_t_defined
+#endif // __need_double_t
+
+
+
+
 
 #ifdef __need_clockid_t
 	#ifndef __clockid_t_defined
@@ -227,7 +249,7 @@
 		#define __time_t_defined		1
 
 		#define __TIME_UNSIGNED			1
-		
+
 		/* This must be 32 bits or more */
 		#if __CPU_INT_SIZE__ < 32
 			typedef unsigned long time_t;
@@ -306,7 +328,7 @@
 		#else
 			#error "Pointer size not supported!"
 		#endif
-		
+
 		#define PTRDIFF_MIN             (-PTRDIFF_MAX - 1)
 
 	#endif // __ptrdiff_t_defined
@@ -318,7 +340,7 @@
 #ifdef __need_struct_tm
 	#ifndef __struct_tm_defined
 	#define __struct_tm_defined
-	
+
 		typedef short __tm_sec_t;
 		typedef short __tm_min_t;
 		typedef short __tm_mday_t;
@@ -327,7 +349,7 @@
 		#define __tm_min_max 32767
 		#define __tm_mday_max 32767
 		#define __tm_hour_max 32767
-		
+
 		typedef short __tm_yday_t;
 		typedef short __tm_year_t;
 		//typedef signed char __tm_mon_t;
@@ -335,14 +357,14 @@
 		typedef signed char __tm_wday_t;
 		typedef signed char __tm_isdst_t;
 		//typedef signed char __tm_gmtoff_t;
-		
+
 		#define __tm_yday_max 32767
 		#define __tm_year_max 32767
 		//#define __tm_mon_max 127
 		#define __tm_mon_max 32767
 		#define __tm_wday_max 127
 		//#define __tm_gmtoff_max 127
-			
+
 		struct tm
 		{
 			__tm_yday_t	tm_yday;	    // 0-365, 01-Jan == 0
@@ -356,7 +378,7 @@
 			__tm_isdst_t tm_isdst;	    // 0: DST not in effect, > 0: DST in effect, < 0: system will decide is DST in effect or not
 			//__tm_gmtoff_t __tm_gmtoff;    // offset in hours to gm time. tm_gmtoff = local_time - gm_time
 		};
-		
+
 	#endif // __struct_tm_defined
 #endif	// __need_struct_tm
 
@@ -366,13 +388,13 @@
 #ifdef __need_struct_timespec
 	#ifndef __struct_timespec_defined
 	#define __struct_timespec_defined
-	
+
 	struct timespec
 	{
 		time_t   tv_sec;        /* seconds */
 		long     tv_nsec;       /* nanoseconds */
 	};
-		
+
 	#endif // __struct_timespec_defined
 #endif	// __need_struct_timespec
 
@@ -382,14 +404,14 @@
 #ifdef __need_struct_timeval
 	#ifndef __struct_timeval_defined
 	#define __struct_timeval_defined
-	
+
 	// the number of seconds and microseconds since the Epoch
 	struct timeval
 	{
 		time_t      tv_sec;     /* seconds */
 		suseconds_t tv_usec;    /* microseconds */
 	};
-		
+
 	#endif // __struct_timeval_defined
 #endif	// __need_struct_timeval
 
@@ -400,13 +422,13 @@
 #ifdef __need_struct_timezone
 	#ifndef __struct_timezone_defined
 	#define __struct_timezone_defined
-	
+
 	struct timezone
 	{
 		int tz_minuteswest;     /* minutes west of Greenwich */
 		int tz_dsttime;         /* type of DST correction */
 	};
-		
+
 	#endif // __struct_timezone_defined
 #endif	// __need_struct_timezone
 
