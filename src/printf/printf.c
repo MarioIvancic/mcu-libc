@@ -2,7 +2,7 @@
  * Copyright (c) 2020
  * Mario Ivancic
  * All rights reserved.
- * 
+ *
  * tfp_printf have smaller memory footprint and msp_printf is closer to standard printf.
  * in general case, on embedded systems we prefer small code size so we will us tfp_printf
  * as default printf implementation.
@@ -21,7 +21,16 @@
 
 #ifdef PRINTF_USE_MSP
 #include <msp_printf.h>
-	
+
+
+// set output function for printf
+// putf is pointer to some output function like int uart0_putc(int).
+void _init_printf(int (*putf) (int))
+{
+    init_msp_printf(putf);
+}
+
+
 int puts ( const char * str ) { return msp_puts(str); }
 
 int vprintf (const char *fmt, va_list argp)
@@ -60,13 +69,21 @@ int snprintf (char *buf, size_t size, const char *fmt, ...)
 	va_list argp;
     va_start (argp, fmt);
     return msp_vsnprintf(buf, size, fmt, argp);
-}	
-	
-	
+}
+
+
 #else
 #include <tfp_printf.h>
 
-int puts ( const char * str ) { tfp_puts(str); return 0; }
+// set output function for printf
+// putf is pointer to some output function like int uart0_putc(int).
+void _init_printf(int (*putf) (int))
+{
+    init_tfp_printf(putf);
+}
+
+
+int puts ( const char * str ) { tfp_puts(str); return 1; }
 
 int vprintf (const char *fmt, va_list argp)
 {
@@ -105,8 +122,8 @@ int snprintf (char *buf, size_t size, const char *fmt, ...)
     va_start (argp, fmt);
     return tfp_vsnprintf(buf, size, fmt, argp);
 }
-	
-	
+
+
 #endif // PRINTF_USE_MSP
 
 

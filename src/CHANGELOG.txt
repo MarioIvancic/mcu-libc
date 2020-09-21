@@ -18,3 +18,7 @@ Version 0.9.5
 	- Added support to explicitly specify which printf implementation to use
     - Added mactos to define vprintf, vsprintf and vsnprintf if MSP printf is used
     - Added math.h and some math functions
+
+Version 0.9.6
+2020-09-21
+	- Added _printf_init() function to set printf output function.

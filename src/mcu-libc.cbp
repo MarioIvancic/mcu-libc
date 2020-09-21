@@ -103,6 +103,9 @@
 		<Unit filename="printf/msp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="printf/printf.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="printf/tfp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>

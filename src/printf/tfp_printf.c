@@ -18,28 +18,28 @@
  *
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this list 
+ * Redistributions of source code must retain the above copyright notice, this list
  * of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright notice, this 
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or other
  * materials provided with the distribution.
- *  
- * Neither the name of the Kustaa Nyholm or SpareTimeLabs nor the names of its 
- * contributors may be used to endorse or promote products derived from this software 
+ *
+ * Neither the name of the Kustaa Nyholm or SpareTimeLabs nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
- * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
@@ -64,7 +64,7 @@
 typedef void (*putcf) (void*, char);
 
 // pointer to output function for printf
-static void (*stdout_putf)(char);
+static int (*stdout_putf)(int);
 
 
 #ifdef TFP_PRINTF_USE_BUILTINS
@@ -76,7 +76,7 @@ static void ulli2a(unsigned long long int num, unsigned int base, int uc, char *
 	int n=0;
 	unsigned int d=1;
 	while (num/d >= base)
-		d*=base;		 
+		d*=base;
 	while (d!=0) {
 		int dgt = num / d;
 		num%=d;
@@ -88,7 +88,7 @@ static void ulli2a(unsigned long long int num, unsigned int base, int uc, char *
 		}
 	*bf=0;
 	}
-    
+
 #endif  // TFP_PRINTF_ENABLE_LONGLONG
 
 #ifdef TFP_PRINTF_ENABLE_LONG
@@ -98,7 +98,7 @@ static void uli2a(unsigned long int num, unsigned int base, int uc,char * bf)
 	int n=0;
 	unsigned int d=1;
 	while (num/d >= base)
-		d*=base;		 
+		d*=base;
 	while (d!=0) {
 		int dgt = num / d;
 		num%=d;
@@ -129,7 +129,7 @@ static void ui2a(unsigned int num, unsigned int base, int uc,char * bf)
 	int n=0;
 	unsigned int d=1;
 	while (num/d >= base)
-		d*=base;		
+		d*=base;
 	while (d!=0) {
 		int dgt = num / d;
 		num%= d;
@@ -155,7 +155,7 @@ static void i2a (int num, char * bf)
 
 static int a2d(char ch)
 	{
-	if (ch>='0' && ch<='9') 
+	if (ch>='0' && ch<='9')
 		return ch-'0';
 	else if (ch>='a' && ch<='f')
 		return ch-'a'+10;
@@ -180,12 +180,12 @@ static char a2i(char ch, char** src,int base,int* nump)
 	}
 
 #endif // 0
-    
+
     // builtin functions for conversion
     #define UTOA(v, b, u, bf) ui2a((v), (b), (u), (bf))
     #define ULTOA(v, b, u, bf) uli2a((v), (b), (u), (bf))
     #define ULLTOA(v, b, u, bf) ulli2a((v), (b), (u), (bf))
-    
+
 #else   // ! TFP_PRINTF_USE_BUILTINS
     // library functions for conversion
     #define UTOA(v, b, u, bf) _utoac((v), (bf), (b), (u))
@@ -477,7 +477,7 @@ void tfp_format(void* putp, void (*putf)(void*, char), const char *fmt, va_list 
 
 // init function for tfp_printf
 // putf is pointer to some output function like uart0_putc().
-void init_tfp_printf(void (*putf) (char))
+void init_tfp_printf(int (*putf) (int))
 {
     stdout_putf = putf;
 }
@@ -486,6 +486,7 @@ void init_tfp_printf(void (*putf) (char))
 void tfp_puts (const char *str)
 {
     while (*str) stdout_putf(*str++);
+    stdout_putf ('\n');
 }
 
 
@@ -495,7 +496,7 @@ void tfp_puts (const char *str)
 // Function p should be void p(char);
 void tfp_printf_indirect_putc(void* p, char c)
 {
-    void (*outf)(char) = (void (*)(char))p;
+    int (*outf)(int) = (int (*)(int))p;
     outf(c);
 }
 
@@ -511,7 +512,7 @@ void tfp_printf(const char *fmt, ...)
 
 
 // printf implementation using void outf(char) output function
-void tfp_uprintf(void (*outf)(char), const char *fmt, ...)
+void tfp_uprintf(int (*outf)(int), const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);

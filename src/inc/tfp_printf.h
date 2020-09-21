@@ -135,8 +135,8 @@ extern "C" {
 #endif
 
 // init function for tfp_printf
-// putf is pointer to some output function like void uart0_putc(char).
-void init_tfp_printf(void (*putf) (char));
+// putf is pointer to some output function like void uart0_putc(int).
+void init_tfp_printf(int (*putf) (int));
 
 // main *printf formating function
 void tfp_format(void*, void (*)(void*, char), const char*, va_list);
@@ -157,7 +157,7 @@ int tfp_vprintf (const char *fmt, va_list argp);
 void tfp_puts (const char *str);
 
 // printf implementation using void outf(char) output function
-void __TFP_PRINTF_FORMAT(2, 3) tfp_uprintf(void (*outf)(char), const char *fmt, ...);
+void __TFP_PRINTF_FORMAT(2, 3) tfp_uprintf(int (*outf)(int), const char *fmt, ...);
 
 // printf
 void __TFP_PRINTF_FORMAT(1, 2) tfp_printf(const char *fmt, ...);
