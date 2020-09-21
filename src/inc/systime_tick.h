@@ -29,7 +29,7 @@
 
 #include <libc_version.h>
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif // _cplusplus
 
@@ -121,7 +121,7 @@ unsigned _systime_sec(void);
 
 
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 }
 #endif // _cplusplus
 
