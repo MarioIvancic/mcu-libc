@@ -134,6 +134,9 @@ extern "C" {
     #define __TFP_PRINTF_FORMAT(a, b)
 #endif
 
+// pointer to output function for printf
+extern int (*_tfp_printf_putchar_ptr)(int);
+
 // init function for tfp_printf
 // putf is pointer to some output function like void uart0_putc(int).
 void init_tfp_printf(int (*putf) (int));

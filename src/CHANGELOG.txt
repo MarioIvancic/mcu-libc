@@ -22,3 +22,4 @@ Version 0.9.5
 Version 0.9.6
 2020-09-21
 	- Added _printf_init() function to set printf output function.
+	- Added int putchar ( int character );

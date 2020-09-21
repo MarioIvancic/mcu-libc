@@ -27,6 +27,8 @@ extern "C" {
     #define __LIBC_PRINTF_FORMAT(a, b)
 #endif
 
+int putchar ( int character );
+
 int puts ( const char * str );
 
 int vprintf (const char *fmt, va_list argp);

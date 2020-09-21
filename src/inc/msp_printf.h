@@ -25,6 +25,8 @@
 extern "C" {
 #endif // __cplusplus
 
+extern int (*_msp_printf_putchar_ptr)(int);
+
 
 // init function for msp_printf
 // putf is pointer to some output function like uart0_putc()

@@ -61,10 +61,10 @@
 #endif // TFP_PRINTF_USE_SHIFT_ADD
 
 
-typedef void (*putcf) (void*, char);
+//typedef void (*putcf) (void*, char);
 
 // pointer to output function for printf
-static int (*stdout_putf)(int);
+int (*_tfp_printf_putchar_ptr)(int);
 
 
 #ifdef TFP_PRINTF_USE_BUILTINS
@@ -479,14 +479,14 @@ void tfp_format(void* putp, void (*putf)(void*, char), const char *fmt, va_list 
 // putf is pointer to some output function like uart0_putc().
 void init_tfp_printf(int (*putf) (int))
 {
-    stdout_putf = putf;
+    _tfp_printf_putchar_ptr = putf;
 }
 
 
 void tfp_puts (const char *str)
 {
-    while (*str) stdout_putf(*str++);
-    stdout_putf ('\n');
+    while (*str) _tfp_printf_putchar_ptr(*str++);
+    _tfp_printf_putchar_ptr ('\n');
 }
 
 
@@ -506,7 +506,7 @@ void tfp_printf(const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    tfp_format(stdout_putf, tfp_printf_indirect_putc, fmt, va);
+    tfp_format(_tfp_printf_putchar_ptr, tfp_printf_indirect_putc, fmt, va);
     va_end(va);
 }
 
@@ -523,7 +523,7 @@ void tfp_uprintf(int (*outf)(int), const char *fmt, ...)
 
 int tfp_vprintf (const char *fmt, va_list argp)
 {
-    tfp_format (stdout_putf, tfp_printf_indirect_putc, fmt, argp);
+    tfp_format (_tfp_printf_putchar_ptr, tfp_printf_indirect_putc, fmt, argp);
     return 0;
 }
 

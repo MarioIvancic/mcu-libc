@@ -2,10 +2,10 @@
  * Copyright (c) 2019
  * Mario Ivancic
  * All rights reserved.
- * 
+ *
  * This code is based on MSP430-Libc *printf.c
  * It implements *reentrant* printf, sprintf and friends.
- * 
+ *
  * Changes to original code:
  * - Changed I/O API to Kustaa Nyholm Tiny Printf style to make all functions reentrant.
  * - Added prefix msp_ to all functions, so thay can be used besides other printf-like functions.
@@ -16,7 +16,7 @@
  *   #include "msp_printf.h"
  *   init_msp_prinf(uart0_putchar);
  *   printf("Helo World\n");
- * 
+ *
  * msp_vuprintf is core function and it's self-contained except memfill.
  * Specifically, it use built-in number conversion code rather than
  * some library functions like itoa.
@@ -647,10 +647,10 @@ int msp_vuprintf (void* outp, int (*write_char)(void*, int), const char *format,
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- * 
+ *
+ *
  * The code below this comment is heavily modified MSP LIBC printf code.
- * In original code vuprintf (core function) takes just 3 arguments, 
+ * In original code vuprintf (core function) takes just 3 arguments,
  * the firs being pointer to output function of type int fcn(int).
  * I added one more argument, a pointer that is in turn supplied to new
  * output function, now prototyped as int function(void*, int), like in
@@ -658,15 +658,15 @@ int msp_vuprintf (void* outp, int (*write_char)(void*, int), const char *format,
  */
 
 
- 
-static int (*stdout_putf)(int);
+
+int (*_msp_printf_putchar_ptr)(int);
 
 
 // init function for msp_printf
 // putf is pointer to some output function like uart0_putc().
 void init_msp_printf(int (*putf) (int))
 {
-    stdout_putf = putf;
+    _msp_printf_putchar_ptr = putf;
 }
 
 
@@ -678,7 +678,7 @@ int msp_printf_indirect_putc(void* p, int c)
 {
     int (*outf)(int) = (int (*)(int))p;
     return outf(c);
-} 
+}
 
 
 // printf using int func(int) output function
@@ -697,9 +697,9 @@ int msp_uprintf (int (*func) (int c), const char *fmt, ...)
 int msp_puts (const char *s)
 {
     /* NB: <= saves 6 bytes ROM over < */
-    while (*s && (0 <= stdout_putf (*s++))) ;
+    while (*s && (0 <= _msp_printf_putchar_ptr (*s++))) ;
     if (*s) return EOF;
-    return stdout_putf ('\n');
+    return _msp_printf_putchar_ptr ('\n');
 }
 
 
@@ -710,7 +710,7 @@ int msp_printf (const char *fmt, ...)
     int rc;
 
     va_start (argp, fmt);
-    rc = msp_vuprintf (stdout_putf, msp_printf_indirect_putc, fmt, argp);
+    rc = msp_vuprintf (_msp_printf_putchar_ptr, msp_printf_indirect_putc, fmt, argp);
     va_end (argp);
     return rc;
 }
@@ -718,7 +718,7 @@ int msp_printf (const char *fmt, ...)
 
 int msp_vprintf (const char *fmt, va_list argp)
 {
-    return msp_vuprintf (stdout_putf, msp_printf_indirect_putc, fmt, argp);
+    return msp_vuprintf (_msp_printf_putchar_ptr, msp_printf_indirect_putc, fmt, argp);
 }
 
 

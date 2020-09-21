@@ -30,6 +30,11 @@ void _init_printf(int (*putf) (int))
     init_msp_printf(putf);
 }
 
+int putchar ( int c )
+{
+    return _msp_printf_putchar_ptr(c);
+}
+
 
 int puts ( const char * str ) { return msp_puts(str); }
 
@@ -80,6 +85,11 @@ int snprintf (char *buf, size_t size, const char *fmt, ...)
 void _init_printf(int (*putf) (int))
 {
     init_tfp_printf(putf);
+}
+
+int putchar ( int c )
+{
+    return _tfp_printf_putchar_ptr(c);
 }
 
 
