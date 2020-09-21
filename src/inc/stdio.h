@@ -27,6 +27,8 @@ extern "C" {
     #define __LIBC_PRINTF_FORMAT(a, b)
 #endif
 
+void _init_printf(int (*) (int));
+
 int putchar ( int character );
 
 int puts ( const char * str );
