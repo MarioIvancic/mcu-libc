@@ -87,7 +87,7 @@
 
 #define _GNU_SOURCE
 #include "libm.h"
-//#include "libc.h"
+#include "features.h"
 
 #if LDBL_MANT_DIG == 53 && LDBL_MAX_EXP == 1024
 double __lgamma_r(double x, int *sg);

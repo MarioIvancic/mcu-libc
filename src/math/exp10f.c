@@ -1,6 +1,6 @@
 #define _GNU_SOURCE
 #include <math.h>
-//#include "libc.h"
+#include "features.h"
 
 float exp10f(float x)
 {

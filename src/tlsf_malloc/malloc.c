@@ -7,6 +7,21 @@
 #include <stdlib.h>
 #include <tlsf.h>
 
+extern char* _stack;
+extern char* _heap;
+
+
+// if TLSF_MALLOC_MEMSIZE is not defined we will take half of available memory for
+// heap and the other half will be available for stack
+#ifndef TLSF_MALLOC_MEMSIZE
+#define TLSF_MALLOC_MEMSIZE ((_stack - _heap) / 2)
+#endif // TLSF_MALLOC_MEMSIZE
+
+
+// If malloc or calloc is called before a call to malloc_init
+// we will make implicit malloc initialization using this macro.
+#define MALLOC_AUTOINIT() malloc_pool = tlsf_create(_heap, TLSF_MALLOC_MEMSIZE)
+
 // all *alloc functions will use this pool
 static tlsf_pool malloc_pool;
 
@@ -18,7 +33,7 @@ static tlsf_pool malloc_pool;
 */
 void malloc_init(void* ptr, size_t size)
 {
-    malloc_pool = tlsf_create(ptr, size);
+    if(!malloc_pool) malloc_pool = tlsf_create(ptr, size);
 }
 
 
@@ -31,6 +46,7 @@ void malloc_init(void* ptr, size_t size)
 */
 void* malloc (size_t size)
 {
+    if(!malloc_pool) MALLOC_AUTOINIT();
     return tlsf_malloc(malloc_pool, size);
 }
 
@@ -46,6 +62,7 @@ void* malloc (size_t size)
 */
 void* calloc (size_t num, size_t size)
 {
+    if(!malloc_pool) MALLOC_AUTOINIT();
     void* ptr = tlsf_malloc(malloc_pool, num * size);
     if(ptr)
     {

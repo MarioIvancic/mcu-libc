@@ -77,6 +77,8 @@ PROJECT_OPTIONS += -DPRINTF_USE_TFP
 
 
 # TLSF malloc options
+# Memory size available to malloc. Default is (_stack - _heap) / 2.
+#PROJECT_OPTIONS += -DTLSF_MALLOC_MEMSIZE=8192
 # how many bits are used for addressing memory
 # 13 => 8KB, 14 =>16KB, 15 => 32KB, 16 => 64KB, 17 => 128KB
 #PROJECT_OPTIONS += -DTLSF_MALLOC_FL_INDEX_BITS=15

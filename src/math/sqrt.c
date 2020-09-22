@@ -83,7 +83,7 @@ static const double tiny = 1.0e-300;
 double sqrt(double x)
 {
 	double z;
-	int32_t sign = (int)0x80000000;
+	int32_t sign = (int32_t)0x80000000;
 	int32_t ix0,s0,q,m,t,i;
 	uint32_t r,t1,s1,ix1,q1;
 
@@ -146,7 +146,7 @@ double sqrt(double x)
 		t  = s0;
 		if (t < ix0 || (t == ix0 && t1 <= ix1)) {
 			s1 = t1 + r;
-			if ((t1&sign) == sign && (s1&sign) == 0)
+			if ((t1&sign) == (uint32_t)sign && (s1&sign) == 0)
 				s0++;
 			ix0 -= t;
 			if (ix1 < t1)

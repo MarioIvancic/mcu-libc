@@ -36,6 +36,11 @@
 
 #include "libm.h"
 
+extern double j0(double x);
+extern double j1(double x);
+extern double y0(double x);
+extern double y1(double x);
+
 static const double invsqrtpi = 5.64189583547756279280e-01; /* 0x3FE20DD7, 0x50429B6D */
 
 double jn(int n, double x)
