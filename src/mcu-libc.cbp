@@ -69,6 +69,152 @@
 		<Unit filename="init/init.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="math/__cos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__cosdf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__cosl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__expo2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__expo2f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__fpclassify.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__fpclassifyf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__fpclassifyl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__invtrigl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__invtrigl.h" />
+		<Unit filename="math/__polevll.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__rem_pio2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__rem_pio2_large.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__rem_pio2f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__rem_pio2l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__signbit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__signbitf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__signbitl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__sin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__sindf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__sinl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__tan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__tandf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/__tanl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acosf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acosh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acoshf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acoshl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/acosl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/armhf/fabs.s" />
+		<Unit filename="math/armhf/fabsf.s" />
+		<Unit filename="math/armhf/sqrt.s" />
+		<Unit filename="math/armhf/sqrtf.s" />
+		<Unit filename="math/asin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/asinf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/asinh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/asinhf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/asinhl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/asinl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atan2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atan2f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atan2l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atanf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atanh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atanhf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atanhl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/atanl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cbrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cbrtf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cbrtl.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="math/ceil.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -76,6 +222,102 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="math/ceill.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/copysign.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/copysignf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/copysignl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cosf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cosh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/coshf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/coshl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/cosl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/erf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/erff.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/erfl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp10f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp10l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp2f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/exp2l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/expf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/expl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/expm1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/expm1f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/expm1l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fabs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fabsf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fabsl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fdim.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fdimf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fdiml.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/finite.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/finitef.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="math/floor.c">
@@ -87,7 +329,274 @@
 		<Unit filename="math/floorl.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="math/fma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmaf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmax.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmaxf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmaxl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fminf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fminl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmod.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmodf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/fmodl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/frexp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/frexpf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/frexpl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/hypot.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/hypotf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/hypotl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ilogb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ilogbf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ilogbl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/j0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/j0f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/j1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/j1f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/jn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/jnf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ldexp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ldexpf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/ldexpl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lgamma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lgamma_r.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lgammaf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lgammaf_r.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lgammal.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="math/libm.h" />
+		<Unit filename="math/llrint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/llrintf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/llrintl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/llround.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/llroundf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/llroundl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log10.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log10f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log10l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log1p.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log1pf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log1pl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log2f.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/log2l.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/logb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/logbf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/logbl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/logf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/logl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lrint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lrintf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lrintl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lround.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lroundf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/lroundl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/modf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/modff.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/modfl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nanf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nanl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nearbyint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nearbyintf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nearbyintl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nextafter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nextafterf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nextafterl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nexttoward.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nexttowardf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/nexttowardl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/pow.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/powf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/powl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remainder.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remainderf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remainderl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remquo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remquof.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/remquol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/rint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/rintf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/rintl.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="math/round.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -97,18 +606,121 @@
 		<Unit filename="math/roundl.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="math/scalb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalbf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalbln.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalblnf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalblnl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalbn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalbnf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/scalbnl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/signgam.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/significand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/significandf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sincos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sincosf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sincosl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sinf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sinh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sinhf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sinhl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sinl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sqrt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sqrtf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/sqrtl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tanf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tanh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tanhf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tanhl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tanl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tgamma.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tgammaf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/tgammal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/trunc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/truncf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="math/truncl.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="printf/doc/convert.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="printf/msp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="printf/printf.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="printf/tfp_printf.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="project_make_options.sample" />
 		<Unit filename="stdlib/abs.c">
 			<Option compilerVar="CC" />
 		</Unit>

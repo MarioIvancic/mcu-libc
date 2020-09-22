@@ -50,6 +50,7 @@
 #endif
 #include <limits.h>
 #include <stdint.h>
+#include <features.h>
 #include "tfp_printf.h"
 
 // this can be handy on some low end MCUs
@@ -483,10 +484,11 @@ void init_tfp_printf(int (*putf) (int))
 }
 
 
-void tfp_puts (const char *str)
+int tfp_puts (const char *str)
 {
     while (*str) _tfp_printf_putchar_ptr(*str++);
     _tfp_printf_putchar_ptr ('\n');
+    return 1;
 }
 
 
@@ -502,22 +504,24 @@ void tfp_printf_indirect_putc(void* p, char c)
 
 
 // printf implementation
-void tfp_printf(const char *fmt, ...)
+int tfp_printf(const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
     tfp_format(_tfp_printf_putchar_ptr, tfp_printf_indirect_putc, fmt, va);
     va_end(va);
+    return 0;
 }
 
 
 // printf implementation using void outf(char) output function
-void tfp_uprintf(int (*outf)(int), const char *fmt, ...)
+int tfp_uprintf(int (*outf)(int), const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
     tfp_format(outf, tfp_printf_indirect_putc, fmt, va);
     va_end(va);
+    return 0;
 }
 
 
@@ -539,13 +543,14 @@ static void putcp(void* p, char c)
 
 
 // sprintf implementation
-void tfp_sprintf(char* s, const char *fmt, ...)
+int tfp_sprintf(char* s, const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
     tfp_format(&s, putcp, fmt, va);
     putcp(&s, 0);
     va_end(va);
+    return 0;
 }
 
 
@@ -600,7 +605,7 @@ int tfp_vsnprintf (char *buf, size_t size, const char *fmt, va_list argp)
 
 
 // snprintf implementation
-void tfp_snprintf(char* s, int size, const char *fmt, ...)
+int tfp_snprintf(char* s, size_t size, const char *fmt, ...)
 {
     scp p;
     p.p = s;
@@ -611,7 +616,28 @@ void tfp_snprintf(char* s, int size, const char *fmt, ...)
     tfp_format(&p, putcpsc, fmt, va);
     *(p.p) = 0;
     va_end(va);
+    return 0;
 }
 
 
+#ifdef PRINTF_USE_TFP
 
+int putchar(int c){ return _tfp_printf_putchar_ptr(c); }
+
+weak_alias(init_tfp_printf, _init_printf);
+
+weak_alias(tfp_puts, puts);
+
+weak_alias(tfp_vprintf, vprintf);
+
+weak_alias(tfp_vsprintf, vsprintf);
+
+weak_alias(tfp_vsnprintf, vsnprintf);
+
+weak_alias(tfp_printf, printf);
+
+weak_alias(tfp_sprintf, sprintf);
+
+weak_alias(tfp_snprintf, snprintf);
+
+#endif // PRINTF_USE_TFP

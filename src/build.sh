@@ -1,17 +1,18 @@
 #!/bin/sh
-make ARCH=arm7tdmi-s distclean
-make ARCH=arm7tdmi-s clean
-make ARCH=arm7tdmi-s
-make ARCH=arm7tdmi-s install
-make ARCH=arm7tdmi-s clean
-make ARCH=cortex-m3 distclean
-make ARCH=cortex-m3 clean
-make ARCH=cortex-m3
-make ARCH=cortex-m3 install
-make ARCH=cortex-m3 clean
-make ARCH=cortex-m0 distclean
-make ARCH=cortex-m0 clean
-make ARCH=cortex-m0
-make ARCH=cortex-m0 install
-make ARCH=cortex-m0 clean
+
+# build all supported architectures
+ARCHS="arm7tdmi-s   cortex-m3   cortex-m0"
+
+for ARCH in $ARCHS
+do
+	make ARCH=$ARCH distclean
+	if [ ! $? ]; then break; fi
+	make ARCH=$ARCH clean
+	if [ ! $? ]; then break; fi
+	make ARCH=$ARCH
+	if [ ! $? ]; then break; fi
+	make ARCH=$ARCH install
+	if [ ! $? ]; then break; fi
+done
+
 #pause

@@ -72,6 +72,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <stdio.h>
+#include <features.h>
 
 
 
@@ -806,7 +807,27 @@ int msp_snprintf (char *buf, size_t size, const char *fmt, ...)
 }
 
 
+#ifdef PRINTF_USE_MSP
 
+int putchar(int c){ return _msp_printf_putchar_ptr(c); }
+
+weak_alias(init_msp_printf, _init_printf);
+
+weak_alias(msp_puts, puts);
+
+weak_alias(msp_vprintf, vprintf);
+
+weak_alias(msp_vsprintf, vsprintf);
+
+weak_alias(msp_vsnprintf, vsnprintf);
+
+weak_alias(msp_printf, printf);
+
+weak_alias(msp_sprintf, sprintf);
+
+weak_alias(msp_snprintf, snprintf);
+
+#endif // PRINTF_USE_MSP
 
 
 

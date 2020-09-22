@@ -1,5 +1,5 @@
 #include <math.h>
-#include "libc.h"
+//#include "libc.h"
 
 double remainder(double x, double y)
 {

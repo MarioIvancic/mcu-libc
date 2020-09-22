@@ -67,12 +67,18 @@ PROJECT_OPTIONS += -DGMTIME_OPTIMIZE_SIZE
 #PROJECT_OPTIONS += -DMSP_PRINTF_ENABLE_LONG
 
 # printf options
+# tfp_printf have smaller memory footprint and msp_printf is closer to standard printf.
+# in general case, on embedded systems we prefer small code size so we will us tfp_printf
+# as default printf implementation.
+# you can control it by PRINTF_USE_MSP and/or PRINTF_USE_TFP project options.
+# In any case you can #include <msp_printf.h> or #include <tfp_printf.h> and use whichever you need.
 #PROJECT_OPTIONS += -DPRINTF_USE_MSP
 PROJECT_OPTIONS += -DPRINTF_USE_TFP
 
 
 # TLSF malloc options
 # how many bits are used for addressing memory
+# 13 => 8KB, 14 =>16KB, 15 => 32KB, 16 => 64KB, 17 => 128KB
 #PROJECT_OPTIONS += -DTLSF_MALLOC_FL_INDEX_BITS=15
 # how many bits is used to calculate subdivisions between 2^n and 2^(n+1)
 #PROJECT_OPTIONS += -DTLSF_MALLOC_SL_INDEX_BITS=2
