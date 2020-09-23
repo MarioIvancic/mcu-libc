@@ -92,6 +92,11 @@ char *strstr(const char *searchee, const char *lookfor);
 char * strtok_r(char *s, const char *delim, char **last);
 char * strtok(char *s, const char *delim);
 char * strupr(char *s);
+char * strdup(const char*);
+char * strndup(const char* str, size_t n);
+char * strerror(int);
+int strerror_r(int, char*, size_t);
+char* strnstr(const char*, const char*, size_t);
 
 #ifdef __cplusplus
 }

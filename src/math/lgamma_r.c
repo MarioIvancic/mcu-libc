@@ -174,6 +174,7 @@ double __lgamma_r(double x, int *signgamp)
 	double_t t,y,z,nadj,p,p1,p2,p3,q,r,w;
 	uint32_t ix;
 	int sign,i;
+	nadj = 0.0;
 
 	/* purge off +-inf, NaN, +-0, tiny and negative arguments */
 	*signgamp = 1;

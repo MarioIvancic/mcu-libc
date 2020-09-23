@@ -431,3 +431,18 @@
 
 
 
+
+
+#ifdef __need_wchar_t
+	#ifndef __wchar_t_defined
+	#define __wchar_t_defined
+
+	#ifndef __cplusplus
+        typedef unsigned wchar_t;
+    #endif
+
+	#endif // __wchar_t_defined
+#endif	// __need_wchar_t
+
+
+

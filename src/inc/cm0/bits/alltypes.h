@@ -166,7 +166,6 @@
 
 
 
-
 #ifdef __need_float_t
 	#ifndef __float_t_defined
 		#define __float_t_defined	1
@@ -185,8 +184,6 @@
 
 	#endif // __double_t_defined
 #endif // __need_double_t
-
-
 
 
 
@@ -431,6 +428,21 @@
 
 	#endif // __struct_timezone_defined
 #endif	// __need_struct_timezone
+
+
+
+
+
+#ifdef __need_wchar_t
+	#ifndef __wchar_t_defined
+	#define __wchar_t_defined
+
+	#ifndef __cplusplus
+        typedef unsigned wchar_t;
+    #endif
+
+	#endif // __wchar_t_defined
+#endif	// __need_wchar_t
 
 
 

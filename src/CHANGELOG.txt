@@ -29,3 +29,7 @@ Version 0.9.7
 	- Added all math functions from Musl.
 	- Functions printf, sprintf, snprintf, .. are now just weak alias to real tfp_* or msp_* functions.
 
+Version 0.9.8
+2020-09-23
+	- Added some string functions from Embedded Artistry LibC
+

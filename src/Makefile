@@ -121,6 +121,8 @@ CPPSRCARMO3 :=
 
 # startup functions
 SRCOs += init/init.c
+SRCOs += init/at_exit.c
+SRCOs += init/exit.c
 
 
 # stdlib functions
@@ -142,6 +144,15 @@ SRCARMO2 += stdlib/lltoa.c
 SRCOs += stdlib/ltoa.c
 SRCOs += stdlib/rand.c
 SRCOs += stdlib/usleep.c
+SRCOs += stdlib/calloc.c
+SRCOs += stdlib/heapsort.c
+SRCOs += stdlib/heapsort_r.c
+SRCOs += stdlib/imaxabs.c
+SRCOs += stdlib/imaxdiv.c
+SRCOs += stdlib/qsort.c
+SRCOs += stdlib/qsort_r.c
+
+
 
 # TLSF malloc functions (malloc, calloc, realloc, free)
 SRCARMO2 += tlsf_malloc/malloc.c
@@ -186,6 +197,40 @@ SRCO2 += string/strtoll.c
 SRCO2 += string/strtoul.c
 SRCO2 += string/strtoull.c
 SRCOs += string/strupr.c
+SRCOs += string/memmem.c
+SRCOs += string/memrchr.c
+SRCOs += string/strchrnul.c
+SRCOs += string/strcoll.c
+SRCOs += string/strdup.c
+SRCOs += string/strerror.c
+SRCOs += string/strerror_r.c
+SRCOs += string/strndup.c
+SRCOs += string/strnstr.c
+SRCOs += string/strxfrm.c
+
+
+# wchar functions
+SRCOs += wchar/iswalnum.c
+SRCOs += wchar/iswalpha.c
+SRCOs += wchar/iswblank.c
+SRCOs += wchar/iswcntrl.c
+SRCOs += wchar/iswctype.c
+SRCOs += wchar/iswdigit.c
+SRCOs += wchar/iswgraph.c
+SRCOs += wchar/iswlower.c
+SRCOs += wchar/iswprint.c
+SRCOs += wchar/iswpunct.c
+SRCOs += wchar/iswspace.c
+SRCOs += wchar/iswupper.c
+SRCOs += wchar/iswxdigit.c
+SRCOs += wchar/towccase.c
+SRCOs += wchar/towctrans.c
+SRCOs += wchar/towlower.c
+SRCOs += wchar/towupper.c
+SRCOs += wchar/wcswidth.c
+SRCOs += wchar/wctrans.c
+SRCOs += wchar/wctype.c
+SRCOs += wchar/wcwidth.c
 
 # systime functions
 SRCOs += systime/systime_ms.c
@@ -472,7 +517,8 @@ DEBUG := gdb
 # gnu89 - c89 plus GCC extensions
 # c99   - ISO C99 standard (not yet fully implemented)
 # gnu99 - c99 plus GCC extensions
-CSTANDARD := -std=gnu99
+#CSTANDARD := -std=gnu99
+CSTANDARD := -std=c11
 
 # Place -D or -U options for C here
 CDEFS += $(PROJECT_OPTIONS)
@@ -507,6 +553,7 @@ CFLAGS += -Wshadow
 #CFLAGS += -Wswitch
 #CFLAGS += -Wunused
 #CFLAGS += -Wreturn-type
+CFLAGS += -ffreestanding
 
 CFLAGS += -nostdinc -nostdlib -nostartfiles
 

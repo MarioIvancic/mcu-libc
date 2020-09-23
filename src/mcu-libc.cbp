@@ -37,22 +37,32 @@
 		<Unit filename="CHANGELOG.txt" />
 		<Unit filename="Makefile" />
 		<Unit filename="inc/arm7/bits/alltypes.h" />
+		<Unit filename="inc/arm7/bits/fenv.h" />
 		<Unit filename="inc/arm7/bits/float.h" />
 		<Unit filename="inc/assert.h" />
 		<Unit filename="inc/cm0/bits/alltypes.h" />
+		<Unit filename="inc/cm0/bits/fenv.h" />
 		<Unit filename="inc/cm0/bits/float.h" />
 		<Unit filename="inc/cm3/bits/alltypes.h" />
+		<Unit filename="inc/cm3/bits/fenv.h" />
 		<Unit filename="inc/cm3/bits/float.h" />
 		<Unit filename="inc/complex.h" />
 		<Unit filename="inc/ctype.h" />
+		<Unit filename="inc/endian.h" />
 		<Unit filename="inc/errno.h" />
 		<Unit filename="inc/features.h" />
+		<Unit filename="inc/fenv.h" />
 		<Unit filename="inc/float.h" />
 		<Unit filename="inc/inttypes.h" />
+		<Unit filename="inc/langinfo.h" />
 		<Unit filename="inc/libc_version.h" />
 		<Unit filename="inc/limits.h" />
+		<Unit filename="inc/locale.h" />
 		<Unit filename="inc/math.h" />
+		<Unit filename="inc/memory.h" />
 		<Unit filename="inc/msp_printf.h" />
+		<Unit filename="inc/nl_types.h" />
+		<Unit filename="inc/setjmp.h" />
 		<Unit filename="inc/stdarg.h" />
 		<Unit filename="inc/stdbool.h" />
 		<Unit filename="inc/stddef.h" />
@@ -60,12 +70,21 @@
 		<Unit filename="inc/stdio.h" />
 		<Unit filename="inc/stdlib.h" />
 		<Unit filename="inc/string.h" />
+		<Unit filename="inc/strings.h" />
 		<Unit filename="inc/sys/time.h" />
 		<Unit filename="inc/systime_tick.h" />
 		<Unit filename="inc/tfp_printf.h" />
 		<Unit filename="inc/time.h" />
 		<Unit filename="inc/tlsf.h" />
 		<Unit filename="inc/unistd.h" />
+		<Unit filename="inc/wchar.h" />
+		<Unit filename="inc/wctype.h" />
+		<Unit filename="init/at_exit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="init/exit.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="init/init.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -745,6 +764,9 @@
 		<Unit filename="stdlib/bsearch.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="stdlib/calloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="stdlib/ctype.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -752,6 +774,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="stdlib/errno.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stdlib/heapsort.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stdlib/heapsort_r.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stdlib/imaxabs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stdlib/imaxdiv.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="stdlib/itoa.c">
@@ -769,6 +803,12 @@
 		<Unit filename="stdlib/ltoa.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="stdlib/qsort.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="stdlib/qsort_r.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="stdlib/rand.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -778,6 +818,7 @@
 		<Unit filename="stdlib/usleep.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="string/__strerror.h" />
 		<Unit filename="string/memccpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -795,7 +836,13 @@
 		<Unit filename="string/memcpy_f9.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="string/memmem.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="string/memmove.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/memrchr.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/memset.c">
@@ -813,13 +860,28 @@
 		<Unit filename="string/strchr.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="string/strchrnul.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="string/strcmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strcoll.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/strcpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/strcspn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strdup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strerror.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strerror_r.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/strlcat.c">
@@ -843,7 +905,13 @@
 		<Unit filename="string/strncpy.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="string/strndup.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="string/strnlen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strnstr.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/strpbrk.c">
@@ -880,6 +948,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="string/strupr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="string/strxfrm.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="systime/systime_ms.c">
@@ -950,6 +1021,74 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tlsf_malloc/tlsfbits.h" />
+		<Unit filename="wchar/_towcase.h" />
+		<Unit filename="wchar/alpha.h" />
+		<Unit filename="wchar/iswalnum.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswalpha.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswblank.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswcntrl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswctype.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswdigit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswgraph.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswlower.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswprint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswpunct.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswspace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswupper.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/iswxdigit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/nonspacing.h" />
+		<Unit filename="wchar/punct.h" />
+		<Unit filename="wchar/towccase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/towctrans.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/towlower.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/towupper.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/wcswidth.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/wctrans.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/wctype.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/wcwidth.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="wchar/wide.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

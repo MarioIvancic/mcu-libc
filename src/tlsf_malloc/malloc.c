@@ -52,28 +52,6 @@ void* malloc (size_t size)
 
 
 
-/*  Allocates a block of memory for an array of num elements, each of them
-    size bytes long, and initializes all its bits to zero.
-    The effective result is the allocation of a zero-initialized memory block
-    of (num*size) bytes.
-    If the function failed to allocate the requested block of memory,
-    or if size is zero a null pointer is returned.
-    This behavior is aligned with C90.
-*/
-void* calloc (size_t num, size_t size)
-{
-    if(!malloc_pool) MALLOC_AUTOINIT();
-    void* ptr = tlsf_malloc(malloc_pool, num * size);
-    if(ptr)
-    {
-        size_t s = tlsf_block_size(ptr);
-        memset(ptr, 0, s);
-    }
-    return ptr;
-}
-
-
-
 /*  Changes the size of the memory block pointed to by ptr.
     The function may move the memory block to a new location (whose address is
     returned by the function).

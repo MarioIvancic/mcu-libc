@@ -13,6 +13,10 @@
 #define MB_CUR_MAX      1
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 typedef struct
 {
     int quot;
@@ -33,14 +37,119 @@ typedef struct
 
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
-
 int abs(int x);
 long labs(long x);
 long long llabs(long long x);
+
+
+/**
+ * @brief Sorts the given array pointed to by vbase in ascending order.
+ *
+ * The heapsort() function is a modified selection sort. It sorts an array of nmemb objects,
+ * the initial member of which is pointed to by vbase. The size of each object is specified by size.
+ *
+ * The contents of the array base are sorted in ascending order according to a comparison
+ * function pointed to by compar, which requires two arguments pointing to the objects being
+ * compared.
+ *
+ * @param vbase a pointer to the array to sort
+ * @param nmemb the number of objects to sort
+ * @param size the size of each object in the array
+ * @param compar comparison function which returns ​a negative integer
+ *  value if the first argument is less than the second,a positive integer value
+ *  if the first argument is greater than the second and zero if the arguments are equal.
+ *  key is passed as the first argument, an element from the array as the second.
+ *  The signature of the comparison function should be equivalent to the following:
+ *       int cmp(const void *a, const void *b);
+ *
+ * @return the value 0 if successful; otherwise the value -1 is returned and
+ * the global variable errno is set to indicate the error.
+ *
+ * */
+int heapsort(void* vbase, size_t nmemb, size_t size, int (*compar)(const void*, const void*));
+
+/**
+ * @brief Sorts the given array pointed to by vbase in ascending order.
+ *
+ * It sorts an array of nmemb objects,
+ * the initial member of which is pointed to by vbase. The size of each object is specified by size.
+ * The heapsort_r() function behaves identically to @see heapsort(), except that it
+ * takes an additional argument, thunk, which	is passed unchanged as the
+ * first argument to function	pointed	to compar.  This allows	the comparison
+ * function to access	additional data	without	using global variables,	and
+ * thus heapsort_r() is suitable for use in functions which must be reentrant.
+ * And is therefore reentrant and safe to use in threads.
+ *
+ * The contents of the array base are sorted in ascending order according to a comparison
+ * function pointed to by compar, which requires two arguments pointing to the objects being
+ * compared.
+ *
+ * @param vbase a pointer to the array to sort
+ * @param nmemb the number of objects to sort
+ * @param size the size of each object in the array
+ * @param thunk additional data(variable) for compar
+ * @param compar comparison function which returns ​a negative integer
+ *  value if the first argument is less than the second,a positive integer value
+ *  if the first argument is greater than the second and zero if the arguments are equal.
+ *  key is passed as the first argument, an element from the array as the second.
+ *  The signature of the comparison function should be equivalent to the following:
+ *       int cmp(const void *a, const void *b);
+ *
+ * @return the value 0 if successful; otherwise the value -1 is returned and
+ * the global variable errno is set to indicate the error.
+ *
+ * */
+int heapsort_r(void* vbase, size_t nmemb, size_t size, void* thunk,
+			   int (*compar)(void*, const void*, const void*));
+               
+
+/**
+ * @brief Sorts the given array pointed to by ptr in ascending order.
+ *
+ * The qsort_r() function behaves identically to @see qsort(), except that it
+ * takes an additional argument, thunk, which	is passed unchanged as the
+ * first argument to function	pointed	to compar.  This allows	the comparison
+ * function to access	additional data	without	using global variables,	and
+ * thus qsort_r() is suitable	for use	in functions which must	be reentrant.
+ * And is therefore reentrant and safe to use in threads.
+ *
+ * @param a pointer to the element to sort
+ * @param n number of element in the array
+ * @param es size of each element in the array in bytes
+ * @param thunk additional data(variable) for cmp
+ * @param cmp comparison function which returns ​a negative integer
+ *  value if the first argument is less than the second,a positive integer value
+ *  if the first argument is greater than the second and zero if the arguments are equal.
+ *  key is passed as the first argument, an element from the array as the second.
+ *  The signature of the comparison function should be equivalent to the following:
+ *       int cmp(const void *a, const void *b);
+ *  The function must not modify the objects passed to it and must return consistent
+ * */
+void qsort_r(void* a, size_t n, size_t es, void* thunk,
+			 int (*cmp)(void*, const void*, const void*));
+
+
+/**
+ * @brief Sorts the given array pointed to by ptr in ascending order.
+ *
+ * Sorts the given array pointed to by ptr in ascending order.
+ * The array contains count elements of size bytes.
+ * Function pointed to by comp is used for object comparison.
+ *
+ * @param a pointer to the element to sort
+ * @param n number of element in the array
+ * @param es size of each element in the array in bytes
+ * @param compar comparison function which returns ​a negative integer
+ *  value if the first argument is less than the second,a positive integer value
+ *  if the first argument is greater than the second and zero if the arguments are equal.
+ *  key is passed as the first argument, an element from the array as the second.
+ *  The signature of the comparison function should be equivalent to the following:
+ *       int cmp(const void *a, const void *b);
+ *  The function must not modify the objects passed to it and must return consistent
+ * */
+void qsort(void* a, size_t n, size_t es, int (*compar)(const void*, const void*));
+
+
 
 void *bsearch(const void *key, const void *base, size_t nel,
               size_t width, int (*cmp)(const void *, const void *));
@@ -135,6 +244,17 @@ void free (void* ptr);
     Note: TLSF_MALLOC_FL_INDEX_BITS is defined in libc makefile.
 */
 void malloc_init(void* ptr, size_t size);
+
+
+void abort(void) __attribute__((noreturn));
+int atexit(void (*)(void));
+void exit(int) __attribute__((noreturn));
+void _Exit(int) __attribute__((noreturn));
+int at_quick_exit(void (*)(void));
+void quick_exit(int) __attribute__((noreturn));
+int cxa_atexit(void (*)(void*), void*, void*);
+
+char* getenv(const char*);
 
 #ifdef __cplusplus
 }

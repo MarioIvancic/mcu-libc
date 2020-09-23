@@ -109,6 +109,7 @@ float __lgammaf_r(float x, int *signgamp)
 	float t,y,z,nadj,p,p1,p2,p3,q,r,w;
 	uint32_t ix;
 	int i,sign;
+	nadj = 0.0f;
 
 	/* purge off +-inf, NaN, +-0, tiny and negative arguments */
 	*signgamp = 1;
