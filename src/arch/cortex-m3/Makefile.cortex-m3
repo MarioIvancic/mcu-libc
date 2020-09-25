@@ -92,6 +92,9 @@ CPPSRCO3 :=
 # include libc file list
 include arch/$(ARCH)/Makefile.libc.$(ARCH)
 
+# include libcpp file list
+include arch/$(ARCH)/Makefile.libcpp.$(ARCH)
+
 
 # Debugging format.
 # Native formats for AVR-GCC's -g are stabs [default], or dwarf-2.
@@ -131,7 +134,6 @@ CFLAGS += -mapcs-frame
 CFLAGS += -fomit-frame-pointer
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wall -Wextra
-CFLAGS += -Wimplicit
 CFLAGS += -Wcast-align
 CFLAGS += -Wcast-qual
 CFLAGS += -Wpointer-arith
@@ -154,6 +156,7 @@ CONLYFLAGS :=
 #CONLYFLAGS += -Wmissing-prototypes
 #CONLYFLAGS += -Wmissing-declarations
 #CONLYFLAGS += -Wnested-externs
+CONLYFLAGS += -Wimplicit
 CONLYFLAGS += $(CSTANDARD)
 
 
@@ -339,7 +342,7 @@ $(COBJOs) : %.o : %.c
 
 # Compile: create object files from C++ source files.
 $(CPPOBJOs) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -Os $< -o $(OBJDIR)$@
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -Os $< -o $(OBJDIR)$@
 
 
 # Optimization -O0
@@ -369,7 +372,7 @@ $(CPPOBJO1) : %.o : %.cpp
 
 # Compile: create object files from C source files.
 $(COBJO2) : %.o : %.c
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O2 $< -o $(OBJDIR)$@
+	$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O2 $< -o $(OBJDIR)$@
 
 # Compile: create object files from C++ source files.
 $(CPPOBJO2) : %.o : %.cpp

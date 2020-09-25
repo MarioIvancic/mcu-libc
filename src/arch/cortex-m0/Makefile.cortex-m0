@@ -131,7 +131,6 @@ CFLAGS += -mapcs-frame
 CFLAGS += -fomit-frame-pointer
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wall -Wextra
-CFLAGS += -Wimplicit
 CFLAGS += -Wcast-align
 CFLAGS += -Wcast-qual
 CFLAGS += -Wpointer-arith
@@ -154,6 +153,7 @@ CONLYFLAGS :=
 #CONLYFLAGS += -Wmissing-prototypes
 #CONLYFLAGS += -Wmissing-declarations
 #CONLYFLAGS += -Wnested-externs
+CONLYFLAGS += -Wimplicit
 CONLYFLAGS += $(CSTANDARD)
 
 

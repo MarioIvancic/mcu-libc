@@ -1,17 +1,35 @@
-CPPSRCOs += libcpp/extensions/plf_list/plf_list_test_suite.cpp
-CPPSRCOs += libcpp/extensions/plf_stack/plf_stack_test_suite.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/algorithms.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/algorithms.partition_point.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/allocation.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/deque.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/filesystem.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/function.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/ordered_set.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/string.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/stringstream.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/unordered_set_operations.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/util_smartptr.bench.cpp
-CPPSRCOs += libcpp/libcxx/benchmarks/vector_operations.bench.cpp
+# libcpp file list, and some options
+
+INCDIRS += ./libcpp/include/c++
+INCDIRS += ./libcpp/include/c++/include
+INCDIRS += ./libcpp/include/c++/support/baremetal
+INCDIRS += ./libcpp/include/c++/external_threading
+INCDIRS += ./libcpp/src/c++abi
+INCDIRS += ./libcpp/libcxxabi/include
+INCDIRS += ./libcpp/libcxxabi/src
+INCDIRS += ./libcpp/libcxxabi/src/include
+INCDIRS += ./libcpp/libcxx/include/
+
+# some C++ headers do #include_next <> and expect to find requested C header
+# so we have to append LibC include directory to ehe end of this list
+INCDIRS += ./inc ./inc/$(CLASS_DIR)
+
+CPPONLYFLAGS += -D_LIBCPP_HAS_NO_THREADS
+
+#CPPSRCOs += libcpp/extensions/plf_list/plf_list_test_suite.cpp
+#CPPSRCOs += libcpp/extensions/plf_stack/plf_stack_test_suite.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/algorithms.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/algorithms.partition_point.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/allocation.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/deque.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/filesystem.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/function.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/ordered_set.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/string.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/stringstream.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/unordered_set_operations.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/util_smartptr.bench.cpp
+#CPPSRCOs += libcpp/libcxx/benchmarks/vector_operations.bench.cpp
 CPPSRCOs += libcpp/libcxx/fuzzing/fuzzing.cpp
 CPPSRCOs += libcpp/libcxx/fuzzing/fuzz_test.cpp
 CPPSRCOs += libcpp/libcxx/src/algorithm.cpp
