@@ -78,7 +78,7 @@
 	.thumb
 	.thumb_func
 	.type memcpy_cm3, %function
-    // r0: dst; r1: src; r2: count
+    /* r0: dst; r1: src; r2: count */
 memcpy_cm3:
     /* we need working registers */
     push {r4, r5}
@@ -202,4 +202,4 @@ memcpy_cm3:
 	bx	lr
     nop
 
-	.size	memcpy_cm3, .-memcpy_cm3
+	.size memcpy_cm3, . - memcpy_cm3

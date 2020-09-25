@@ -1,0 +1,471 @@
+# WinARM template makefile
+# by Martin Thomas, Kaiserslautern, Germany
+# <eversmith(at)heizung-thomas(dot)de>
+#
+# Released to the Public Domain
+#
+# Modified by Mario Ivancic for libc
+
+# On command line:
+# make ARCH=atm7tdmi-s all = Make software.
+# make ARCH=cortex-m3 clean = Clean out built project files.
+# make ARCH=cortex-m0 install = Install liblpc.a and some .h files in lib/$(MCU).
+
+
+# Project options
+# set before compile & install
+# ARCH type
+#ARCH := arm7-tdmi-s
+#ARCH := cortex-m3
+#ARCH := cortex-m0
+
+PROJECT_OPTIONS := -D__LIBC__
+
+# include project specific options
+include project_make_options
+
+
+ifndef SRCDIR
+SRCDIR := .
+endif
+
+# Toolchain prefix (arm-elf- -> arm-elf-gcc.exe)
+#TCHAIN_PREFIX ?= C:/bin/winarm/arm-eabi-gcc-4.7.0/bin/arm-none-eabi-
+TCHAIN_PREFIX ?= arm-none-eabi-
+
+# we need this for ARM archs, undef it for others
+THUMB := -mthumb
+
+
+# ARCH name and submodel
+
+ifeq ($(ARCH),cortex-m0)
+    CLASS_NAME := CORTEXM0
+    CLASS_DIR := cm0
+    # PROJECT_OPTIONS += -DSYSTEM_TIME_HAVE_DIV_INST
+    CFLAGS := -nostdinc -nostdlib -nostartfiles -fsigned-char
+    CFLAGS += -mcpu=$(ARCH)
+    CFLAGS += -ffreestanding
+    ASFLAGS = -mcpu=$(ARCH) -x assembler-with-cpp
+    # flags only for C++
+    CPPONLYFLAGS := -fno-rtti -fno-exceptions
+    # List any directories to look for include files here.
+    # Each directory must be seperated by a space.
+    INCDIRS := . ./inc ./inc/$(CLASS_DIR)
+endif
+
+
+PROJECT_OPTIONS += -D$(CLASS_NAME)
+
+# place for object files
+#OBJDIR := obj/
+#OBJDIR := obj
+
+# Target file name (without extension).
+TARGETLIB := libc
+
+
+# Assembler, C and C++ source files ...
+# Optimization level, can be [0, 1, 2, 3, s].
+# 0 = turn off optimization. s = optimize for size.
+# (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
+# ASRC
+# SRCOs, SRCO0, SRCO1, SRCO2, SRCO3 for Thumb code with
+#  s,      0,     1,     2,     3   optimization level
+# CPPSRCOs, CPPSRCO0, CPPSRCO1, CPPSRCO2, CPPSRCO3 for Thumb C++ code with
+#    s,         0,       1,        2,        3     optimisation level
+
+# these must be Simply expanded variables
+ASRC :=
+SRCOs :=
+SRCO0 :=
+SRCO1 :=
+SRCO2 :=
+SRCO3 :=
+CPPSRCOs :=
+CPPSRCO0 :=
+CPPSRCO1 :=
+CPPSRCO2 :=
+CPPSRCO3 :=
+
+
+# include libc file list
+include arch/$(ARCH)/Makefile.libc.$(ARCH)
+
+
+# Debugging format.
+# Native formats for AVR-GCC's -g are stabs [default], or dwarf-2.
+# AVR (extended) COFF requires stabs, plus an avr-objcopy run.
+#DEBUG := stabs
+#DEBUG := dwarf-2
+DEBUG := gdb
+
+
+# Compiler flag to set the C Standard level.
+# c89   - "ANSI" C
+# gnu89 - c89 plus GCC extensions
+# c99   - ISO C99 standard
+# gnu99 - c99 plus GCC extensions
+# c11   - ISO C11 standard
+# gnu11 - c11 plus GCC extensions
+CSTANDARD := -std=gnu11
+
+# Compiler flag to set the C++ Standard level.
+# c++98, gnu++98, c++02, gnu++03, c++11, gnu++11
+CPPSTANDARD := -std=gnu++11
+
+
+# Compiler flags.
+#  -g*:          generate debugging information
+#  -O*:          optimization level
+#  -f...:        tuning, see GCC manual and avr-libc documentation
+#  -Wall...:     warning level
+#  -Wa,...:      tell GCC to pass this to the assembler.
+#    -adhlns...: create assembler listing
+#
+# Flags for C and C++ (arm-elf-gcc/arm-elf-g++)
+CFLAGS += -g$(DEBUG)
+CFLAGS += $(PROJECT_OPTIONS)
+CFLAGS += $(patsubst %,-I%,$(INCDIRS))
+CFLAGS += -mapcs-frame
+CFLAGS += -fomit-frame-pointer
+CFLAGS += -ffunction-sections -fdata-sections
+CFLAGS += -Wall -Wextra
+CFLAGS += -Wimplicit
+CFLAGS += -Wcast-align
+CFLAGS += -Wcast-qual
+CFLAGS += -Wpointer-arith
+CFLAGS += -Wredundant-decls
+CFLAGS += -Wshadow
+#CFLAGS += -Wswitch
+#CFLAGS += -Wunused
+#CFLAGS += -Wreturn-type
+
+# print include paths
+#CFLAGS += -Wp,-v
+
+CFLAGS += -Wa,-adhlns=$(OBJDIR)$(subst $(suffix $<),.lst,$<)
+#CFLAGS += -Wa,-adhlns=$(OBJDIR)/$(notdir $(subst $(suffix $<),.lst,$<))
+
+
+# flags only for C
+CONLYFLAGS :=
+#CONLYFLAGS += -Wstrict-prototypes
+#CONLYFLAGS += -Wmissing-prototypes
+#CONLYFLAGS += -Wmissing-declarations
+#CONLYFLAGS += -Wnested-externs
+CONLYFLAGS += $(CSTANDARD)
+
+
+# Assembler flags.
+#  -Wa,...:   tell GCC to pass this to the assembler.
+#  -ahlms:    create listing
+#  -gstabs:   have the assembler create line number information; note that
+#             for use in COFF files, additional information about filenames
+#             and function names needs to be present in the assembler source
+#             files -- see avr-libc docs [FIXME: not yet described there]
+##ASFLAGS += -Wa,-adhlns=$(<:.S=.lst),-gstabs
+ASFLAGS += -Wa,-adhlns=$(OBJDIR)$(<:.S=.lst),-g$(DEBUG)
+#ASFLAGS += -Wa,-adhlns=$(OBJDIR)/$(notdir $(<:.S=.lst)),-g$(DEBUG)
+ASFLAGS += $(patsubst %,-I%,$(INCDIRS))
+
+# ---------------------------------------------------------------------------
+
+# Define programs and commands.
+CC      := $(TCHAIN_PREFIX)gcc
+CPP     := $(TCHAIN_PREFIX)g++
+AR      := $(TCHAIN_PREFIX)ar
+OBJCOPY := $(TCHAIN_PREFIX)objcopy
+OBJDUMP := $(TCHAIN_PREFIX)objdump
+SIZE    := $(TCHAIN_PREFIX)size
+NM      := $(TCHAIN_PREFIX)nm
+
+REMOVE := rm -f
+REMOVEDIR := rm -rf
+COPY := cp
+TEST := test
+
+
+# Define Messages
+# English
+MSG_ERRORS_NONE := Errors: none
+MSG_BEGIN := -------- begin --------
+MSG_END := --------  end  --------
+MSG_SIZE_BEFORE := Size before:
+MSG_SIZE_AFTER := Size after:
+MSG_FLASH := Creating load file for Flash:
+MSG_EXTENDED_LISTING := Creating Extended Listing:
+MSG_FULL_DISASEMBLY := Creating Full Disasembly:
+MSG_SYMBOL_TABLE := Creating Symbol Table:
+MSG_LINKING := Linking:
+MSG_COMPILING := Compiling C:
+MSG_COMPILING_ARM := "Compiling C (ARM-only):"
+MSG_COMPILINGCPP := Compiling C++:
+MSG_COMPILINGCPP_ARM := "Compiling C++ (ARM-only):"
+MSG_ASSEMBLING := Assembling:
+MSG_ASSEMBLING_ARM := "Assembling (ARM-only):"
+MSG_CLEANING := Cleaning project:
+
+
+# Define all object files.
+COBJOs      = $(SRCOs:.c=.o)
+COBJO0      = $(SRCO0:.c=.o)
+COBJO1      = $(SRCO1:.c=.o)
+COBJO2      = $(SRCO2:.c=.o)
+COBJO3      = $(SRCO3:.c=.o)
+CPPOBJOs    = $(CPPSRCOs:.cpp=.o)
+CPPOBJO0    = $(CPPSRCO0:.cpp=.o)
+CPPOBJO1    = $(CPPSRCO1:.cpp=.o)
+CPPOBJO2    = $(CPPSRCO2:.cpp=.o)
+CPPOBJO3    = $(CPPSRCO3:.cpp=.o)
+AOBJ      = $(ASRC:.S=.o)
+
+
+ALL_OBJ =  $(AOBJ)
+ALL_OBJ += $(COBJOs) $(COBJO0) $(COBJO1) $(COBJO2) $(COBJO3)
+ALL_OBJ += $(CPPOBJOs) $(CPPOBJO0) $(CPPOBJO1) $(CPPOBJO2) $(CPPOBJO3)
+ALL_OBJ += $(EXTRAOBJS)
+
+ALL_SRC =  $(ASRC)
+ALL_SRC += $(SRCOs) $(SRCO0) $(SRCO1) $(SRCO2) $(SRCO3)
+ALL_SRC += $(CPPSRCOs) $(CPPSRCO0) $(CPPSRCO1) $(CPPSRCO2) $(CPPSRCO3)
+
+# Define all listing files.
+LST =  $(ASRC:.S=.lst)
+LST += $(SRCOs:.c=.lst)
+LST += $(SRCO0:.c=.lst)
+LST += $(SRCO1:.c=.lst)
+LST += $(SRCO2:.c=.lst)
+LST += $(SRCO3:.c=.lst)
+LST += $(CPPSRCOs:.cpp=.lst)
+LST += $(CPPSRCO0:.cpp=.lst)
+LST += $(CPPSRCO1:.cpp=.lst)
+LST += $(CPPSRCO2:.cpp=.lst)
+LST += $(CPPSRCO3:.cpp=.lst)
+
+# Compiler flags to generate dependency files.
+### GENDEPFLAGS = -Wp,-M,-MP,-MT,$(*F).o,-MF,.dep/$(@F).d
+GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
+
+ifdef OBJDIR
+    OBJMAGIC = $< -o $(OBJDIR)/$(notdir $@)
+else
+    OBJMAGIC = $< -o $@
+endif
+
+
+
+# Default target.
+.PHONY: all
+all: begin gccversion buildlib finished end
+
+
+
+.PHONY: buildlib
+buildlib: objdir $(TARGETLIB).a
+
+
+# create OBJDIR if defined
+.PHONY: objdir
+ifdef OBJDIR
+objdir:
+	@if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi
+else
+objdir:
+
+endif
+
+# copy target from OBJDIR dirctory
+.PHONY: copytarget
+copytarget:
+	@echo "copy target from OBJDIR dirctory"
+	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGET).hex ]; then $(COPY) $(OBJDIR)/$(TARGET).hex . ; fi
+	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGETLIB).a ]; then $(COPY) $(OBJDIR)/$(TARGETLIB).a . ; fi
+
+
+# Eye candy.
+.PHONY: begin
+begin:
+	@echo
+	@echo $(MSG_BEGIN)
+
+.PHONY: finished
+finished:
+	@echo $(MSG_ERRORS_NONE)
+
+.PHONY: end
+end:
+	@echo $(MSG_END)
+	@echo
+
+
+# Display compiler version information.
+.PHONY: gccversion
+gccversion :
+	@$(CC) --version
+
+
+# Link: create .a output file from object files.
+$(TARGETLIB).a:  $(ALL_OBJ)
+	@echo
+	@echo $(MSG_LINKING) $@
+#	@echo OBJDIR: $(OBJDIR)
+#	@echo ALL_OBJ: $(ALL_OBJ)
+#	@echo ALL_OBJ_NOTDIR: $(notdir $(ALL_OBJ))
+#	@echo ALL_OBJ_PREFIXED: $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
+ifdef OBJDIR
+	@$(AR) rc $(TARGETLIB).a $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
+else
+	@$(AR) rc $(TARGETLIB).a $(ALL_OBJ)
+endif
+
+
+# Compile: create assembler files from C source files. ARM/Thumb
+## does not work - TODO - hints welcome
+##$(COBJ) : %.s : %.c
+##	$(CC) $(THUMB) -S $(CFLAGS) $(GENDEPFLAGS) $< -o $@
+
+
+# Assemble: create object files from assembler source files. ARM/Thumb
+$(AOBJ) : %.o : %.S
+	@$(CC) -c $(THUMB) $(ASFLAGS) $< -o $(OBJDIR)$@
+
+
+# Optimization -Os
+
+# Compile: create object files from C source files.
+$(COBJOs) : %.o : %.c
+#	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $< -o $(OBJDIR)$@
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $(OBJMAGIC)
+
+# Compile: create object files from C++ source files.
+$(CPPOBJOs) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -Os $< -o $(OBJDIR)$@
+
+
+# Optimization -O0
+
+# Compile: create object files from C source files.
+$(COBJO0) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O0 $< -o $(OBJDIR)$@
+
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO0) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O0 $< -o $(OBJDIR)$@
+
+
+# Optimization -O1
+
+# Compile: create object files from C source files.
+$(COBJO1) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O1 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO1) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O1 $< -o $(OBJDIR)$@
+
+
+# Optimization -O2
+
+# Compile: create object files from C source files.
+$(COBJO2) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O2 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO2) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O2 $< -o $(OBJDIR)$@
+
+
+# Optimization -O3
+
+# Compile: create object files from C source files.
+$(COBJO3) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O3 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO3) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O3 $< -o $(OBJDIR)$@
+
+
+# Target: install
+.PHONY: install
+install: $(OBJDIR)$(TARGETLIB).a
+	@if [ ! -d ./../lib ]; then mkdir ./../lib; fi
+	@if [ ! -d ./../lib/$(CLASS_DIR) ]; then mkdir ./../lib/$(CLASS_DIR); fi
+	@if [ ! -d ./../lib/$(CLASS_DIR)/bits ]; then mkdir ./../lib/$(CLASS_DIR)/bits; fi
+	@$(COPY) $(OBJDIR)$(TARGETLIB).a ./../lib/$(CLASS_DIR)
+	@$(COPY) ./inc/*.h ./../lib/$(CLASS_DIR)
+	@$(COPY) ./inc/$(CLASS_DIR)/bits/*.h ./../lib/$(CLASS_DIR)/bits
+
+
+.PHONY: distclean
+distclean: clean
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/$(TARGETLIB).a
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/*.h
+	@$(REMOVE) ./../lib/$(CLASS_DIR)/bits/*.h
+	@$(REMOVEDIR) ./../lib/$(CLASS_DIR)/bits
+	@$(REMOVEDIR) ./../lib/$(CLASS_DIR)
+
+
+# Target: clean project.
+.PHONY: clean
+clean :
+	@$(REMOVE) $(TARGETLIB).obj
+	@$(REMOVE) $(TARGETLIB).elf
+	@$(REMOVE) $(TARGETLIB).map
+	@$(REMOVE) $(TARGETLIB).obj
+	@$(REMOVE) $(TARGETLIB).a90
+	@$(REMOVE) $(TARGETLIB).sym
+	@$(REMOVE) $(TARGETLIB).lnk
+	@$(REMOVE) $(TARGETLIB).lss
+	@$(REMOVE) $(TARGETLIB).dis
+	@$(REMOVE) $(TARGETLIB).a
+	@$(REMOVE) $(ALL_OBJ)
+	@$(REMOVE) $(LST)
+	@$(REMOVE) $(SRCOs:.c=.s)
+	@$(REMOVE) $(SRCO0:.c=.s)
+	@$(REMOVE) $(SRCO1:.c=.s)
+	@$(REMOVE) $(SRCO2:.c=.s)
+	@$(REMOVE) $(SRCO3:.c=.s)
+	@$(REMOVE) $(SRCOs:.c=.d)
+	@$(REMOVE) $(SRCO0:.c=.d)
+	@$(REMOVE) $(SRCO1:.c=.d)
+	@$(REMOVE) $(SRCO2:.c=.d)
+	@$(REMOVE) $(SRCO3:.c=.d)
+	@$(REMOVE) $(SRCARMOs:.c=.s)
+	@$(REMOVE) $(SRCARMO0:.c=.s)
+	@$(REMOVE) $(SRCARMO1:.c=.s)
+	@$(REMOVE) $(SRCARMO2:.c=.s)
+	@$(REMOVE) $(SRCARMO3:.c=.s)
+	@$(REMOVE) $(SRCARMOs:.c=.d)
+	@$(REMOVE) $(SRCARMO0:.c=.d)
+	@$(REMOVE) $(SRCARMO1:.c=.d)
+	@$(REMOVE) $(SRCARMO2:.c=.d)
+	@$(REMOVE) $(SRCARMO3:.c=.d)
+	@$(REMOVE) $(CPPSRCOs:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO0:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO1:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO2:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO3:.cpp=.s)
+	@$(REMOVE) $(CPPSRCOs:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO0:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO1:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO2:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO3:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMOs:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO0:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO1:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO2:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO3:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMOs:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO0:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO1:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO2:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO3:.cpp=.d)
+	@$(REMOVEDIR) .dep
+	@$(REMOVEDIR) $(OBJDIR)
+
+
+# Include the dependency files.
+-include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)
