@@ -1,0 +1,9 @@
+[submodule "libcpp/embedded-unwind"]
+	path = libcpp/embedded-unwind
+	url = https://github.com/embeddedartistry/embedded-unwind.git
+[submodule "libcpp/libcxx"]
+	path = libcpp/libcxx
+	url = https://github.com/llvm-mirror/libcxx.git
+[submodule "libcpp/libcxxabi"]
+	path = libcpp/libcxxabi
+	url = https://github.com/llvm-mirror/libcxxabi.git

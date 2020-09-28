@@ -1,0 +1,1220 @@
+# WinARM template makefile
+# by Martin Thomas, Kaiserslautern, Germany
+# <eversmith(at)heizung-thomas(dot)de>
+#
+# Released to the Public Domain
+#
+# Modified by Mario Ivancic for libcpp
+
+# On command line:
+# make ARCH=atm7tdmi-s all = Make software.
+# make ARCH=cortex-m3 clean = Clean out built project files.
+# make ARCH=cortex-m0 install = Install libcpp.a and some .h files in lib/$(MCU).
+
+PROJECT_OPTIONS := -D__LIBCPP__
+
+# include project specific options
+include project_make_options
+
+
+# Toolchain prefix (arm-elf- -> arm-elf-gcc.exe)
+#TCHAIN_PREFIX ?= C:/bin/winarm/arm-eabi-gcc-4.7.0/bin/arm-none-eabi-
+TCHAIN_PREFIX ?= arm-none-eabi-
+
+# we need this for ARM archs, undef it for others
+THUMB := -mthumb
+
+# place for object files
+#OBJDIR := obj/
+#OBJDIR := obj
+
+# Target file name (without extension).
+TARGETLIB := libcpp
+
+
+# Assembler, C and C++ source files ...
+# Optimization level, can be [0, 1, 2, 3, s].
+# 0 = turn off optimization. s = optimize for size.
+# (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
+# ASRC
+# SRCOs, SRCO0, SRCO1, SRCO2, SRCO3 for Thumb code with
+#  s,      0,     1,     2,     3   optimization level
+# CPPSRCOs, CPPSRCO0, CPPSRCO1, CPPSRCO2, CPPSRCO3 for Thumb C++ code with
+#    s,         0,       1,        2,        3     optimisation level
+
+# these must be Simply expanded variables
+ASRC :=
+SRCOs :=
+SRCO0 :=
+SRCO1 :=
+SRCO2 :=
+SRCO3 :=
+CPPSRCOs :=
+CPPSRCO0 :=
+CPPSRCO1 :=
+CPPSRCO2 :=
+CPPSRCO3 :=
+
+
+# ARCH name and submodel
+
+ifeq ($(ARCH),cortex-m3)
+    CLASS_DIR := cm3
+else ifeq ($(ARCH),cortex-m0)
+    CLASS_DIR := cm0
+else ifeq ($(ARCH),arm7tdmi-s)
+    CLASS_DIR := arm7
+else
+    $(error Architecture $(ARCH) is not supported)
+endif
+
+
+# assembler flags
+ASFLAGS = -mcpu=$(ARCH) -x assembler-with-cpp
+# flags only for C++
+CPPONLYFLAGS :=
+# common flags for C and C++
+CFLAGS = -mcpu=$(ARCH)
+# List any directories to look for include files here.
+# Each directory must be seperated by a space.
+INCDIRS :=
+# linker flags
+LDFLAGS :=
+CXXABIFLAGS :=
+CXXABILDFLAGS :=
+CXXABIINCDIRS :=
+CXXABISRCOs :=
+CXXABISRCO0 :=
+CXXABISRCO1 :=
+CXXABISRCO2 :=
+CXXABISRCO3 :=
+CXXFLAGS :=
+CXXLDFLAGS :=
+CXXINCDIRS :=
+CXXSRCOs :=
+CXXSRCO0 :=
+CXXSRCO1 :=
+CXXSRCO2 :=
+CXXSRCO3 :=
+
+
+# custom options to make it compile using arm-none-eabi-gcc 6.3.1
+
+CFLAGS += -nostdinc
+
+# Downgrade some diagnostics about nonconformant code from errors to warnings. 
+# Thus, using -fpermissive allows some nonconforming code to compile.
+# without it we have error: 'operator new' takes type 'size_t' ('unsigned int') as first parameter
+#CFLAGS += -fpermissive
+
+# Warn if an undefined identifier is evaluated in an #if directive. Such identifiers are replaced with zero.
+#CFLAGS += -Wundef
+
+#CFLAGS += -Wattributes
+CFLAGS += -std=gnu++14
+
+
+# common C/C++ options
+CFLAGS += -W
+CFLAGS += -Wwrite-strings
+#CFLAGS += -Wno-unused-member-function
+CFLAGS += -Wno-useless-cast
+#CFLAGS += -Wno-weak-vtables
+#CFLAGS += -Wno-missing-prototypes
+#CFLAGS += -Wno-class-varargs
+#CFLAGS += -Wno-unused-template
+CFLAGS += -Wno-zero-as-null-pointer-constant
+#CFLAGS += -Wno-reserved-id-macro
+#CFLAGS += -Wno-deprecated-dynamic-exception-spec
+#CFLAGS += -Wno-comma
+CFLAGS += -Wno-old-style-cast
+# These are disabled because I don't want libc++ warnings when we turn
+# on extra warnings for the framework
+CFLAGS += -Werror=return-type
+CFLAGS += -Wno-unused-parameter
+CFLAGS += -Wno-long-long
+CFLAGS += -Wno-switch-default
+CFLAGS += -Wno-switch-enum
+CFLAGS += -Wno-inline
+CFLAGS += -Wno-effc++
+CFLAGS += -Wno-cast-align
+
+# common linker flags
+LDFLAGS += -nodefaultlibs
+
+# libcxxabi options
+#CXXABIFLAGS += -Wmismatched-tags
+#CXXABIFLAGS += -Wnewline-eof
+#CXXABIFLAGS += -Wshorten-64-to-32
+CXXABIFLAGS += -Wconversion
+CXXABIFLAGS += -Wchar-subscripts
+CXXABIFLAGS += -Wmissing-braces
+CXXABIFLAGS += -Wshadow
+CXXABIFLAGS += -Wsign-compare
+CXXABIFLAGS += -Wsign-conversion
+CXXABIFLAGS += -Wstrict-aliasing=2
+CXXABIFLAGS += -Wstrict-overflow=4
+CXXABIFLAGS += -Wunused-variable
+CXXABIFLAGS += -Wundef
+# These are disabled because I don't want libc++ warnings when we turn
+# on extra warnings for the framework
+CXXABIFLAGS += -Wno-switch
+CXXABIFLAGS += -Wno-missing-declarations
+
+
+# libcxxabi_compile_flags 
+# Let C++ library know we are building libcxxabi
+CXXABIFLAGS += -D_LIBCXXABI_BUILDING_LIBRARY
+# Bring back `std::unexpected`, which is removed in C++17, to support pre-C++17.
+CXXABIFLAGS += -D_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
+# ABI needs GNU functions to compile/link
+CXXABIFLAGS += -D_GNU_SOURCE
+
+# libcxxabi linker flags
+CXXABILDFLAGS += -lunwind
+
+
+# libcxx_dep_compile_flags
+CXXFLAGS += -nostdinc++
+CXXFLAGS += -D_GNU_SOURCE
+
+
+# libcxx options
+CXXFLAGS += -Wno-literal-suffix
+CXXFLAGS += -Wno-c++14-compat
+#CXXFLAGS += -Wno-noexcept-type
+#CXXFLAGS += -Wno-user-defined-literals
+#CXXFLAGS += -Wno-covered-switch-default
+# These are disabled because I don't want libc++ warnings when we turn
+# on extra warnings for the framework
+CXXFLAGS += -Wno-sign-conversion
+CXXFLAGS += -Wno-conversion
+CXXFLAGS += -Wno-double-promotion
+
+# libcxx_compile_flags 
+CXXFLAGS += -fvisibility-inlines-hidden
+CXXFLAGS += -fvisibility=hidden
+CXXFLAGS += -D_LIBCPP_BUILD_STATIC
+CXXFLAGS += -D_LIBCPP_BUILDING_LIBRARY
+CXXFLAGS += -D_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
+CXXFLAGS += -DLIBCXX_BUILDING_LIBCXXABI
+# Define we don't touch libcpp debug settings,
+CXXFLAGS += -D_LIBCPP_DEBUG=0
+# STL needs GNU functions to compile/link
+CXXFLAGS += -D_GNU_SOURCE
+
+
+# ABI version of libc++. Can be either 1 or 2, where 2 is currently not stable. Defaults to 1.
+CXXFLAGS += -D_LIBCPP_ABI_VERSION=1
+
+# The inline ABI namespace used by libc++. It defaults to __n where `n` is the current ABI version.
+CXXFLAGS += -D_LIBCPP_ABI_NAMESPACE=__1
+
+
+
+# parsing options
+
+ifeq ($(debug),true)
+    CXXFLAGS += -D_DEBUG
+else
+    CXXFLAGS += -D_LIBCPP_DISABLE_ADDITIONAL_DIAGNOSTICS
+endif
+
+ifeq ($(enable_pedantic),true)
+    CFLAGS += -pedantic
+else
+    CFLAGS += -Wno-pedantic
+endif
+
+ifeq ($(enable_pedantic_error),true)
+    CFLAGS += -pedantic-error
+endif
+
+
+
+
+
+
+
+# libcxxabi file list
+CXXABISRCOs += libcxxabi/src/cxa_aux_runtime.cpp
+CXXABISRCOs += libcxxabi/src/cxa_default_handlers.cpp
+CXXABISRCOs += src/c++abi/cxa_handlers.cpp
+CXXABISRCOs += libcxxabi/src/cxa_unexpected.cpp
+CXXABISRCOs += libcxxabi/src/cxa_vector.cpp
+CXXABISRCOs += libcxxabi/src/cxa_virtual.cpp
+CXXABISRCOs += libcxxabi/src/fallback_malloc.cpp
+CXXABISRCOs += libcxxabi/src/private_typeinfo.cpp
+CXXABISRCOs += libcxxabi/src/stdlib_exception.cpp
+CXXABISRCOs += libcxxabi/src/stdlib_typeinfo.cpp
+
+# libcpp core files
+CXXSRCOs += libcxx/src/algorithm.cpp
+CXXSRCOs += libcxx/src/any.cpp
+CXXSRCOs += libcxx/src/bind.cpp
+CXXSRCOs += libcxx/src/charconv.cpp
+CXXSRCOs += libcxx/src/condition_variable.cpp
+CXXSRCOs += libcxx/src/condition_variable_destructor.cpp
+CXXSRCOs += libcxx/src/exception.cpp
+CXXSRCOs += libcxx/src/functional.cpp
+CXXSRCOs += libcxx/src/future.cpp
+CXXSRCOs += libcxx/src/hash.cpp
+CXXSRCOs += libcxx/src/ios.cpp
+CXXSRCOs += libcxx/src/memory.cpp
+CXXSRCOs += libcxx/src/mutex.cpp
+CXXSRCOs += libcxx/src/mutex_destructor.cpp
+CXXSRCOs += src/c++/new_terminate_badalloc.cpp
+CXXSRCOs += libcxx/src/optional.cpp
+CXXSRCOs += libcxx/src/regex.cpp
+CXXSRCOs += libcxx/src/shared_mutex.cpp
+CXXSRCOs += libcxx/src/strstream.cpp
+CXXSRCOs += libcxx/src/system_error.cpp
+CXXSRCOs += libcxx/src/typeinfo.cpp
+CXXSRCOs += libcxx/src/utility.cpp
+CXXSRCOs += libcxx/src/valarray.cpp
+CXXSRCOs += libcxx/src/variant.cpp
+CXXSRCOs += libcxx/src/vector.cpp
+
+ifeq ($(enable_chrono),true)
+    ifeq ($(use_external_libc),true)
+        CXXSRCOs += src/c++/chrono.cpp
+    else
+        CXXSRCOs += libcxx/src/chrono.cpp
+    endif
+endif
+
+
+
+# libcpp_experimental_files
+CXXSRCOs += libcxx/src/experimental/memory_resource.cpp
+
+
+# libcpp_filesystem_files
+ifeq ($(libcxx_enable_filesystem),true)
+    CXXSRCOs += libcxx/src/filesystem/directory_iterator.cpp
+    CXXSRCOs += libcxx/src/filesystem/operations.cpp
+endif
+
+
+
+# libcxxabi_include_directories
+CXXABIINCDIRS += include/c++abi
+CXXABIINCDIRS += include/c++
+
+
+# libcxx_include_directories
+CXXINCDIRS += include/c++abi
+CXXINCDIRS += include/c++
+CXXINCDIRS += libcxx/include
+# libcxx_extensions_include_dir
+CXXINCDIRS += extensions
+
+
+
+ifeq ($(use_external_libc),true)
+    # Using external libc specified in libc-subproject option.
+    # If you are using Embedded Artistry libc, note that iostreams and locale are not supported.
+    
+    # Libcxxabi Settings
+    CXXABIFLAGS += -D_POSIX_MEMALIGN_VISIBLE -DLIBCXXABI_USE_LLVM_UNWINDER
+    CXXABIINCDIRS += embedded-unwind/include
+    CXXABISRCOs += src/c++abi/abort_message.cpp
+    CXXABISRCOs += src/c++abi/cxa_guard.cpp
+    CXXABISRCOs += src/c++abi/stdlib_stdexcept.cpp
+
+    ifeq ($(disable_rtti),false)
+        CXXABISRCOs += src/c++abi/cxa_demangle.cpp
+    endif
+    
+    # TODO: build Unwind-sjlj_pthread.c
+    # if host_machine.cpu_family() == 'arm'
+    ifneq (,$(findstring $(ARCH),cortex-m3 cortex-m0 arm7tdmi-s))
+        CXXABIFLAGS += -D__USING_SJLJ_EXCEPTIONS__
+    endif
+    
+    ## Libcxx Settings
+    CXXFLAGS += -D_POSIX_MEMALIGN_VISIBLE
+    # libcpp_core_files
+    CXXSRCOs += src/c++/debug.cpp
+    CXXSRCOs += src/c++/locale.cpp
+    CXXSRCOs += src/c++/string.cpp
+    CXXSRCOs += src/c++/random.cpp
+    CXXSRCOs += src/c++/stdexcept.cpp
+
+    # Enable "baremetal" fallbacks when working with an alternate libc
+    # TODO: better name for this argument - could be split out even?
+    CXXFLAGS += -D_BAREMETAL
+else
+    # Compiling with the built-in libc and system headers
+    
+    # libcxxabi_compile_flags 
+    CXXABIFLAGS += -nostdinc++
+    # libcxxabi_files
+    CXXABISRCOs += libcxxabi/src/abort_message.cpp
+    CXXABISRCOs += libcxxabi/src/stdlib_stdexcept.cpp
+    CXXABISRCOs += libcxxabi/src/cxa_guard.cpp
+
+
+    ifeq ($(disable_rtti),false)
+        CXXABISRCOs += libcxxabi/src/cxa_demangle.cpp
+    endif
+
+    # libcxx_compile_flags
+    CXXFLAGS += -nostdinc++
+    # libcpp_core_files
+    CXXSRCOs += libcxx/src/debug.cpp
+    CXXSRCOs += libcxx/src/iostream.cpp
+    CXXSRCOs += libcxx/src/locale.cpp
+    CXXSRCOs += libcxx/src/random.cpp
+    CXXSRCOs += libcxx/src/string.cpp
+    CXXSRCOs += libcxx/src/stdexcept.cpp
+endif    # use_external_libc
+
+
+
+
+
+
+
+
+# Apply Project Option Changes
+
+
+
+
+### Exceptions
+ifeq ($(disable_exceptions),true)
+    # Exceptions are disabled
+
+    # libcxxabi_files
+    CXXABISRCOs += libcxxabi/src/cxa_noexception.cpp
+    
+    # libcxxabi_compile_flags 
+    CXXABIFLAGS += -D_LIBCXXABI_NO_EXCEPTIONS -fno-exceptions
+
+    # libcxx_compile_flags 
+    CXXFLAGS += -fno-exceptions -D_LIBCPP_NO_EXCEPTIONS
+else
+    # Exceptions are enabled
+
+    # libcxxabi_compile_flags 
+    CXXABIFLAGS += -funwind-tables
+    
+    # libcxxabi_files
+    CXXABISRCOs += libcxxabi/src/cxa_exception.cpp
+    # We always use our CXA Personality because the standard one doesn't support GCC
+    CXXABISRCOs += src/c++abi/cxa_personality.cpp
+
+    CXXABISRCOs += libcxxabi/src/cxa_exception_storage.cpp
+endif
+
+### RTTI
+ifeq ($(disable_rtti),true)
+    # RTTI is Disabled
+    # libcxx_compile_flags 
+    CXXFLAGS += -fno-rtti
+    CXXFLAGS += -D_LIBCPP_NO_RTTI
+endif
+
+### STDIO
+ifeq ($(enable_stdinout),false)
+    CXXFLAGS += -D_LIBCPP_HAS_NO_STDIN
+endif
+
+### Filesystem
+ifeq ($(libcxx_enable_filesystem),false)
+    CXXFLAGS += -D_LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+endif
+
+### Compiler-rt
+ifeq ($(use_compiler_rt),true)
+    # libcxxabi_link_flags 
+    CXXABILDFLAGS += -rtlib=compiler-rt
+    # libcxx_link_flags 
+    CXXLDFLAGS += -rtlib=compiler-rt
+else
+    # Filesystem uses __int128_t, which requires a definition of __muloi4 when
+    # compiled with UBSAN. This definition is not provided by libgcc_s, but is
+    # provided by compiler-rt. So we need to disable it to avoid having multiple
+    # definitions. See filesystem/int128_builtins.cpp.
+    # libcpp_filesystem_files 
+    CXXSRCOs += libcxx/src/filesystem/int128_builtins.cpp
+endif
+
+### Unwind
+ifeq ($(use_llvm_libunwind),true)
+    # libcxxabi_compile_flags 
+    CXXABIFLAGS += -DLIBCXXABI_USE_LLVM_UNWINDER
+endif
+
+### Terminate
+# The default terminate handler attempts to demangle uncaught exceptions, which
+# causes extra I/O and demangling code to be pulled in.
+ifeq ($(libcxx_silent_terminate),true)
+    # libcxxabi_compile_flags 
+    CXXABIFLAGS += -DLIBCXXABI_SILENT_TERMINATE
+else ifeq ($(disable_rtti),true)
+    $(error Loud terminate requires RTTI)
+endif
+
+### New/Delete
+ifeq ($(default_newdelete),true)
+    # libcxxabi_files 
+    CXXABISRCOs += libcxxabi/src/stdlib_new_delete.cpp
+else
+    # libcxx_compile_flags 
+    CXXFLAGS += -D_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS
+endif
+
+
+
+### Threading Support
+ifeq ($(enable_threads),true)
+    ifeq ($(thread_library),)
+        $(error Supply thread library if enable_threads is used)
+    endif
+    ifeq ($(thread_library),none)
+        $(error Supply thread library if enable_threads is used)
+    endif
+
+    ifeq ($(thread_library),pthread)
+        # Using pthread dependency for threading support
+        using_pthread = true
+    else ifeq ($(thread_library),ea-framework)
+        # If we aren't using pthreads, use an external header
+        # Building with framework thread library support
+        # Using include path to core RTOS headers: + os_header_path
+        CXXFLAGS += -D_LIBCPP_HAS_THREAD_API_EXTERNAL
+
+        # libcxxabi_include_directories 
+        CXXABIINCDIRS += $(os_header_path)
+        # libcxx_include_directories 
+        CXXINCDIRS += $(os_header_path)
+
+        # libcpp_core_files 
+        CXXSRCOs += src/c++/thread.cpp
+
+        using_pthread = true
+    else
+        # If we aren't using pthreads or framework, use an external header
+        assert(not (has_external_threading == true and build_external_threading == true),
+        ifeq ($(has_external_threading),true)
+            ifeq ($(build_external_threading),true)
+                $(error Cannot select both has_external_threading and build_external_threading. Pick one.)
+            endif
+        endif
+
+
+        # Enabling custom external threading support.
+        ifeq ($(build_external_threading),true)
+            CXXFLAGS += -D_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL
+        else
+            CXXFLAGS += -D_LIBCPP_HAS_THREAD_API_EXTERNAL
+            # libcpp_core_files 
+            CXXSRCOs += src/c++/thread.cpp
+        endif
+
+        ifeq ($(os_header_path),)
+            $(info If the build fails, please set os-header-path so the build can find your includes)
+        else
+            # libcxxabi_include_directories 
+            CXXABIINCDIRS += $(os_header_path)
+            # libcxx_include_directories 
+            CXXINCDIRS += $(os_header_path)
+        endif
+
+        # TODO: test - does the new logic break in this case, and should we reactivate this?
+        #libcxxabi_files += files('src/c++abi/cxa_guard.cpp')
+        CXXSRCOs += src/c++abi/cxa_guard.cpp
+    endif
+
+    #if host_os != 'darwin' and host_os != 'windows'
+    #    message('enabling threads')
+    #    libcxxabi_files += files(
+    #        'libcxxabi/src/cxa_thread_atexit.cpp',
+    #    )
+    #endif
+
+    #if build_os != 'darwin' and build_os != 'windows'
+    #    libcxxabi_native_files += files(
+    #        'libcxxabi/src/cxa_thread_atexit.cpp',
+    #    )
+    #endif
+else
+    $(info Building without threading support.)
+    CXXFLAGS += -D_LIBCPP_HAS_NO_THREADS
+    CXXFLAGS += -D_LIBCXXABI_HAS_NO_THREADS
+    CXXABIFLAGS += -D_LIBCPP_HAS_NO_THREADS
+    CXXABIFLAGS += -D_LIBCXXABI_HAS_NO_THREADS
+endif
+
+
+# Handle pthread-specific logic
+# TODO
+
+
+#### Monotonic Clock
+# monotonic clock can only be disabled if there is no threading
+ifeq ($(enable_monotonic_clock),false)
+    ifeq ($(enable_threads),false)
+        CXXFLAGS += -D_LIBCPP_HAS_NO_MONOTONIC_CLOCK
+    endif
+endif
+
+### 32-bit
+ifeq ($(force_32_bit),true)
+    CXXFLAGS += -m32
+    CXXABIFLAGS += -m32
+endif
+
+### Atexit Handling
+#if host_cpp_compiler.has_function('__cxa_thread_atexit_impl')
+#    libcxx_host_compile_flags += ['-DHAVE___CXA_THREAD_ATEXIT_IMPL']
+#elif host_machine.system() == 'darwin'
+#    # On OS X, clang doesn't handle weak linking the way we expect
+#    # So we'll work around it by undefining the weak symbol
+#    libcxx_host_dep_link_flags += '-Wl,-U,___cxa_thread_atexit_impl'
+#endif
+
+#if native_cpp_compiler.has_function('__cxa_thread_atexit_impl')
+#    libcxx_native_compile_flags += ['-DHAVE___CXA_THREAD_ATEXIT_IMPL']
+#elif build_machine.system() == 'darwin'
+#    # On OS X, clang doesn't handle weak linking the way we expect
+#    # So we'll work around it by undefining the weak symbol
+#    libcxx_native_dep_link_flags += '-Wl,-U,___cxa_thread_atexit_impl'
+#endif
+
+### Cross-compilation Specific
+
+#if meson.is_cross_build()
+    CXXABIFLAGS += -DLIBCXXABI_BAREMETAL -ffreestanding
+    CXXFLAGS += -ffreestanding
+#endif
+
+
+
+###################
+# Install Headers #
+###################
+
+# This must be after all the config_data is set
+# This is the source of install_cpp_headers_dep
+# subdir('include')
+
+# libcxxabi Library targets #
+
+# Note that due to the behavior of #include_next and -isystem, you need to ensure that
+# the C++ includes are _last_ to be added to a target so that they are first in the search list.
+# This is a helper variable that is used to control include directory order.
+
+CXXABIINCDIRS += libcxxabi/include
+CXXABIINCDIRS += libcxx/include
+CXXABIINCDIRS += $(os_header_path)
+
+CXXINCDIRS += libcxxabi/include
+CXXINCDIRS += $(os_header_path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CFLAGS += $(patsubst %,-I%,$(INCDIRS))
+CXXFLAGS += $(patsubst %,-I%,$(CXXINCDIRS))
+CXXABIFLAGS += $(patsubst %,-I%,$(CXXABIINCDIRS))
+CFLAGS += -Wa,-adhlns=$(OBJDIR)$(subst $(suffix $<),.lst,$<)
+#CFLAGS += -Wa,-adhlns=$(OBJDIR)/$(notdir $(subst $(suffix $<),.lst,$<))
+
+
+# Assembler flags.
+#  -Wa,...:   tell GCC to pass this to the assembler.
+#  -ahlms:    create listing
+#  -gstabs:   have the assembler create line number information; note that
+#             for use in COFF files, additional information about filenames
+#             and function names needs to be present in the assembler source
+#             files -- see avr-libc docs [FIXME: not yet described there]
+##ASFLAGS += -Wa,-adhlns=$(<:.S=.lst),-gstabs
+ASFLAGS += -Wa,-adhlns=$(OBJDIR)$(<:.S=.lst)
+#ASFLAGS += -Wa,-adhlns=$(OBJDIR)/$(notdir $(<:.S=.lst)),-g$(DEBUG)
+ASFLAGS += $(patsubst %,-I%,$(INCDIRS))
+
+# ---------------------------------------------------------------------------
+
+# Define programs and commands.
+CC      := $(TCHAIN_PREFIX)gcc
+CPP     := $(TCHAIN_PREFIX)g++
+AR      := $(TCHAIN_PREFIX)ar
+OBJCOPY := $(TCHAIN_PREFIX)objcopy
+OBJDUMP := $(TCHAIN_PREFIX)objdump
+SIZE    := $(TCHAIN_PREFIX)size
+NM      := $(TCHAIN_PREFIX)nm
+
+REMOVE := rm -f
+REMOVEDIR := rm -rf
+COPY := cp
+TEST := test
+
+
+# Define Messages
+# English
+MSG_ERRORS_NONE := Errors: none
+MSG_BEGIN := -------- begin --------
+MSG_END := --------  end  --------
+MSG_SIZE_BEFORE := Size before:
+MSG_SIZE_AFTER := Size after:
+MSG_FLASH := Creating load file for Flash:
+MSG_EXTENDED_LISTING := Creating Extended Listing:
+MSG_FULL_DISASEMBLY := Creating Full Disasembly:
+MSG_SYMBOL_TABLE := Creating Symbol Table:
+MSG_LINKING := Linking:
+MSG_COMPILING := Compiling C:
+MSG_COMPILING_ARM := "Compiling C (ARM-only):"
+MSG_COMPILINGCPP := Compiling C++:
+MSG_COMPILINGCPP_ARM := "Compiling C++ (ARM-only):"
+MSG_ASSEMBLING := Assembling:
+MSG_ASSEMBLING_ARM := "Assembling (ARM-only):"
+MSG_CLEANING := Cleaning project:
+
+
+# Define all object files.
+COBJOs      = $(SRCOs:.c=.o)
+COBJO0      = $(SRCO0:.c=.o)
+COBJO1      = $(SRCO1:.c=.o)
+COBJO2      = $(SRCO2:.c=.o)
+COBJO3      = $(SRCO3:.c=.o)
+CPPOBJOs    = $(CPPSRCOs:.cpp=.o)
+CPPOBJO0    = $(CPPSRCO0:.cpp=.o)
+CPPOBJO1    = $(CPPSRCO1:.cpp=.o)
+CPPOBJO2    = $(CPPSRCO2:.cpp=.o)
+CPPOBJO3    = $(CPPSRCO3:.cpp=.o)
+AOBJ        = $(ASRC:.S=.o)
+
+CXXABIOBJOs := $(CXXABISRCOs:.cpp=.o) 
+CXXABIOBJO0 := $(CXXABISRCO0:.cpp=.o) 
+CXXABIOBJO1 := $(CXXABISRCO1:.cpp=.o) 
+CXXABIOBJO2 := $(CXXABISRCO2:.cpp=.o) 
+CXXABIOBJO3 := $(CXXABISRCO3:.cpp=.o)
+CXXABIOBJS := $(CXXABIOBJOs) $(CXXABIOBJO0) $(CXXABIOBJO1) $(CXXABIOBJO2) $(CXXABIOBJO2) $(CXXABIOBJO3)
+
+CXXOBJOs := $(CXXSRCOs:.cpp=.o) 
+CXXOBJO0 := $(CXXSRCO0:.cpp=.o) 
+CXXOBJO1 := $(CXXSRCO1:.cpp=.o) 
+CXXOBJO2 := $(CXXSRCO2:.cpp=.o) 
+CXXOBJO3 := $(CXXSRCO3:.cpp=.o)
+CXXOBJS := $(CXXOBJOs) $(CXXOBJO0) $(CXXOBJO1) $(CXXOBJO2) $(CXXOBJO2) $(CXXOBJO3)
+
+
+ALL_OBJ =  $(AOBJ)
+ALL_OBJ += $(COBJOs) $(COBJO0) $(COBJO1) $(COBJO2) $(COBJO3)
+ALL_OBJ += $(CPPOBJOs) $(CPPOBJO0) $(CPPOBJO1) $(CPPOBJO2) $(CPPOBJO3)
+ALL_OBJ += $(EXTRAOBJS)
+ALL_OBJ += $(CXXABIOBJS) $(CXXOBJS)
+
+
+# Define all listing files.
+LST =  $(ASRC:.S=.lst)
+LST += $(SRCOs:.c=.lst)
+LST += $(SRCO0:.c=.lst)
+LST += $(SRCO1:.c=.lst)
+LST += $(SRCO2:.c=.lst)
+LST += $(SRCO3:.c=.lst)
+LST += $(CPPSRCOs:.cpp=.lst)
+LST += $(CPPSRCO0:.cpp=.lst)
+LST += $(CPPSRCO1:.cpp=.lst)
+LST += $(CPPSRCO2:.cpp=.lst)
+LST += $(CPPSRCO3:.cpp=.lst)
+LST += $(CXXABISRCOs:.cpp=.lst)
+LST += $(CXXABISRCO0:.cpp=.lst)
+LST += $(CXXABISRCO1:.cpp=.lst)
+LST += $(CXXABISRCO2:.cpp=.lst)
+LST += $(CXXABISRCO3:.cpp=.lst)
+LST += $(CXXSRCOs:.cpp=.lst)
+LST += $(CXXSRCO0:.cpp=.lst)
+LST += $(CXXSRCO1:.cpp=.lst)
+LST += $(CXXSRCO2:.cpp=.lst)
+LST += $(CXXSRCO3:.cpp=.lst)
+
+# Compiler flags to generate dependency files.
+### GENDEPFLAGS = -Wp,-M,-MP,-MT,$(*F).o,-MF,.dep/$(@F).d
+GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
+
+ifdef OBJDIR
+    OBJMAGIC = $< -o $(OBJDIR)/$(notdir $@)
+else
+    OBJMAGIC = $< -o $@
+endif
+
+
+#all_targets := libc++abi libc++abi_native libc++ libc++_native libc++experimental libc++experimental_native
+all_targets := libc++abi libc++
+ifeq ($(libcxx_enable_filesystem),true)
+    all_targets += libc++fs libc++fs_native
+endif
+
+
+# Default target.
+.PHONY: all
+all: begin gccversion $(all_targets) finished end
+
+
+.PHONY: libc++abi
+libc++abi: libc++abi.a
+
+.PHONY: libc++abi_native
+libc++abi_native: libc++abi_native.a
+
+.PHONY: libc++
+libc++: libc++.a
+
+.PHONY: libc++_native
+libc++_native: libc++_native.a
+
+.PHONY: libc++experimental
+libc++experimental: libc++experimental.a
+
+.PHONY: libc++experimental_native
+libc++experimental_native: libc++experimental_native.a
+
+
+
+
+# Link: create .a output file from object files.
+libc++abi.a: $(CXXABIOBJS)
+ifdef OBJDIR
+	@$(AR) rc $@ $(addprefix $(OBJDIR)/,$(notdir $(CXXABIOBJS)))
+else
+	@$(AR) rc $@ $(CXXABIOBJS)
+endif
+
+libc++.a: $(CXXOBJS)
+ifdef OBJDIR
+	@$(AR) rc $@ $(addprefix $(OBJDIR)/,$(notdir $(CXXOBJS)))
+else
+	@$(AR) rc $@ $(CXXOBJS)
+endif
+
+
+
+
+# create OBJDIR if defined
+.PHONY: objdir
+ifdef OBJDIR
+objdir:
+	@if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi
+else
+objdir:
+
+endif
+
+# copy target from OBJDIR dirctory
+.PHONY: copytarget
+copytarget:
+	@echo "copy target from OBJDIR dirctory"
+	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGET).hex ]; then $(COPY) $(OBJDIR)/$(TARGET).hex . ; fi
+	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGETLIB).a ]; then $(COPY) $(OBJDIR)/$(TARGETLIB).a . ; fi
+
+
+# Eye candy.
+.PHONY: begin
+begin:
+	@echo
+	@echo $(MSG_BEGIN)
+
+.PHONY: finished
+finished:
+	@echo $(MSG_ERRORS_NONE)
+
+.PHONY: end
+end:
+	@echo $(MSG_END)
+	@echo
+
+
+# Display compiler version information.
+.PHONY: gccversion
+gccversion :
+	@$(CC) --version
+
+
+# Link: create .a output file from object files.
+$(TARGETLIB).a:  $(ALL_OBJ)
+	@echo
+	@echo $(MSG_LINKING) $@
+#	@echo OBJDIR: $(OBJDIR)
+#	@echo ALL_OBJ: $(ALL_OBJ)
+#	@echo ALL_OBJ_NOTDIR: $(notdir $(ALL_OBJ))
+#	@echo ALL_OBJ_PREFIXED: $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
+ifdef OBJDIR
+	@$(AR) rc $(TARGETLIB).a $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
+else
+	@$(AR) rc $(TARGETLIB).a $(ALL_OBJ)
+endif
+
+
+# Compile: create assembler files from C source files. ARM/Thumb
+## does not work - TODO - hints welcome
+##$(COBJ) : %.s : %.c
+##	$(CC) $(THUMB) -S $(CFLAGS) $(GENDEPFLAGS) $< -o $@
+
+
+# Assemble: create object files from assembler source files. ARM/Thumb
+$(AOBJ) : %.o : %.S
+	@$(CC) -c $(THUMB) $(ASFLAGS) $< -o $(OBJDIR)$@
+
+
+# Optimization -Os
+
+# Compile: create object files from C source files.
+$(COBJOs) : %.o : %.c
+#	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $< -o $(OBJDIR)$@
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $(OBJMAGIC)
+
+# Compile: create object files from C++ source files.
+$(CPPOBJOs) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -Os $< -o $(OBJDIR)$@
+
+
+# Optimization -O0
+
+# Compile: create object files from C source files.
+$(COBJO0) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O0 $< -o $(OBJDIR)$@
+
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO0) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O0 $< -o $(OBJDIR)$@
+
+
+# Optimization -O1
+
+# Compile: create object files from C source files.
+$(COBJO1) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O1 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO1) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O1 $< -o $(OBJDIR)$@
+
+
+# Optimization -O2
+
+# Compile: create object files from C source files.
+$(COBJO2) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O2 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO2) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O2 $< -o $(OBJDIR)$@
+
+
+# Optimization -O3
+
+# Compile: create object files from C source files.
+$(COBJO3) : %.o : %.c
+	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O3 $< -o $(OBJDIR)$@
+
+# Compile: create object files from C++ source files.
+$(CPPOBJO3) : %.o : %.cpp
+	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O3 $< -o $(OBJDIR)$@
+
+
+
+# Compile libcxxabi and libcxx source file
+$(CXXABIOBJOs) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -Os $< -o $(OBJDIR)$@
+	
+$(CXXABIOBJO0) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O0 $< -o $(OBJDIR)$@
+
+$(CXXABIOBJO1) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O1 $< -o $(OBJDIR)$@
+
+$(CXXABIOBJO2) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O2 $< -o $(OBJDIR)$@
+	
+$(CXXABIOBJO3) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O3 $< -o $(OBJDIR)$@
+
+
+$(CXXOBJOs) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -Os $< -o $(OBJDIR)$@
+
+$(CXXOBJO0) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O0 $< -o $(OBJDIR)$@
+
+$(CXXOBJO1) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O1 $< -o $(OBJDIR)$@
+
+$(CXXOBJO2) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O2 $< -o $(OBJDIR)$@
+
+$(CXXOBJO3) : %.o : %.cpp
+	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O3 $< -o $(OBJDIR)$@
+
+
+
+# Target: install
+.PHONY: install
+install: $(OBJDIR)libc++abi.a $(OBJDIR)libc++.a $(OBJDIR)libcpp.a
+# Make destination directories
+	@if [ ! -d ./../lib++ ]; then mkdir ./../lib++; fi
+	@if [ ! -d ./../lib++/$(CLASS_DIR) ]; then mkdir ./../lib++/$(CLASS_DIR); fi
+	@if [ ! -d ./../lib++/$(CLASS_DIR)/experimental ]; then mkdir ./../lib++/$(CLASS_DIR)/experimental; fi
+	@if [ ! -d ./../lib++/$(CLASS_DIR)/ext ]; then mkdir ./../lib++/$(CLASS_DIR)/ext; fi
+	@if [ ! -d ./../lib++/$(CLASS_DIR)/support ]; then mkdir ./../lib++/$(CLASS_DIR)/support; fi
+# Copy libraries
+	@$(COPY) $(OBJDIR)libc++abi.a ./../lib++/$(CLASS_DIR)
+	@$(COPY) $(OBJDIR)libc++.a ./../lib++/$(CLASS_DIR)
+	@$(COPY) $(OBJDIR)libcpp.a ./../lib++/$(CLASS_DIR)
+# Make custom config
+	cat __libcpp_config_site ./libcxx/include/__config > ./../lib++/$(CLASS_DIR)/__config
+# C++ core headers
+	@$(COPY) ./include/c++/__baremetal_locale_fallbacks.hpp ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./include/c++/__locale ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./include/c++/locale ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__bit_reference ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__bsd_locale_defaults.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__bsd_locale_fallbacks.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__errc ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__debug ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__functional_03 ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__functional_base ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__functional_base_03 ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__hash_table ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__libcpp_version ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__mutex_base ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__node_handle ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__nullptr ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__split_buffer ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__sso_allocator ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__std_stream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__string ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__threading_support ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__tree ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__tuple ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/__undef_macros ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/algorithm ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/any ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/array ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/atomic ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/bit ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/bitset ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cassert ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ccomplex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cctype ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cerrno ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cfenv ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cfloat ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/charconv ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/chrono ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cinttypes ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ciso646 ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/climits ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/clocale ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cmath ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/codecvt ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/compare ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/complex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/complex.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/condition_variable ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/csetjmp ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/csignal ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstdarg ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstdbool ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstddef ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstdint ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstdio ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstdlib ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cstring ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ctgmath ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ctime ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ctype.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cwchar ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/cwctype ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/deque ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/errno.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/exception ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/fenv.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/filesystem ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/float.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/forward_list ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/fstream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/functional ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/future ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/initializer_list ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/inttypes.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/iomanip ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ios ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/iosfwd ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/iostream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/istream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/iterator ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/limits ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/limits.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/list ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/locale.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/map ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/math.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/memory ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/mutex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/new ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/numeric ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/optional ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ostream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/queue ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/random ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/ratio ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/regex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/scoped_allocator ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/set ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/setjmp.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/shared_mutex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/span ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/sstream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stack ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stdbool.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stddef.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stdexcept ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stdint.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stdio.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/stdlib.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/streambuf ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/string ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/string.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/string_view ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/strstream ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/system_error ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/tgmath.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/thread ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/tuple ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/type_traits ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/typeindex ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/typeinfo ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/unordered_map ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/unordered_set ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/utility ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/valarray ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/variant ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/vector ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/version ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/wchar.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxx/include/wctype.h ./../lib++/$(CLASS_DIR)
+# external headers
+	@$(COPY) ./libcxx/include/ext/__hash ./../lib++/$(CLASS_DIR)/ext
+	@$(COPY) ./libcxx/include/ext/hash_map ./../lib++/$(CLASS_DIR)/ext
+	@$(COPY) ./libcxx/include/ext/hash_set ./../lib++/$(CLASS_DIR)/ext
+# experimental headers
+	@$(COPY) ./libcxx/include/experimental/__config ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/__memory ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/algorithm ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/coroutine ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/deque ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/filesystem ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/forward_list ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/functional ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/iterator ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/list ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/map ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/memory_resource ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/propagate_const ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/regex ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/set ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/simd ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/string ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/type_traits ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/unordered_map ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/unordered_set ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/utility ./../lib++/$(CLASS_DIR)/experimental
+	@$(COPY) ./libcxx/include/experimental/vector ./../lib++/$(CLASS_DIR)/experimental
+# Install C++ ABI header
+	@$(COPY) ./libcxxabi/include/cxxabi.h ./../lib++/$(CLASS_DIR)
+	@$(COPY) ./libcxxabi/include/__cxxabi_config.h ./../lib++/$(CLASS_DIR)
+
+
+.PHONY: distclean
+distclean: clean
+	@$(REMOVE) ./../lib++/$(CLASS_DIR)/ext/*
+	@$(REMOVE) ./../lib++/$(CLASS_DIR)/experimental/*
+	@$(REMOVE) ./../lib++/$(CLASS_DIR)/support/*
+	-@$(REMOVE) ./../lib++/$(CLASS_DIR)/*
+	@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/*
+
+
+# Target: clean project.
+.PHONY: clean
+clean :
+	@$(REMOVE) $(TARGETLIB).obj
+	@$(REMOVE) $(TARGETLIB).elf
+	@$(REMOVE) $(TARGETLIB).map
+	@$(REMOVE) $(TARGETLIB).obj
+	@$(REMOVE) $(TARGETLIB).a90
+	@$(REMOVE) $(TARGETLIB).sym
+	@$(REMOVE) $(TARGETLIB).lnk
+	@$(REMOVE) $(TARGETLIB).lss
+	@$(REMOVE) $(TARGETLIB).dis
+	@$(REMOVE) $(TARGETLIB).a
+	@$(REMOVE) $(ALL_OBJ)
+	@$(REMOVE) $(LST)
+	@$(REMOVE) $(SRCOs:.c=.s)
+	@$(REMOVE) $(SRCO0:.c=.s)
+	@$(REMOVE) $(SRCO1:.c=.s)
+	@$(REMOVE) $(SRCO2:.c=.s)
+	@$(REMOVE) $(SRCO3:.c=.s)
+	@$(REMOVE) $(SRCOs:.c=.d)
+	@$(REMOVE) $(SRCO0:.c=.d)
+	@$(REMOVE) $(SRCO1:.c=.d)
+	@$(REMOVE) $(SRCO2:.c=.d)
+	@$(REMOVE) $(SRCO3:.c=.d)
+	@$(REMOVE) $(SRCARMOs:.c=.s)
+	@$(REMOVE) $(SRCARMO0:.c=.s)
+	@$(REMOVE) $(SRCARMO1:.c=.s)
+	@$(REMOVE) $(SRCARMO2:.c=.s)
+	@$(REMOVE) $(SRCARMO3:.c=.s)
+	@$(REMOVE) $(SRCARMOs:.c=.d)
+	@$(REMOVE) $(SRCARMO0:.c=.d)
+	@$(REMOVE) $(SRCARMO1:.c=.d)
+	@$(REMOVE) $(SRCARMO2:.c=.d)
+	@$(REMOVE) $(SRCARMO3:.c=.d)
+	@$(REMOVE) $(CPPSRCOs:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO0:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO1:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO2:.cpp=.s)
+	@$(REMOVE) $(CPPSRCO3:.cpp=.s)
+	@$(REMOVE) $(CPPSRCOs:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO0:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO1:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO2:.cpp=.d)
+	@$(REMOVE) $(CPPSRCO3:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMOs:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO0:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO1:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO2:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMO3:.cpp=.s)
+	@$(REMOVE) $(CPPSRCARMOs:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO0:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO1:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO2:.cpp=.d)
+	@$(REMOVE) $(CPPSRCARMO3:.cpp=.d)
+	@$(REMOVEDIR) .dep
+	@$(REMOVEDIR) $(OBJDIR)
+
+
+# Include the dependency files.
+-include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)
