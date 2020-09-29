@@ -4,12 +4,17 @@
 #
 # Released to the Public Domain
 #
-# Modified by Mario Ivancic for libcpp
+# Modified by Mario Ivancic for libc++
+
+# This is second level Makefile
+# You can call it directly (see below) but it's usually called from top level Makefile
 
 # On command line:
-# make ARCH=atm7tdmi-s all = Make software.
-# make ARCH=cortex-m3 clean = Clean out built project files.
-# make ARCH=cortex-m0 install = Install libcpp.a and some .h files in lib/$(MCU).
+# make -f Makefile.2 ARCH=atm7tdmi-s 			Build LibC++.
+# make -f Makefile.2 ARCH=atm7tdmi-s all 		Build LibC++
+# make -f Makefile.2 ARCH=cortex-m3 clean 		Clean all object and listing files.
+# make -f Makefile.2 ARCH=cortex-m3 distclean 	Uninstall LibC++ and header files.
+# make -f Makefile.2 ARCH=cortex-m0 install 	Install libc.a and some .h files in lib++/$(MCU).
 
 PROJECT_OPTIONS := -D__LIBCPP__
 
@@ -21,8 +26,7 @@ include project_make_options
 #TCHAIN_PREFIX ?= C:/bin/winarm/arm-eabi-gcc-4.7.0/bin/arm-none-eabi-
 TCHAIN_PREFIX ?= arm-none-eabi-
 
-# we need this for ARM archs, undef it for others
-THUMB := -mthumb
+
 
 # place for object files
 #OBJDIR := obj/
@@ -58,23 +62,35 @@ CPPSRCO3 :=
 
 # ARCH name and submodel
 
-ifeq ($(ARCH),cortex-m3)
-    CLASS_DIR := cm3
-else ifeq ($(ARCH),cortex-m0)
-    CLASS_DIR := cm0
-else ifeq ($(ARCH),arm7tdmi-s)
+ifeq ($(ARCH),arm7tdmi-s)
+    # we need this for ARM archs, undef it for others
+	THUMB := -mthumb
     CLASS_DIR := arm7
+    CFLAGS = -mcpu=$(ARCH) -mthumb-interwork
+    ASFLAGS = -mcpu=$(ARCH)
+else ifeq ($(ARCH),cortex-m3)
+    # we need this for ARM archs, undef it for others
+	THUMB := -mthumb
+    NO_ARM_MODE := 1
+    CLASS_DIR := cm3
+    CFLAGS = -mcpu=$(ARCH)
+    ASFLAGS = -mcpu=$(ARCH)
+else ifeq ($(ARCH),cortex-m0)
+    # we need this for ARM archs, undef it for others
+	THUMB := -mthumb
+    NO_ARM_MODE := 1
+    CLASS_DIR := cm0
+    CFLAGS = -mcpu=$(ARCH)
+    ASFLAGS = -mcpu=$(ARCH)
 else
-    $(error Architecture $(ARCH) is not supported)
+	$(error Architecture $(ARCH) is not supported)
 endif
 
 
 # assembler flags
-ASFLAGS = -mcpu=$(ARCH) -x assembler-with-cpp
+ASFLAGS += -x assembler-with-cpp
 # flags only for C++
 CPPONLYFLAGS :=
-# common flags for C and C++
-CFLAGS = -mcpu=$(ARCH)
 # List any directories to look for include files here.
 # Each directory must be seperated by a space.
 INCDIRS :=
@@ -88,6 +104,11 @@ CXXABISRCO0 :=
 CXXABISRCO1 :=
 CXXABISRCO2 :=
 CXXABISRCO3 :=
+CXXABIARMSRCOs :=
+CXXABIARMSRCO0 :=
+CXXABIARMSRCO1 :=
+CXXABIARMSRCO2 :=
+CXXABIARMSRCO3 :=
 CXXFLAGS :=
 CXXLDFLAGS :=
 CXXINCDIRS :=
@@ -96,6 +117,11 @@ CXXSRCO0 :=
 CXXSRCO1 :=
 CXXSRCO2 :=
 CXXSRCO3 :=
+CXXABISRCOs :=
+CXXABISRCO0 :=
+CXXABISRCO1 :=
+CXXABISRCO2 :=
+CXXABISRCO3 :=
 
 
 # custom options to make it compile using arm-none-eabi-gcc 6.3.1
@@ -614,25 +640,35 @@ CXXABIINCDIRS += $(os_header_path)
 CXXINCDIRS += libcxxabi/include
 CXXINCDIRS += $(os_header_path)
 
+###############################################################################
 
 
+ifdef NO_ARM_MODE
+    # no ARM mode for cortex-mx
+    CXXABISRCOs += $(CXXABIARMSRCOs)
+    CXXABISRCO0 += $(CXXABIARMSRCO0)
+    CXXABISRCO1 += $(CXXABIARMSRCO1)
+    CXXABISRCO2 += $(CXXABIARMSRCO2)
+    CXXABISRCO3 += $(CXXABIARMSRCO3)
+    CXXSRCOs += $(CXXARMSRCOs)
+    CXXSRCO0 += $(CXXARMSRCO0)
+    CXXSRCO1 += $(CXXARMSRCO1)
+    CXXSRCO2 += $(CXXARMSRCO2)
+    CXXSRCO3 += $(CXXARMSRCO3)
+    CXXARMSRCOs :=
+    CXXARMSRCO0 :=
+    CXXARMSRCO1 :=
+    CXXARMSRCO2 :=
+    CXXARMSRCO3 :=
+    CXXABIARMSRCOs :=
+    CXXABIARMSRCO0 :=
+    CXXABIARMSRCO1 :=
+    CXXABIARMSRCO2 :=
+    CXXABIARMSRCO3 :=
+endif
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+###############################################################################
 
 
 CFLAGS += $(patsubst %,-I%,$(INCDIRS))
@@ -693,57 +729,53 @@ MSG_CLEANING := Cleaning project:
 
 
 # Define all object files.
-COBJOs      = $(SRCOs:.c=.o)
-COBJO0      = $(SRCO0:.c=.o)
-COBJO1      = $(SRCO1:.c=.o)
-COBJO2      = $(SRCO2:.c=.o)
-COBJO3      = $(SRCO3:.c=.o)
-CPPOBJOs    = $(CPPSRCOs:.cpp=.o)
-CPPOBJO0    = $(CPPSRCO0:.cpp=.o)
-CPPOBJO1    = $(CPPSRCO1:.cpp=.o)
-CPPOBJO2    = $(CPPSRCO2:.cpp=.o)
-CPPOBJO3    = $(CPPSRCO3:.cpp=.o)
-AOBJ        = $(ASRC:.S=.o)
 
-CXXABIOBJOs := $(CXXABISRCOs:.cpp=.o) 
-CXXABIOBJO0 := $(CXXABISRCO0:.cpp=.o) 
-CXXABIOBJO1 := $(CXXABISRCO1:.cpp=.o) 
-CXXABIOBJO2 := $(CXXABISRCO2:.cpp=.o) 
+CXXABIARMOBJOs := $(CXXABIARMSRCOs:.cpp=.o)
+CXXABIARMOBJO0 := $(CXXABIARMSRCO0:.cpp=.o)
+CXXABIARMOBJO1 := $(CXXABIARMSRCO1:.cpp=.o)
+CXXABIARMOBJO2 := $(CXXABIARMSRCO2:.cpp=.o)
+CXXABIARMOBJO3 := $(CXXABIARMSRCO3:.cpp=.o)
+CXXABIOBJOs := $(CXXABISRCOs:.cpp=.o)
+CXXABIOBJO0 := $(CXXABISRCO0:.cpp=.o)
+CXXABIOBJO1 := $(CXXABISRCO1:.cpp=.o)
+CXXABIOBJO2 := $(CXXABISRCO2:.cpp=.o)
 CXXABIOBJO3 := $(CXXABISRCO3:.cpp=.o)
-CXXABIOBJS := $(CXXABIOBJOs) $(CXXABIOBJO0) $(CXXABIOBJO1) $(CXXABIOBJO2) $(CXXABIOBJO2) $(CXXABIOBJO3)
+CXXABIOBJS := $(CXXABIOBJOs) $(CXXABIOBJO0) $(CXXABIOBJO1) $(CXXABIOBJO2) $(CXXABIOBJO3)
+CXXABIOBJS += $(CXXABIARMOBJOs) $(CXXABIARMOBJO0) $(CXXABIARMOBJO1) $(CXXABIARMOBJO2) $(CXXABIARMOBJO3)
 
-CXXOBJOs := $(CXXSRCOs:.cpp=.o) 
-CXXOBJO0 := $(CXXSRCO0:.cpp=.o) 
-CXXOBJO1 := $(CXXSRCO1:.cpp=.o) 
-CXXOBJO2 := $(CXXSRCO2:.cpp=.o) 
+CXXARMOBJOs := $(CXXARMSRCOs:.cpp=.o)
+CXXARMOBJO0 := $(CXXARMSRCO0:.cpp=.o)
+CXXARMOBJO1 := $(CXXARMSRCO1:.cpp=.o)
+CXXARMOBJO2 := $(CXXARMSRCO2:.cpp=.o)
+CXXARMOBJO3 := $(CXXARMSRCO3:.cpp=.o)
+CXXOBJOs := $(CXXSRCOs:.cpp=.o)
+CXXOBJO0 := $(CXXSRCO0:.cpp=.o)
+CXXOBJO1 := $(CXXSRCO1:.cpp=.o)
+CXXOBJO2 := $(CXXSRCO2:.cpp=.o)
 CXXOBJO3 := $(CXXSRCO3:.cpp=.o)
-CXXOBJS := $(CXXOBJOs) $(CXXOBJO0) $(CXXOBJO1) $(CXXOBJO2) $(CXXOBJO2) $(CXXOBJO3)
+CXXOBJS := $(CXXOBJOs) $(CXXOBJO0) $(CXXOBJO1) $(CXXOBJO2) $(CXXOBJO3)
+CXXOBJS += $(CXXARMOBJOs) $(CXXARMOBJO0) $(CXXARMOBJO1) $(CXXARMOBJO2) $(CXXARMOBJO3)
 
 
-ALL_OBJ =  $(AOBJ)
-ALL_OBJ += $(COBJOs) $(COBJO0) $(COBJO1) $(COBJO2) $(COBJO3)
-ALL_OBJ += $(CPPOBJOs) $(CPPOBJO0) $(CPPOBJO1) $(CPPOBJO2) $(CPPOBJO3)
-ALL_OBJ += $(EXTRAOBJS)
 ALL_OBJ += $(CXXABIOBJS) $(CXXOBJS)
 
 
 # Define all listing files.
-LST =  $(ASRC:.S=.lst)
-LST += $(SRCOs:.c=.lst)
-LST += $(SRCO0:.c=.lst)
-LST += $(SRCO1:.c=.lst)
-LST += $(SRCO2:.c=.lst)
-LST += $(SRCO3:.c=.lst)
-LST += $(CPPSRCOs:.cpp=.lst)
-LST += $(CPPSRCO0:.cpp=.lst)
-LST += $(CPPSRCO1:.cpp=.lst)
-LST += $(CPPSRCO2:.cpp=.lst)
-LST += $(CPPSRCO3:.cpp=.lst)
+LST += $(CXXABIARMSRCOs:.cpp=.lst)
+LST += $(CXXABIARMSRCO0:.cpp=.lst)
+LST += $(CXXABIARMSRCO1:.cpp=.lst)
+LST += $(CXXABIARMSRCO2:.cpp=.lst)
+LST += $(CXXABIARMSRCO3:.cpp=.lst)
 LST += $(CXXABISRCOs:.cpp=.lst)
 LST += $(CXXABISRCO0:.cpp=.lst)
 LST += $(CXXABISRCO1:.cpp=.lst)
 LST += $(CXXABISRCO2:.cpp=.lst)
 LST += $(CXXABISRCO3:.cpp=.lst)
+LST += $(CXXARMSRCOs:.cpp=.lst)
+LST += $(CXXARMSRCO0:.cpp=.lst)
+LST += $(CXXARMSRCO1:.cpp=.lst)
+LST += $(CXXARMSRCO2:.cpp=.lst)
+LST += $(CXXARMSRCO3:.cpp=.lst)
 LST += $(CXXSRCOs:.cpp=.lst)
 LST += $(CXXSRCO0:.cpp=.lst)
 LST += $(CXXSRCO1:.cpp=.lst)
@@ -822,13 +854,6 @@ objdir:
 
 endif
 
-# copy target from OBJDIR dirctory
-.PHONY: copytarget
-copytarget:
-	@echo "copy target from OBJDIR dirctory"
-	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGET).hex ]; then $(COPY) $(OBJDIR)/$(TARGET).hex . ; fi
-	@if [ -d $(OBJDIR) -a -f $(OBJDIR)/$(TARGETLIB).a ]; then $(COPY) $(OBJDIR)/$(TARGETLIB).a . ; fi
-
 
 # Eye candy.
 .PHONY: begin
@@ -856,85 +881,15 @@ gccversion :
 $(TARGETLIB).a:  $(ALL_OBJ)
 	@echo
 	@echo $(MSG_LINKING) $@
-#	@echo OBJDIR: $(OBJDIR)
-#	@echo ALL_OBJ: $(ALL_OBJ)
-#	@echo ALL_OBJ_NOTDIR: $(notdir $(ALL_OBJ))
-#	@echo ALL_OBJ_PREFIXED: $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
 ifdef OBJDIR
 	@$(AR) rc $(TARGETLIB).a $(addprefix $(OBJDIR)/,$(notdir $(ALL_OBJ)))
 else
 	@$(AR) rc $(TARGETLIB).a $(ALL_OBJ)
 endif
 
+###############################################################################
 
 # Compile: create assembler files from C source files. ARM/Thumb
-## does not work - TODO - hints welcome
-##$(COBJ) : %.s : %.c
-##	$(CC) $(THUMB) -S $(CFLAGS) $(GENDEPFLAGS) $< -o $@
-
-
-# Assemble: create object files from assembler source files. ARM/Thumb
-$(AOBJ) : %.o : %.S
-	@$(CC) -c $(THUMB) $(ASFLAGS) $< -o $(OBJDIR)$@
-
-
-# Optimization -Os
-
-# Compile: create object files from C source files.
-$(COBJOs) : %.o : %.c
-#	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $< -o $(OBJDIR)$@
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -Os $(OBJMAGIC)
-
-# Compile: create object files from C++ source files.
-$(CPPOBJOs) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -Os $< -o $(OBJDIR)$@
-
-
-# Optimization -O0
-
-# Compile: create object files from C source files.
-$(COBJO0) : %.o : %.c
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O0 $< -o $(OBJDIR)$@
-
-
-# Compile: create object files from C++ source files.
-$(CPPOBJO0) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O0 $< -o $(OBJDIR)$@
-
-
-# Optimization -O1
-
-# Compile: create object files from C source files.
-$(COBJO1) : %.o : %.c
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O1 $< -o $(OBJDIR)$@
-
-# Compile: create object files from C++ source files.
-$(CPPOBJO1) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O1 $< -o $(OBJDIR)$@
-
-
-# Optimization -O2
-
-# Compile: create object files from C source files.
-$(COBJO2) : %.o : %.c
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O2 $< -o $(OBJDIR)$@
-
-# Compile: create object files from C++ source files.
-$(CPPOBJO2) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O2 $< -o $(OBJDIR)$@
-
-
-# Optimization -O3
-
-# Compile: create object files from C source files.
-$(COBJO3) : %.o : %.c
-	@$(CC) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CONLYFLAGS) -O3 $< -o $(OBJDIR)$@
-
-# Compile: create object files from C++ source files.
-$(CPPOBJO3) : %.o : %.cpp
-	@$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) -O3 $< -o $(OBJDIR)$@
-
-
 
 # Compile libcxxabi and libcxx source file
 $(CXXABIOBJOs) : %.o : %.cpp
@@ -968,6 +923,38 @@ $(CXXOBJO2) : %.o : %.cpp
 $(CXXOBJO3) : %.o : %.cpp
 	$(CPP) -c $(THUMB) $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O3 $< -o $(OBJDIR)$@
 
+
+
+$(CXXABIARMOBJOs) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -Os $< -o $(OBJDIR)$@
+	
+$(CXXABIARMOBJO0) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O0 $< -o $(OBJDIR)$@
+
+$(CXXABIARMOBJO1) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O1 $< -o $(OBJDIR)$@
+
+$(CXXABIARMOBJO2) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O2 $< -o $(OBJDIR)$@
+	
+$(CXXABIARMOBJO3) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXABIFLAGS) -O3 $< -o $(OBJDIR)$@
+
+
+$(CXXARMOBJOs) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -Os $< -o $(OBJDIR)$@
+
+$(CXXARMOBJO0) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O0 $< -o $(OBJDIR)$@
+
+$(CXXARMOBJO1) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O1 $< -o $(OBJDIR)$@
+
+$(CXXARMOBJO2) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O2 $< -o $(OBJDIR)$@
+
+$(CXXARMOBJO3) : %.o : %.cpp
+	$(CPP) -c $(CFLAGS) $(GENDEPFLAGS) $(CPPONLYFLAGS) $(CXXFLAGS) -O3 $< -o $(OBJDIR)$@
 
 
 # Target: install

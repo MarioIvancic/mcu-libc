@@ -1,3 +1,5 @@
 src/project_make_options
 lib
 lib/*
+lib++
+lib++/*
