@@ -660,7 +660,7 @@ int msp_vuprintf (void* outp, int (*write_char)(void*, int), const char *format,
 
 
 
-int (*_msp_printf_putchar_ptr)(int);
+int (*_msp_printf_putchar_ptr)(int) = putchar;
 
 
 // init function for msp_printf
@@ -809,7 +809,7 @@ int msp_snprintf (char *buf, size_t size, const char *fmt, ...)
 
 #ifdef PRINTF_USE_MSP
 
-int putchar(int c){ return _msp_printf_putchar_ptr(c); }
+// int putchar(int c){ return _msp_printf_putchar_ptr(c); }
 
 weak_alias(init_msp_printf, _init_printf);
 

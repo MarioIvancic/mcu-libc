@@ -65,7 +65,7 @@
 //typedef void (*putcf) (void*, char);
 
 // pointer to output function for printf
-int (*_tfp_printf_putchar_ptr)(int);
+int (*_tfp_printf_putchar_ptr)(int) = putchar;
 
 
 #ifdef TFP_PRINTF_USE_BUILTINS
@@ -622,7 +622,7 @@ int tfp_snprintf(char* s, size_t size, const char *fmt, ...)
 
 #ifdef PRINTF_USE_TFP
 
-int putchar(int c){ return _tfp_printf_putchar_ptr(c); }
+// int putchar(int c){ return _tfp_printf_putchar_ptr(c); }
 
 weak_alias(init_tfp_printf, _init_printf);
 
