@@ -28,3 +28,14 @@ __attribute__((weak)) int cxa_atexit(void (*function)(void*), void* arg, void* d
 	// EA libc does not exit on baremetal systems
 	return 0;
 }
+
+
+__attribute__((weak)) int __aeabi_atexit(void *object, void (*destructor)(void *), void *dso_handle)
+{ 
+    (void)object; 
+	(void)destructor;
+	(void)dso_handle;
+    return 0; 
+} 
+
+void* __dso_handle;
