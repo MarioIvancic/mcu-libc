@@ -1137,10 +1137,10 @@ install: $(OBJDIR)libc++abi.a $(OBJDIR)libc++.a $(OBJDIR)libcpp.a
 
 .PHONY: distclean
 distclean: clean
-	@$(REMOVE) ./../lib++/$(CLASS_DIR)/ext/*
-	@$(REMOVE) ./../lib++/$(CLASS_DIR)/experimental/*
-	@$(REMOVE) ./../lib++/$(CLASS_DIR)/support/*
-	-@$(REMOVE) ./../lib++/$(CLASS_DIR)/*
+	@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/ext/*
+	@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/experimental/*
+	@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/support/*
+	-@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/*
 	@$(REMOVEDIR) ./../lib++/$(CLASS_DIR)/*
 
 

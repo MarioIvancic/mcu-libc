@@ -3,3 +3,14 @@ lib
 lib/*
 lib++
 lib++/*
+libcpp/.dep
+libcpp/libc++.a
+libcpp/libc++abi.a
+libcpp/src/c++/*.lst
+libcpp/src/c++/*.o
+libcpp/src/c++abi/*.lst
+libcpp/src/c++abi/*.o
+
+libcpp/libcpp.a
+libcpp/libcxx
+libcpp/libcxxabi
