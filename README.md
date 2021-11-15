@@ -38,7 +38,9 @@ cd ..
 git submodule update --init --recursive
 cd libcpp
 cp project_make_options.sample project_make_options
+cp __libcpp_config_site.sample __libcpp_config_site
 nano project_make_options
+nano __libcpp_config_site
 ```
 
 To make libc++ for all supported arch:
