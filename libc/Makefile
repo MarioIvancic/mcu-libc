@@ -14,7 +14,7 @@ L2MAKEFILE = Makefile.2
 
 # default target is to build LibC for all architectures
 .PHONY: all
-all: arm7tdmi-s-libc cortex-m3-libc cortex-m0-libc
+all: arm7tdmi-s-libc cortex-m3-libc cortex-m0-libc cortex-m33-libc cortex-m4-libc
 
 
 
@@ -69,12 +69,44 @@ cortex-m3-clean:
 	@make -s -f $(L2MAKEFILE) ARCH=cortex-m3 clean
 
 
+# target for building LibC for cortex-m4 architecture
+.PHONY: cortex-m4-libc cortex-m4-distclean cortex-m4 cortex-m4-install cortex-m4-clean
+cortex-m4-libc: cortex-m4-distclean cortex-m4 cortex-m4-install cortex-m4-clean
+cortex-m4-distclean:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m4 distclean
+
+cortex-m4:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m4
+	
+cortex-m4-install:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m4 install
+	
+cortex-m4-clean:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m4 clean
+
+
+# target for building LibC for cortex-m33 architecture
+.PHONY: cortex-m33-libc cortex-m33-distclean cortex-m33 cortex-m33-install cortex-m33-clean
+cortex-m33-libc: cortex-m33-distclean cortex-m33 cortex-m33-install cortex-m33-clean
+cortex-m33-distclean:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m33 distclean
+
+cortex-m33:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m33
+	
+cortex-m33-install:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m33 install
+	
+cortex-m33-clean:
+	@make -s -f $(L2MAKEFILE) ARCH=cortex-m33 clean
+
+
 # target to clean working directory
 .PHONY: clean
-clean: cortex-m3-clean cortex-m0-clean arm7tdmi-s-clean
+clean: cortex-m3-clean cortex-m0-clean arm7tdmi-s-clean cortex-m4-clean cortex-m33-clean
 
 
 # target to uninstall LibC for all archs
 .PHONY: distclean
-distclean: cortex-m3-distclean cortex-m0-distclean arm7tdmi-s-distclean
+distclean: cortex-m3-distclean cortex-m0-distclean arm7tdmi-s-distclean cortex-m4-distclean cortex-m33-distclean
 
