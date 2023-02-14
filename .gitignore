@@ -5,3 +5,11 @@ lib++
 lib++/*
 libcpp/libc++.a
 libcpp/libc++abi.a
+libcpp/libcpp.a
+libcpp/.dep
+libcpp/src/c++/*.lst
+libcpp/src/c++/*.o
+libcpp/src/c++abi/*.lst
+libcpp/src/c++abi/*.o
+libcpp/libcxx
+libcpp/libcxxabi

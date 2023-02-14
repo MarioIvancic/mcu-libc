@@ -88,7 +88,8 @@ PROJECT_OPTIONS += -DPRINTF_USE_TFP
 
 
 # startup options
-#PROJECT_OPTIONS += -DHAVE_INITFINI_ARRAY
+# uncomment this if you want support for C++ global/static constructors
+PROJECT_OPTIONS += -DHAVE_INITFINI_ARRAY
 
 
 

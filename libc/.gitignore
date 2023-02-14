@@ -2,3 +2,4 @@
 *.lst
 .dep
 libc.a
+project_make_options
