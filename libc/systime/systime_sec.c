@@ -1,6 +1,5 @@
 // systime_sec.c
 
-//#include <systime_tick.h>
 #include "systime_tick.h"
 
 // define this if you have integer divide instruction
@@ -51,6 +50,22 @@ unsigned _systime_sec(void)
 #endif  // SYSTEM_TIME_HAVE_DIV_INST
 
     return __systime_curr_sec;
+}
+
+
+
+void _systime_sec_set(unsigned current_time)
+{
+    unsigned now = _systime_sec();
+
+    if(now > current_time)
+    {
+        __systime_curr_sec -= (now - current_time);
+    }
+    else
+    {
+        __systime_curr_sec += (current_time - now);
+    }
 }
 
 
