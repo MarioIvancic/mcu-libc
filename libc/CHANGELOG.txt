@@ -33,3 +33,7 @@ Version 0.9.8
 2020-09-23
 	- Added some string functions from Embedded Artistry LibC
 
+Version 0.9.9
+2023-12-10
+    - Removed tfp_printf, msp_prinf, systime, tlsf_malloc from libc.
+
