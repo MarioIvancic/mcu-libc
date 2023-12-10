@@ -269,11 +269,6 @@ SRCOs += stdlib/qsort.c
 SRCOs += stdlib/qsort_r.c
 
 
-
-# TLSF malloc functions (malloc, calloc, realloc, free)
-SRCARMO2 += tlsf_malloc/malloc.c
-SRCARMO2 += tlsf_malloc/tlsf.c
-
 # string functions
 ifeq ($(ARCH),cortex-m3)
     ASRC += string/memcpy-armv7m.S
@@ -348,11 +343,6 @@ SRCOs += wchar/wctrans.c
 SRCOs += wchar/wctype.c
 SRCOs += wchar/wcwidth.c
 
-# systime functions
-SRCOs += systime/systime_ms.c
-SRCOs += systime/systime_sec.c
-SRCOs += systime/systime_tick.c
-
 # time functions
 SRCOs += time/asctime.c
 SRCOs += time/clock_getres.c
@@ -369,10 +359,6 @@ SRCOs += time/time.c
 SRCOs += time/tzset.c
 SRCOs += time/gettimeofday.c
 
-# printf functions
-SRCOs += printf/msp_printf.c
-SRCOs += printf/tfp_printf.c
-SRCOs += printf/putchar.c
 
 # math functions
 SRCOs += math/ceil.c
